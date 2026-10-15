@@ -1,19 +1,30 @@
-VAHRAM TUMANYAN — CARTOON PORTFOLIO PROTOTYPE
+VAHRAM PORTFOLIO V2 — TEST VERSION
 
-HOW TO TEST
-1. Open index.html in Chrome.
-2. Internet is needed in this prototype because project thumbnails are loaded from Behance CDN.
-3. Move the mouse near the fly — it escapes. Click it — it reacts.
-4. Hover project cards — they tilt.
-5. Click a project — it opens the matching Behance project.
+Что уже есть:
+- мультяшный тёмно-синий дизайн с жёлтыми акцентами
+- левое меню
+- большая hero-секция
+- 5 карточек проектов
+- About / Skills / Contact
+- интерактивная муха (HTML/CSS/JS, без картинки)
+- паук, который бегает по нижней части экрана
+- 4 кликабельные точки на hero-картинке
+- адаптация под мобильный экран
 
-HOW TO PUBLISH ON GITHUB PAGES
-1. Create a new GitHub repository, for example vahram-portfolio.
-2. Upload index.html, style.css, script.js.
-3. Open Settings > Pages.
-4. Source: Deploy from a branch.
-5. Branch: main, folder: /root.
-6. Save. GitHub will provide the public github.io URL.
+КАК ЗАМЕНИТЬ КАРТИНКИ ПОЗЖЕ:
+1) Добавьте изображения в папку assets.
+2) В style.css замените background у .t1 .t2 .t3 .t4 .t5 на:
+   background-image:url('assets/имя-файла.jpg');
+   background-size:cover;
+   background-position:center;
 
-NOTE
-For a final production version, download the artwork images you own into an assets/ folder instead of hot-linking Behance thumbnails. That makes the site independent and more reliable.
+Для hero можно заменить .hero-bg на:
+background-image:url('assets/hero.jpg');
+background-size:cover;
+background-position:center;
+
+КАК ЗАПУСТИТЬ:
+Откройте index.html двойным кликом.
+
+КАК ЗАЛИТЬ НА GITHUB PAGES:
+Загрузите index.html, style.css, script.js и папку assets в корень репозитория.
