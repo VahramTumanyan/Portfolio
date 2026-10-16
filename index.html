@@ -2,193 +2,470 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#141017">
-  <title>Vahram Tumanyan — 2D Artist & Spine Animator</title>
-  <meta name="description" content="Vahram Tumanyan — 2D artist, concept artist, illustrator and Spine animator. Interactive portfolio.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@4.3.13/dist/spine-player.min.css">
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Spine Characters Test</title>
+  <link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@4.3.13/dist/spine-player.css">
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0b0f14;font-family:Inter,Arial,sans-serif;color:#fff}
+    body{
+      background:
+        radial-gradient(circle at 50% 35%,#1a2634 0,#0d141d 38%,#080b10 78%),
+        #080b10;
+    }
+
+    /* ===== compact top controls ===== */
+    .controls{
+      position:fixed;
+      top:10px;
+      left:50%;
+      transform:translateX(-50%);
+      z-index:100;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      padding:5px;
+      border:1px solid #3d4b5d;
+      border-radius:18px;
+      background:#121923eF;
+      box-shadow:0 12px 35px #000b, inset 0 0 0 1px #ffffff08;
+      backdrop-filter:blur(14px);
+    }
+    .master{
+      display:flex;align-items:center;gap:5px;
+      padding:0 7px 0 5px;
+      border-right:1px solid #334052;
+      height:42px;
+    }
+    .bolt{font-size:18px;filter:drop-shadow(0 0 8px #ff9d28)}
+    .card{position:relative}
+    .head{
+      height:42px;
+      min-width:118px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      padding:3px 6px;
+      border:1px solid #334052;
+      border-radius:12px;
+      background:linear-gradient(#1a2330,#101720);
+    }
+    .avatar{
+      width:34px;height:34px;border-radius:10px;
+      display:grid;place-items:center;
+      font-size:21px;
+      background:#0d151f;
+      border:2px solid #f4a73c;
+      box-shadow:0 0 14px #ff9c3133;
+    }
+    .name{font-weight:800;font-size:12px;line-height:1}
+    .sub{font-size:8px;color:#8696ab;margin-top:3px}
+    .fold{
+      width:18px;height:24px;padding:0;border:0;background:transparent;color:#b8c2d0;
+      font-size:15px;cursor:pointer;
+    }
+    .switch{position:relative;width:36px;height:20px;display:inline-block;margin-left:auto}
+    .switch input{display:none}
+    .track{
+      position:absolute;inset:0;border-radius:999px;
+      background:#8e1823;border:1px solid #ff4051;
+      box-shadow:0 0 10px #ff243b88,inset 0 0 7px #ff304166;
+      transition:.18s;
+    }
+    .knob{
+      position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;
+      background:#fff3d8;box-shadow:0 1px 4px #0008;
+      transition:.18s;
+    }
+    .switch input:checked + .track{
+      background:#087b40;border-color:#2dff86;
+      box-shadow:0 0 12px #25ff7faa,inset 0 0 8px #42ff9177;
+    }
+    .switch input:checked + .track .knob{transform:translateX(16px)}
+    .menu{
+      display:none;
+      position:absolute;
+      top:48px;left:0;
+      min-width:165px;
+      padding:7px;
+      border:1px solid #405066;
+      border-radius:12px;
+      background:#111923f7;
+      box-shadow:0 20px 40px #000c;
+    }
+    .card.open .menu{display:grid;gap:4px}
+    .anim{
+      border:1px solid #273346;
+      border-radius:8px;
+      background:#18212d;color:#dbe4ef;
+      padding:7px 9px;text-align:left;font-size:11px;cursor:pointer;
+    }
+    .anim:hover,.anim.active{border-color:#f3a63c;color:#fff;background:#2a2218}
+
+    /* ===== full-screen character stage ===== */
+    #stage{position:fixed;inset:0;overflow:hidden;pointer-events:none}
+    .actor{position:absolute;opacity:0;transition:opacity .22s;pointer-events:none}
+    .actor.on{opacity:1}
+
+    .spine-host{width:100%;height:100%;background:transparent!important}
+    .spine-player-canvas{background:transparent!important}
+
+    /* Fly: left -> right only. Inner wrapper bobs vertically. */
+    #flyLane{
+      position:absolute;
+      left:-280px;
+      top:34%;
+      width:250px;
+      height:200px;
+      opacity:0;
+      pointer-events:none;
+      will-change:transform;
+    }
+    #flyLane.on{opacity:1}
+    #flyBob{
+      width:100%;height:100%;
+      pointer-events:auto;
+      cursor:crosshair;
+      animation:flyBob 1.25s ease-in-out infinite alternate;
+      transform-origin:center;
+    }
+    #flyLane.flying{
+      animation:flyAcross 7.8s linear infinite;
+    }
+    #flyLane.fast{
+      animation-duration:4.8s;
+    }
+    @keyframes flyAcross{
+      from{transform:translateX(0)}
+      to{transform:translateX(calc(100vw + 560px))}
+    }
+    @keyframes flyBob{
+      from{transform:translateY(-28px) rotate(-2deg)}
+      to{transform:translateY(30px) rotate(2deg)}
+    }
+    .click-label{
+      position:absolute;left:50%;top:3px;transform:translateX(-50%);
+      font-size:10px;font-weight:900;letter-spacing:.08em;
+      color:#ffd27a;text-shadow:0 2px 8px #000;
+      opacity:.78;pointer-events:none;
+    }
+
+    /* Frog fixed bottom-right */
+    #frogActor{
+      right:2vw;bottom:-2.5vw;
+      width:min(650px,43vw);height:min(520px,36vw);
+    }
+
+    /* Croc moves horizontally across bottom */
+    #crocActor{
+      left:-48vw;bottom:-2.5vw;
+      width:min(760px,48vw);height:min(500px,34vw);
+      will-change:left,transform;
+    }
+    #crocActor.reverse{transform:scaleX(-1)}
+
+    .hint{
+      position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
+      color:#7f8c9f;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+      pointer-events:none;
+    }
+
+    @media(max-width:850px){
+      .controls{left:8px;right:8px;transform:none;justify-content:center;gap:3px}
+      .head{min-width:88px;padding:3px}
+      .name,.sub{display:none}
+      .avatar{width:32px;height:32px}
+      #frogActor{width:86vw;height:68vw;right:-8vw;bottom:-4vw}
+      #crocActor{width:110vw;height:75vw;bottom:-5vw}
+      #flyLane{width:220px;height:175px;top:30%}
+    }
+  </style>
 </head>
 <body>
-  <div class="paper-noise"></div>
-  <div class="sky-blob blob-a"></div>
-  <div class="sky-blob blob-b"></div>
 
-  <header class="topbar">
-    <a class="brand" href="#top" aria-label="Vahram Tumanyan portfolio">
-      <span class="brand-badge">VT</span>
-      <span class="brand-copy"><b>VAHRAM TUMANYAN</b><small>2D ARTIST · SPINE ANIMATOR</small></span>
-    </a>
-    <nav>
-      <a href="#works">WORKS</a>
-      <a href="#about">ABOUT</a>
-      <a class="behance-top" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">BEHANCE ↗</a>
-    </nav>
-  </header>
+  <div class="controls">
+    <div class="master">
+      <span class="bolt">⚡</span>
+      <label class="switch" title="Все персонажи">
+        <input id="allToggle" type="checkbox">
+        <span class="track"><span class="knob"></span></span>
+      </label>
+    </div>
 
-  <main id="top">
-    <section class="hero">
-      <div class="hero-art"></div>
-      <div class="hero-vignette"></div>
-      <div class="hero-copy">
-        <span class="kicker">CHARACTERS · ENVIRONMENT · SPINE</span>
-        <h1>Я рисую миры,<br><span>которые оживают.</span></h1>
-        <p>2D персонажи, игровые фоны и Spine-анимация. Здесь можно не только посмотреть мои работы, но и прямо на сайте включить мои реальные Spine-анимации.</p>
-        <div class="hero-buttons">
-          <a class="cartoon-btn primary" href="#works">Смотреть работы</a>
-          <a class="cartoon-btn ghost" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">Behance</a>
-        </div>
+    <div class="card" data-key="fly">
+      <div class="head">
+        <div class="avatar">🪰</div>
+        <div><div class="name">Муха</div><div class="sub">interactive</div></div>
+        <label class="switch">
+          <input class="toggle" type="checkbox">
+          <span class="track"><span class="knob"></span></span>
+        </label>
+        <button class="fold">⌄</button>
       </div>
-
-      <aside class="control-panel" aria-label="Interactive Spine characters">
-        <div class="panel-title-row">
-          <div class="panel-title"><span class="bolt">⚡</span><span><b>Персонажи</b><small>Interactive Spine</small></span></div>
-          <label class="mini-switch global" title="Включить / выключить всех">
-            <input id="allToggle" type="checkbox" checked>
-            <span class="track"><span class="knob"></span></span>
-          </label>
-        </div>
-
-        <div class="char-card open" data-character="fly">
-          <div class="char-head">
-            <img class="char-avatar" src="https://mir-s3-cdn-cf.behance.net/projects/404/f5b125252415279.Y3JvcCwyMzM0LDE4MjYsMzQxNSwxMDIy.png" alt="Fly">
-            <div class="char-meta"><b>Муха</b><small>кликни по мухе → fire</small></div>
-            <label class="mini-switch">
-              <input class="char-toggle" type="checkbox" checked>
-              <span class="track"><span class="knob"></span></span>
-            </label>
-            <button class="fold" type="button" aria-label="Открыть список">⌄</button>
-          </div>
-          <div class="anim-menu">
-            <button class="anim-btn active" data-mode="auto">▶ <span>Auto</span></button>
-            <button class="anim-btn" data-mode="flies">▶ <span>flies</span></button>
-            <button class="anim-btn" data-mode="flies_Run">▶ <span>flies_Run</span></button>
-            <button class="anim-btn" data-mode="fire">▶ <span>fire</span></button>
-            <button class="anim-btn" data-mode="Rig_View">▶ <span>Rig View</span></button>
-          </div>
-        </div>
-
-        <div class="char-card" data-character="frog">
-          <div class="char-head">
-            <img class="char-avatar" src="https://mir-s3-cdn-cf.behance.net/projects/404/958e83179400911.Y3JvcCwyODIxLDIyMDYsMCw2.png" alt="Frog">
-            <div class="char-meta"><b>Лягушка</b><small>появится → выстрелит → исчезнет</small></div>
-            <label class="mini-switch">
-              <input class="char-toggle" type="checkbox">
-              <span class="track"><span class="knob"></span></span>
-            </label>
-            <button class="fold" type="button" aria-label="Открыть список">⌄</button>
-          </div>
-          <div class="anim-menu">
-            <button class="anim-btn active" data-mode="fire">▶ <span>fire</span></button>
-            <button class="anim-btn" data-mode="Rig_View">▶ <span>Rig View</span></button>
-          </div>
-        </div>
-
-        <div class="char-card" data-character="croc">
-          <div class="char-head">
-            <img class="char-avatar" src="https://mir-s3-cdn-cf.behance.net/projects/404/61f771227043203.Y3JvcCwxOTgxLDE1NTAsMCww.png" alt="Crocodile">
-            <div class="char-meta"><b>Крокодил</b><small>start → running → Happy</small></div>
-            <label class="mini-switch">
-              <input class="char-toggle" type="checkbox">
-              <span class="track"><span class="knob"></span></span>
-            </label>
-            <button class="fold" type="button" aria-label="Открыть список">⌄</button>
-          </div>
-          <div class="anim-menu">
-            <button class="anim-btn active" data-mode="auto">▶ <span>Auto</span></button>
-            <button class="anim-btn" data-mode="start">▶ <span>start</span></button>
-            <button class="anim-btn" data-mode="running">▶ <span>running</span></button>
-            <button class="anim-btn" data-mode="Happy_1">▶ <span>Happy_1</span></button>
-            <button class="anim-btn" data-mode="Happy_2">▶ <span>Happy_2</span></button>
-            <button class="anim-btn" data-mode="Rig_View">▶ <span>Rig View</span></button>
-          </div>
-        </div>
-
-        <div class="panel-status"><i></i><span id="runtimeStatus">Spine 4.3 · loading…</span></div>
-      </aside>
-
-      <div id="stage" class="stage">
-        <div id="flyActor" class="actor fly-actor active" title="Кликни — муха выстрелит">
-          <div id="flyPlayer" class="spine-host"></div>
-          <div class="click-hint">CLICK!</div>
-        </div>
-        <div id="frogActor" class="actor frog-actor">
-          <div id="frogPlayer" class="spine-host"></div>
-        </div>
-        <div id="crocActor" class="actor croc-actor">
-          <div id="crocPlayer" class="spine-host"></div>
-        </div>
+      <div class="menu">
+        <button class="anim active" data-mode="auto">▶ Auto</button>
+        <button class="anim" data-mode="flies">▶ flies</button>
+        <button class="anim" data-mode="flies_Run">▶ flies_Run</button>
+        <button class="anim" data-mode="fire">▶ fire</button>
+        <button class="anim" data-mode="Rig_View">▶ Rig View</button>
       </div>
+    </div>
 
-      <div class="scroll-sticker">↓ WORKS</div>
-    </section>
-
-    <section id="works" class="works">
-      <div class="section-head">
-        <div><span class="kicker">SELECTED WORK</span><h2>Мои работы</h2></div>
-        <a class="cartoon-btn ghost small" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">Все на Behance ↗</a>
+    <div class="card" data-key="croc">
+      <div class="head">
+        <div class="avatar">🐊</div>
+        <div><div class="name">Крокодил</div><div class="sub">running</div></div>
+        <label class="switch">
+          <input class="toggle" type="checkbox">
+          <span class="track"><span class="knob"></span></span>
+        </label>
+        <button class="fold">⌄</button>
       </div>
-
-      <div class="work-grid">
-        <a class="work-card featured" target="_blank" rel="noopener" href="https://www.behance.net/gallery/142574327/spine-animation-2d-Environment-Art">
-          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/ab37e3142574327.Y3JvcCwyOTQ2LDIzMDQsNTc2LDEzMQ.jpg" alt="Spine animation 2d Environment Art">
-          <div class="work-info"><span>SPINE · ENVIRONMENT</span><h3>Spine Animation + 2D Environment Art</h3></div>
-        </a>
-        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/gallery/227043203/Flying-crocodile">
-          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/61f771227043203.Y3JvcCwxOTgxLDE1NTAsMCww.png" alt="Flying crocodile">
-          <div class="work-info"><span>SPINE CHARACTER</span><h3>Flying Crocodile</h3></div>
-        </a>
-        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/gallery/179400911/Spine-2D-CHARACTER-ANIMATIONS-frog-on-a-cloud">
-          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/958e83179400911.Y3JvcCwyODIxLDIyMDYsMCw2.png" alt="Frog on a cloud">
-          <div class="work-info"><span>SPINE CHARACTER</span><h3>Frog on a Cloud</h3></div>
-        </a>
-        <a class="work-card tall" target="_blank" rel="noopener" href="https://www.behance.net/gallery/218300215/cartoon-bird-of-prey">
-          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/62f576218300215.Y3JvcCwxMTY5LDkxNCw2MywyMjI.png" alt="Cartoon bird of prey">
-          <div class="work-info"><span>CHARACTER DESIGN</span><h3>Cartoon Bird of Prey</h3></div>
-        </a>
-        <a class="work-card wide" target="_blank" rel="noopener" href="https://www.behance.net/gallery/230209447/background-games-THUMBNAILSAI">
-          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/a8fcd4230209447.Y3JvcCwxNzY4LDEzODMsMTE2NCwzOQ.png" alt="Game backgrounds">
-          <div class="work-info"><span>BACKGROUND ART</span><h3>Background Games</h3></div>
-        </a>
-        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/gallery/175945285/2D-games-ENVIRONMENT-DESIGN-Character-Design-skech">
-          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/fc32b8175945285.Y3JvcCwzODk0LDMwNDYsMCww.jpg" alt="2D game environment design">
-          <div class="work-info"><span>ENVIRONMENT</span><h3>2D Game Environment</h3></div>
-        </a>
-        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/gallery/177035915/Spine-2D-CHARACTER-ANIMATIONS-Dieselpunk-beetle">
-          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/97f28f177035915.Y3JvcCwyNDc4LDE5MzksNjcsMA.png" alt="Dieselpunk beetle">
-          <div class="work-info"><span>SPINE</span><h3>Dieselpunk Beetle</h3></div>
-        </a>
-        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/gallery/138330639/Environment-Art-Character-Design">
-          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/eaf5ab138330639.Y3JvcCwzODIxLDI5ODgsMzc4LDEzMg.jpg" alt="Environment Art Character Design">
-          <div class="work-info"><span>CONCEPT ART</span><h3>Environment + Character Design</h3></div>
-        </a>
-        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/gallery/252415279/Cartoon-Fly">
-          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/f5b125252415279.Y3JvcCwyMzM0LDE4MjYsMzQxNSwxMDIy.png" alt="Cartoon Fly">
-          <div class="work-info"><span>CHARACTER</span><h3>Cartoon Fly</h3></div>
-        </a>
-        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/gallery/227761179/it-caught-the-snake">
-          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/5b2d7f227761179.Y3JvcCwxOTIwLDE1MDEsMCww.png" alt="It caught the snake">
-          <div class="work-info"><span>ILLUSTRATION</span><h3>It Caught the Snake</h3></div>
-        </a>
+      <div class="menu">
+        <button class="anim active" data-mode="auto">▶ Auto</button>
+        <button class="anim" data-mode="running">▶ running</button>
+        <button class="anim" data-mode="Happy_1">▶ Happy_1</button>
+        <button class="anim" data-mode="Happy_2">▶ Happy_2</button>
+        <button class="anim" data-mode="start">▶ start</button>
+        <button class="anim" data-mode="Rig_View">▶ Rig View</button>
       </div>
-    </section>
+    </div>
 
-    <section id="about" class="about">
-      <div class="about-card">
-        <span class="kicker">ABOUT ME</span>
-        <h2>2D Artist · Concept Artist · Spine Animator</h2>
-        <p>Я создаю персонажей, игровые и кинематографические фоны и 2D-анимацию. На этой странице интерактивные персонажи используют мои реальные экспортированные Spine-файлы — не GIF и не подмена CSS-анимацией.</p>
-        <a class="cartoon-btn primary" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">Открыть Behance ↗</a>
+    <div class="card" data-key="frog">
+      <div class="head">
+        <div class="avatar">🐸</div>
+        <div><div class="name">Лягушка</div><div class="sub">fire</div></div>
+        <label class="switch">
+          <input class="toggle" type="checkbox">
+          <span class="track"><span class="knob"></span></span>
+        </label>
+        <button class="fold">⌄</button>
       </div>
-    </section>
-  </main>
+      <div class="menu">
+        <button class="anim active" data-mode="fire">▶ fire</button>
+        <button class="anim" data-mode="Rig_View">▶ Rig View</button>
+      </div>
+    </div>
+  </div>
 
-  <footer>© 2026 Vahram Tumanyan · Interactive portfolio</footer>
+  <div id="stage">
+    <div id="flyLane">
+      <div id="flyBob">
+        <div id="flyPlayer" class="spine-host"></div>
+        <div class="click-label">CLICK → FIRE</div>
+      </div>
+    </div>
+
+    <div id="frogActor" class="actor">
+      <div id="frogPlayer" class="spine-host"></div>
+    </div>
+
+    <div id="crocActor" class="actor">
+      <div id="crocPlayer" class="spine-host"></div>
+    </div>
+  </div>
+
+  <div class="hint">Тест персонажей · без сайта</div>
 
   <script src="https://unpkg.com/@esotericsoftware/spine-player@4.3.13/dist/iife/spine-player.min.js"></script>
-  <script src="script.js"></script>
+  <script>
+    const refs={fly:null,frog:null,croc:null};
+    const ready={fly:false,frog:false,croc:false};
+    const flyLane=document.getElementById('flyLane');
+    const flyBob=document.getElementById('flyBob');
+    const frogActor=document.getElementById('frogActor');
+    const crocActor=document.getElementById('crocActor');
+    const allToggle=document.getElementById('allToggle');
+    let flyMode='auto';
+    let crocToken=0;
+
+    function createPlayer(key,id,skeleton,atlas,animation){
+      return new spine.SpinePlayer(id,{
+        skeleton,atlas,animation,
+        showControls:false,alpha:true,premultipliedAlpha:true,
+        backgroundColor:'#00000000',
+        success(player){
+          refs[key]=player;ready[key]=true;
+          if(key==='fly') player.animationState.setAnimation(0,'flies',true);
+        },
+        error(player,reason){console.error(key,reason)}
+      });
+    }
+
+    createPlayer('fly','flyPlayer',
+      'assets/spine/fly/jeko_spine_final.json',
+      'assets/spine/fly/jeko_spine_final.atlas','flies');
+
+    createPlayer('frog','frogPlayer',
+      'assets/spine/frog/Amb+gort spine.json',
+      'assets/spine/frog/Amb+gort spine.atlas','fire');
+
+    createPlayer('croc','crocPlayer',
+      'assets/spine/croc/kroks spine fayl.json',
+      'assets/spine/croc/kroks spine fayl.atlas','running');
+
+    const cards=[...document.querySelectorAll('.card')];
+
+    function cardFor(key){return document.querySelector(`.card[data-key="${key}"]`)}
+    function enabled(key){return cardFor(key).querySelector('.toggle').checked}
+
+    cards.forEach(card=>{
+      const key=card.dataset.key;
+      const fold=card.querySelector('.fold');
+      const toggle=card.querySelector('.toggle');
+
+      fold.addEventListener('click',e=>{
+        e.stopPropagation();
+        const open=card.classList.contains('open');
+        cards.forEach(c=>c.classList.remove('open'));
+        if(!open) card.classList.add('open');
+      });
+
+      toggle.addEventListener('change',()=>{
+        setEnabled(key,toggle.checked);
+        syncMaster();
+      });
+
+      card.querySelectorAll('.anim').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          card.querySelectorAll('.anim').forEach(b=>b.classList.remove('active'));
+          btn.classList.add('active');
+          if(!toggle.checked){toggle.checked=true;setEnabled(key,true)}
+          playMode(key,btn.dataset.mode);
+          syncMaster();
+        });
+      });
+    });
+
+    document.addEventListener('pointerdown',e=>{
+      if(!e.target.closest('.controls')) cards.forEach(c=>c.classList.remove('open'));
+    });
+
+    allToggle.addEventListener('change',()=>{
+      cards.forEach(card=>{
+        const t=card.querySelector('.toggle');
+        t.checked=allToggle.checked;
+        setEnabled(card.dataset.key,t.checked);
+      });
+    });
+
+    function syncMaster(){
+      const values=cards.map(c=>c.querySelector('.toggle').checked);
+      allToggle.checked=values.every(Boolean);
+      allToggle.indeterminate=values.some(Boolean)&&!values.every(Boolean);
+    }
+
+    function setEnabled(key,on){
+      if(key==='fly'){
+        flyLane.classList.toggle('on',on);
+        if(on) setFly('auto'); else flyLane.classList.remove('flying','fast');
+      }
+      if(key==='frog'){
+        frogActor.classList.toggle('on',on);
+        if(on&&ready.frog) refs.frog.setAnimation('fire',false);
+      }
+      if(key==='croc'){
+        crocActor.classList.toggle('on',on);
+        if(on) startCroc(); else crocToken++;
+      }
+    }
+
+    function playMode(key,mode){
+      if(key==='fly') setFly(mode);
+      if(key==='frog'&&ready.frog){
+        frogActor.classList.add('on');
+        refs.frog.setAnimation(mode,false);
+      }
+      if(key==='croc'&&ready.croc){
+        crocToken++;
+        crocActor.classList.add('on');
+        crocActor.classList.remove('reverse');
+        refs.croc.setAnimation(mode,mode==='running');
+      }
+    }
+
+    /* Fly: ONLY left -> right across screen + gentle vertical bobbing.
+       No random teleporting and no random 2D directions. */
+    function setFly(mode){
+      flyMode=mode;
+      if(!ready.fly) return;
+      flyLane.classList.add('on');
+      flyLane.classList.remove('flying','fast');
+
+      if(mode==='auto'){
+        refs.fly.setAnimation('flies',true);
+        void flyLane.offsetWidth;
+        flyLane.classList.add('flying');
+      }else if(mode==='flies'){
+        refs.fly.setAnimation('flies',true);
+        void flyLane.offsetWidth;
+        flyLane.classList.add('flying');
+      }else if(mode==='flies_Run'){
+        refs.fly.setAnimation('flies_Run',true);
+        void flyLane.offsetWidth;
+        flyLane.classList.add('flying','fast');
+      }else{
+        refs.fly.setAnimation(mode,false);
+      }
+    }
+
+    flyBob.addEventListener('pointerdown',e=>{
+      e.preventDefault();e.stopPropagation();
+      if(!enabled('fly')||!ready.fly) return;
+      const wasFast=flyLane.classList.contains('fast');
+      refs.fly.setAnimation('fire',false);
+      setTimeout(()=>{
+        if(!enabled('fly')) return;
+        refs.fly.setAnimation(wasFast?'flies_Run':'flies',true);
+      },900);
+    });
+
+    function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+    function once(player,name){
+      return new Promise(resolve=>{
+        const entry=player.animationState.setAnimation(0,name,false);
+        entry.listener={complete:resolve};
+      });
+    }
+
+    async function startCroc(){
+      if(!ready.croc) return;
+      const token=++crocToken;
+      crocActor.classList.add('on');
+      const width=Math.max(520,crocActor.getBoundingClientRect().width);
+      const left=-width*.72;
+      const right=innerWidth-width*.40;
+
+      while(token===crocToken && enabled('croc')){
+        crocActor.classList.remove('reverse');
+        crocActor.style.transition='none';
+        crocActor.style.left=left+'px';
+        refs.croc.setAnimation('running',true);
+        await sleep(60);
+
+        if(token!==crocToken||!enabled('croc')) break;
+        crocActor.style.transition='left 4.6s linear, transform .2s, opacity .2s';
+        crocActor.style.left=right+'px';
+        await sleep(4600);
+
+        if(token!==crocToken||!enabled('croc')) break;
+        await once(refs.croc,Math.random()>.5?'Happy_1':'Happy_2');
+
+        if(token!==crocToken||!enabled('croc')) break;
+        crocActor.classList.add('reverse');
+        refs.croc.setAnimation('running',true);
+        crocActor.style.left=left+'px';
+        await sleep(4600);
+
+        if(token!==crocToken||!enabled('croc')) break;
+        await once(refs.croc,Math.random()>.5?'Happy_1':'Happy_2');
+
+        if(token!==crocToken||!enabled('croc')) break;
+        crocActor.classList.remove('reverse');
+        await once(refs.croc,'start');
+        await sleep(250);
+      }
+    }
+  </script>
 </body>
 </html>
