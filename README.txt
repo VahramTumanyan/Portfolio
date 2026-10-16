@@ -1,19 +1,14 @@
-VAHRAM TUMANYAN — CARTOON PORTFOLIO PROTOTYPE
+VAHRAM PORTFOLIO — PHOTOSHOP-STYLE VERSION
 
-HOW TO TEST
-1. Open index.html in Chrome.
-2. Internet is needed in this prototype because project thumbnails are loaded from Behance CDN.
-3. Move the mouse near the fly — it escapes. Click it — it reacts.
-4. Hover project cards — they tilt.
-5. Click a project — it opens the matching Behance project.
+AUTO IMAGES:
+На GitHub Pages просто загружай любое количество JPG/JPEG/PNG/WEBP/GIF/AVIF в папку конкретного проекта. Имя и количество не важны. Сайт автоматически получает список файлов из GitHub API.
 
-HOW TO PUBLISH ON GITHUB PAGES
-1. Create a new GitHub repository, for example vahram-portfolio.
-2. Upload index.html, style.css, script.js.
-3. Open Settings > Pages.
-4. Source: Deploy from a branch.
-5. Branch: main, folder: /root.
-6. Save. GitHub will provide the public github.io URL.
+Пример:
+assets/projects/cartoon-fly/
+  hello.jpg
+  final.webp
+  any-name.png
 
-NOTE
-For a final production version, download the artwork images you own into an assets/ folder instead of hot-linking Behance thumbnails. That makes the site independent and more reliable.
+Hero: замени assets/hero-placeholder.jpg, оставив это имя.
+
+Текущая настройка projects.js: owner=tumanyan12, repo=Portfolio, branch=main.
