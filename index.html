@@ -1,176 +1,159 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Vahram Tumanyan — Portfolio Workspace</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@4.3.13/dist/spine-player.min.css">
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#10151c" />
+  <title>Vahram Tumanyan — 2D Artist & Animator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Rubik:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<div class="app">
+  <div class="noise"></div>
+
   <header class="topbar">
-    <div class="brand"><span>VT</span><i>ART</i></div>
-    <nav class="menu">
-      <button>File</button><button>Edit</button><button>Image</button><button>Layer</button>
-      <button>Type</button><button>Select</button><button>Filter</button><button>View</button><button>Window</button>
+    <a class="brand" href="#top">
+      <span class="brand-mark">VT</span>
+      <span><b>VAHRAM TUMANYAN</b><small>2D Artist · Animator · Spine</small></span>
+    </a>
+    <nav>
+      <a href="#works">Works</a>
+      <a href="#about">About</a>
+      <a class="behance-btn" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">Behance ↗</a>
     </nav>
-    <div class="top-right"><span id="zoomReadoutTop">100%</span><span>RGB/8</span><button class="share">Share</button></div>
   </header>
 
-  <div class="work-area">
-    <aside class="toolbar">
-      <button title="Move">✥</button>
-      <button title="Select">▧</button>
-      <button title="Lasso">◯</button>
-      <button title="Brush">🖌</button>
-      <button title="Eraser">◇</button>
-      <button title="Text">T</button>
-      <button title="Hand">✋</button>
-      <button title="Zoom">⌕</button>
-      <div class="swatches"><i></i><b></b></div>
-    </aside>
-
-    <section class="center">
-      <div id="docTabs" class="doc-tabs">
-        <button class="doc-tab active" data-page="home">VAHRAM_HOME.psd <span>×</span></button>
-        <button class="doc-tab" data-page="portfolio">PORTFOLIO.psd <span>×</span></button>
-        <button class="doc-tab" data-page="about">ABOUT.psd <span>×</span></button>
+  <main id="top">
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-shade"></div>
+      <div class="hero-copy">
+        <span class="eyebrow">2D ART · BACKGROUNDS · SPINE ANIMATION</span>
+        <h1>I build worlds<br><em>that move.</em></h1>
+        <p>Фоны для игр и кино, персонажи и интерактивная 2D-анимация. Этот сайт — тоже маленькая сцена.</p>
+        <div class="hero-actions">
+          <a class="primary" href="#works">Смотреть работы</a>
+          <a class="secondary" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">Открыть Behance</a>
+        </div>
       </div>
 
-      <section id="page-home" class="page active-page">
-        <div class="home-canvas">
-          <img src="assets/hero-placeholder.jpg" alt="Hero artwork">
-          <div class="home-shade"></div>
-          <div class="home-copy cartoon-copy">
-            <small>VAHRAM / CREATIVE WORKSPACE</small>
-            <h1>VAHRAM</h1>
-            <h2>Senior 2D Artist<br>Character Designer · Concept Artist · Animator</h2>
-            <p>Game Art / Illustration / 2D Animation / Comics / Visual Development</p>
-            <button class="primary goto-portfolio">OPEN PORTFOLIO.psd ↗</button><span class="scribble-arrow">↗</span>
-          </div>
-          <div class="file-chip">hero-placeholder.jpg</div><div class="hero-note">YOUR ART LIVES HERE ✦</div>
+      <aside class="spine-panel" aria-label="Spine animation controls">
+        <div class="panel-head">
+          <div><span class="bolt">⚡</span><b>Персонажи</b></div>
+          <label class="switch global-switch" title="Включить/выключить всех персонажей">
+            <input id="allToggle" type="checkbox" checked>
+            <span class="slider"><span class="state on-label">Вкл</span><span class="state off-label">Выкл</span></span>
+          </label>
         </div>
-      </section>
 
-      <section id="page-portfolio" class="page">
-        <div class="portfolio-layout">
-          <div class="project-stage-shell">
-            <div class="stage-header">
-              <div>
-                <b id="stageTitle">Select a layer →</b>
-                <small id="stageCategory">Choose one of your Behance projects from Layers.</small>
-              </div>
-              <div class="stage-actions">
-                <button id="fitBtn">Fit</button>
-                <button id="hundredBtn">100%</button>
-                <a id="behanceLink" target="_blank" class="behance-link">Behance ↗</a>
-              </div>
-            </div>
-
-            <div id="projectStage" class="project-stage">
-              <div id="emptyStage" class="empty-stage">
-                <div class="ps-big">PS</div>
-                <h2>Your project opens here</h2>
-                <p>Click a large layer on the right. Use mouse wheel to zoom, drag to pan, or pinch with two fingers.</p>
-              </div>
-              <img id="stageImage" alt="Selected artwork">
-            </div>
-
-            <div class="stage-footer">
-              <div class="image-nav">
-                <button id="prevImage">←</button>
-                <span id="imageCounter">0 / 0</span>
-                <button id="nextImage">→</button>
-              </div>
-              <div class="zoom-tools">
-                <button id="zoomMinus">−</button>
-                <span id="zoomReadout">100%</span>
-                <button id="zoomPlus">+</button>
-              </div>
-            </div>
+        <div class="character-card open" data-character="fly">
+          <div class="character-row">
+            <div class="char-icon fly-face">🪰</div>
+            <div class="char-name"><b>Муха</b><small>Interactive Spine</small></div>
+            <label class="switch char-switch">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+            <button class="chev" aria-label="Развернуть">⌄</button>
+          </div>
+          <div class="anim-list">
+            <button class="anim active" data-anim="auto">▶ <span>Auto</span></button>
+            <button class="anim" data-anim="flies">▶ <span>flies</span></button>
+            <button class="anim" data-anim="flies_Run">▶ <span>flies_Run</span></button>
+            <button class="anim" data-anim="fire">▶ <span>fire</span></button>
+            <button class="anim" data-anim="Rig_View">▶ <span>Rig View</span></button>
           </div>
         </div>
-      </section>
 
-      <section id="page-about" class="page">
-        <div class="about-canvas">
-          <div class="about-left">
-            <small>ABOUT.psd / PROFILE</small>
-            <h1>Vahram Tumanyan</h1>
-            <h2>Senior 2D Artist · Character Designer · Concept Artist · 2D Animator</h2>
-            <p>Vahram creates expressive characters, stylized environments, illustrations, game-ready visual assets and 2D animation. His background includes character design, concept art, UI design, comics and storyboards.</p>
-            <p>He has worked across game development, illustration and animation, taking projects from rough visual ideas to polished production assets.</p>
-            <div class="about-buttons">
-              <a class="primary" href="https://www.behance.net/vahramtumanyan" target="_blank">Behance ↗</a>
-            </div>
+        <div class="character-card" data-character="croc">
+          <div class="character-row">
+            <div class="char-icon">🐊</div>
+            <div class="char-name"><b>Крокодил</b><small>Spine showcase</small></div>
+            <label class="switch char-switch">
+              <input type="checkbox">
+              <span class="slider"></span>
+            </label>
+            <button class="chev" aria-label="Развернуть">⌄</button>
           </div>
-          <div class="about-right">
-            <div class="info-panel">
-              <h3>CONTACTS</h3>
-              <div><span>Email</span><b>tumanyanvahram@gmail.com</b></div>
-              <div><span>Phone</span><b>094 82 82 57</b></div>
-              <div><span>Location</span><b>Armenia</b></div>
-            </div>
-            <div class="info-panel">
-              <h3>EXPERIENCE</h3>
-              <div><span>Wind Company</span><b>Senior 2D Artist · Animator · UI · Concept Art</b></div>
-              <div><span>VivaroBet</span><b>Illustrator</b></div>
-              <div><span>Red Rock Revolution</span><b>Senior 2D Artist · Animator · UI · Concept Art</b></div>
-              <div><span>Mayro Studio</span><b>Comics · Concept Art · Character Design · Storyboard</b></div>
-              <div><span>HY Pictures</span><b>Concept Art · Comics · Character Design</b></div>
-            </div>
+          <div class="anim-list">
+            <button class="anim active">▶ <span>Auto</span></button>
+            <button class="anim">▶ <span>Animation</span></button>
+            <button class="anim">▶ <span>Rig View</span></button>
           </div>
         </div>
-      </section>
+
+        <div class="character-card" data-character="frog">
+          <div class="character-row">
+            <div class="char-icon">🐸</div>
+            <div class="char-name"><b>Лягушка</b><small>Spine showcase</small></div>
+            <label class="switch char-switch">
+              <input type="checkbox">
+              <span class="slider"></span>
+            </label>
+            <button class="chev" aria-label="Развернуть">⌄</button>
+          </div>
+          <div class="anim-list">
+            <button class="anim active">▶ <span>Auto</span></button>
+            <button class="anim">▶ <span>Attack</span></button>
+            <button class="anim">▶ <span>Rig View</span></button>
+          </div>
+        </div>
+        <div class="panel-note">Тестовый интерфейс. Spine-файлы подключим следующим шагом.</div>
+      </aside>
+
+      <div id="characterStage" class="character-stage" aria-hidden="true">
+        <div id="flyDemo" class="demo fly-demo">🪰</div>
+        <img id="crocDemo" class="demo art-demo" src="assets/croc.png" alt="">
+        <img id="frogDemo" class="demo art-demo" src="assets/frog.png" alt="">
+      </div>
+
+      <div class="scroll-hint">SCROLL <span>↓</span></div>
     </section>
 
-    <aside class="rightbar">
-      <div class="right-tabs">
-        <button class="active">Layers</button><button>Channels</button><button>Paths</button>
+    <section class="works" id="works">
+      <div class="section-title">
+        <span>SELECTED WORK</span>
+        <h2>Мои миры и персонажи</h2>
+        <p>Пока карточки ведут на общий Behance. Потом подставим точные ссылки на каждую работу.</p>
       </div>
 
-      <div class="layers-title cartoon-layers-title">
-        <div>
-          <b>MY BEHANCE WORK</b>
-          <small>Click a layer to open it</small>
-        </div>
-        <span class="layer-sticker">ART!</span>
+      <div class="work-grid">
+        <a class="work-card wide" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">
+          <img src="assets/showcase.png" alt="Game art showcase">
+          <span class="tag">GAME ART</span><div><h3>Stylized Game Worlds</h3><p>Background · UI · Characters</p></div>
+        </a>
+        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">
+          <img src="assets/hero-art.png" alt="Forest slot game art">
+          <span class="tag">2D ART</span><div><h3>Forest Game Concept</h3><p>Symbols · Environment</p></div>
+        </a>
+        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">
+          <img src="assets/symbols.png" alt="Symbols">
+          <span class="tag">CHARACTERS</span><div><h3>Character & Symbol Design</h3><p>Stylized 2D</p></div>
+        </a>
+        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">
+          <img src="assets/dark-forest.png" alt="Dark forest background">
+          <span class="tag">BACKGROUND</span><div><h3>Environment Painting</h3><p>Games · Film</p></div>
+        </a>
+        <a class="work-card wide" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">
+          <img src="assets/rig-breakdown.png" alt="Rig breakdown">
+          <span class="tag">SPINE</span><div><h3>Rig View / Breakdown</h3><p>How the character is built</p></div>
+        </a>
       </div>
-      <div id="layersList" class="layers-list"></div>
+    </section>
 
-      <div class="properties">
-        <div class="prop-tabs"><button class="active">Properties</button><button>Skills</button></div>
-        <div id="selectedInfo" class="selected-info">
-          <small>SELECTED LAYER</small>
-          <h3>No project selected</h3>
-          <p>Choose a Behance work above.</p>
-        </div>
+    <section class="about" id="about">
+      <div>
+        <span class="eyebrow">ABOUT</span>
+        <h2>2D Artist & Animator</h2>
       </div>
-    </aside>
-  </div>
+      <p>Я создаю игровые и кинематографические фоны, стилизованных персонажей и Spine-анимации. Мне важно показывать не только готовый кадр, но и то, как он собран и оживает.</p>
+      <a target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">Все работы на Behance ↗</a>
+    </section>
+  </main>
 
-  <footer class="status">
-    <span>Vahram Tumanyan © 2026</span>
-    <span>Workspace: Portfolio / RGB / Interactive</span>
-    <a target="_blank" href="https://www.behance.net/vahramtumanyan">Behance ↗</a>
-  </footer>
-</div>
-
-<div id="speech" class="speech"></div>
-
-<div id="flyProjectile" class="fly-projectile" aria-hidden="true"></div>
-
-
-<!-- spine fly -->
-<div id="spineFlyWrap" class="spine-fly-wrap" aria-label="Interactive fly">
-  <div id="spineFlyPlayer" class="spine-fly-player"></div>
-</div>
-<script src="https://unpkg.com/@esotericsoftware/spine-player@4.3.13/dist/iife/spine-player.min.js"></script>
-<script src="projects.js"></script>
-<script src="script.js"></script>
+  <footer>© 2026 Vahram Tumanyan · Portfolio prototype v1</footer>
+  <script src="script.js"></script>
 </body>
 </html>
