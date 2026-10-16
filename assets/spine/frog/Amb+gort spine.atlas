@@ -1,0 +1,307 @@
+Amb+gort spine.png
+size:952,1028
+filter:Linear,Linear
+pma:true
+scale:0.5
+BG
+bounds:2,893,693,133
+acq_R
+bounds:633,470,48,65
+acq_R_bib
+bounds:871,889,23,36
+acq_l
+bounds:521,539,49,58
+acq_l_bib
+bounds:660,861,18,30
+acq_l_unq
+bounds:910,937,40,17
+offsets:0,0,40,19
+ampTakl
+bounds:458,3,454,386
+offsets:2,2,456,389
+ampTakl_k
+bounds:2,2,454,387
+offsets:1,2,456,389
+ampverev
+bounds:2,391,517,249
+offsets:1,2,518,251
+ampverev K
+bounds:2,642,517,249
+offsets:1,0,518,251
+cucamat1
+bounds:814,498,49,37
+cucamat2
+bounds:633,432,44,36
+cucamat3
+bounds:572,541,69,56
+offsets:2,4,71,60
+cucamat4
+bounds:697,927,211,99
+dzer arachi 1
+bounds:683,393,69,156
+offsets:2,0,71,156
+dzer arachi 1 stver
+bounds:830,537,99,114
+offsets:6,13,111,134
+dzer arachi 2
+bounds:910,956,40,70
+dzer arachi 3
+bounds:910,867,30,68
+offsets:0,1,30,69
+hangisDzerik
+bounds:830,710,116,59
+hangistDzer_1
+bounds:643,551,44,46
+hangistDzer_2
+bounds:747,559,55,38
+hangistDzer_3
+bounds:521,394,50,32
+hangistDzer_4
+bounds:830,653,104,55
+offsets:1,0,105,55
+hangistDzer_STVER
+bounds:521,837,137,54
+offsets:1,0,140,54
+jan
+bounds:521,599,307,236
+unq 1 R
+bounds:573,409,58,17
+offsets:10,0,72,17
+unq 2 R
+bounds:689,555,56,42
+unq_l_2
+bounds:754,520,58,37
+us
+bounds:871,771,72,94
+offsets:0,0,72,101
+veran acq
+bounds:697,838,172,87
+offsets:0,13,185,110
+vor R
+bounds:521,428,66,107
+vor_L
+bounds:589,448,42,87
+
+Amb+gort spine_2.png
+size:2018,1997
+filter:Linear,Linear
+pma:true
+scale:0.5
+jur/water_0
+bounds:2,1712,502,283
+jur/water_1
+bounds:2,1427,502,283
+jur/water_10
+bounds:506,1712,502,283
+jur/water_11
+bounds:2,1142,502,283
+jur/water_12
+bounds:506,1427,502,283
+jur/water_13
+bounds:1010,1712,502,283
+jur/water_14
+bounds:2,857,502,283
+jur/water_15
+bounds:506,1142,502,283
+jur/water_16
+bounds:1514,1712,502,283
+jur/water_17
+bounds:1010,1427,502,283
+jur/water_18
+bounds:2,572,502,283
+jur/water_19
+bounds:2,287,502,283
+jur/water_2
+bounds:2,2,502,283
+jur/water_20
+bounds:506,857,502,283
+jur/water_21
+bounds:1010,1142,502,283
+jur/water_22
+bounds:1514,1427,502,283
+jur/water_23
+bounds:506,572,502,283
+jur/water_24
+bounds:1010,857,502,283
+jur/water_25
+bounds:1514,1142,502,283
+jur/water_26
+bounds:506,287,502,283
+jur/water_27
+bounds:1010,572,502,283
+jur/water_28
+bounds:1514,857,502,283
+jur/water_29
+bounds:506,2,502,283
+jur/water_3
+bounds:1010,287,502,283
+jur/water_30
+bounds:1514,572,502,283
+jur/water_31
+bounds:1010,2,502,283
+jur/water_32
+bounds:1514,287,502,283
+jur/water_33
+bounds:1514,2,502,283
+
+Amb+gort spine_3.png
+size:2018,1712
+filter:Linear,Linear
+pma:true
+scale:0.5
+jur/water_34
+bounds:2,1427,502,283
+jur/water_35
+bounds:506,1427,502,283
+jur/water_36
+bounds:1010,1427,502,283
+jur/water_37
+bounds:1514,1427,502,283
+jur/water_38
+bounds:2,1142,502,283
+jur/water_39
+bounds:506,1142,502,283
+jur/water_4
+bounds:1010,1142,502,283
+jur/water_40
+bounds:1514,1142,502,283
+jur/water_41
+bounds:2,857,502,283
+jur/water_42
+bounds:506,857,502,283
+jur/water_43
+bounds:1010,857,502,283
+jur/water_44
+bounds:1514,857,502,283
+jur/water_45
+bounds:2,572,502,283
+jur/water_46
+bounds:506,572,502,283
+jur/water_47
+bounds:1010,572,502,283
+jur/water_48
+bounds:1514,572,502,283
+jur/water_49
+bounds:2,287,502,283
+jur/water_5
+bounds:506,287,502,283
+jur/water_50
+bounds:1010,287,502,283
+jur/water_51
+bounds:1514,287,502,283
+jur/water_6
+bounds:2,2,502,283
+jur/water_7
+bounds:506,2,502,283
+jur/water_8
+bounds:1010,2,502,283
+jur/water_9
+bounds:1514,2,502,283
+
+Amb+gort spine_4.png
+size:1178,350
+filter:Linear,Linear
+pma:true
+scale:0.5
+katil/water1_00
+bounds:2,176,292,172
+katil/water1_01
+bounds:296,176,292,172
+katil/water1_02
+bounds:590,176,292,172
+katil/water1_03
+bounds:884,176,292,172
+katil/water1_04
+bounds:2,2,292,172
+katil/water1_05
+bounds:296,2,292,172
+katil/water1_06
+bounds:590,2,292,172
+katil/water1_07
+bounds:884,2,292,172
+
+Amb+gort spine_5.png
+size:1718,1718
+filter:Linear,Linear
+pma:true
+scale:0.5
+kaych atak/Energy 0 Ray Right00
+bounds:2,1289,427,427
+kaych atak/Energy 0 Ray Right01
+bounds:2,860,427,427
+kaych atak/Energy 0 Ray Right02
+bounds:431,1289,427,427
+kaych atak/Energy 0 Ray Right03
+bounds:2,431,427,427
+kaych atak/Energy 0 Ray Right04
+bounds:431,860,427,427
+kaych atak/Energy 0 Ray Right05
+bounds:860,1289,427,427
+kaych atak/Energy 0 Ray Right06
+bounds:2,2,427,427
+kaych atak/Energy 0 Ray Right07
+bounds:431,431,427,427
+kaych atak/Energy 0 Ray Right08
+bounds:860,860,427,427
+kaych atak/Energy 0 Ray Right09
+bounds:1289,1289,427,427
+kaych atak/Energy 0 Ray Right10
+bounds:431,2,427,427
+kaych atak/Energy 0 Ray Right11
+bounds:860,431,427,427
+kaych atak/Energy 0 Ray Right12
+bounds:1289,860,427,427
+kaych atak/Energy 0 Ray Right13
+bounds:860,2,427,427
+kaych atak/Energy 0 Ray Right14
+bounds:1289,431,427,427
+kaych atak/Energy 0 Ray Right15
+bounds:1289,2,427,427
+
+Amb+gort spine_6.png
+size:1718,1718
+filter:Linear,Linear
+pma:true
+scale:0.5
+kaych atak/Energy 0 Ray Right16
+bounds:2,1289,427,427
+kaych atak/Energy 0 Ray Right17
+bounds:2,860,427,427
+kaych atak/Energy 0 Ray Right18
+bounds:431,1289,427,427
+kaych atak/Energy 0 Ray Right19
+bounds:2,431,427,427
+kaych atak/Energy 0 Ray Right20
+bounds:431,860,427,427
+kaych atak/Energy 0 Ray Right21
+bounds:860,1289,427,427
+kaych atak/Energy 0 Ray Right22
+bounds:2,2,427,427
+kaych atak/Energy 0 Ray Right23
+bounds:431,431,427,427
+kaych atak/Energy 0 Ray Right24
+bounds:860,860,427,427
+kaych atak/Energy 0 Ray Right25
+bounds:1289,1289,427,427
+kaych atak/Energy 0 Ray Right26
+bounds:431,2,427,427
+kaych atak/Energy 0 Ray Right27
+bounds:860,431,427,427
+kaych atak/Energy 0 Ray Right28
+bounds:1289,860,427,427
+kaych atak/Energy 0 Ray Right29
+bounds:860,2,427,427
+kaych atak/Energy 0 Ray Right30
+bounds:1289,431,427,427
+kaych atak/Energy 0 Ray Right31
+bounds:1289,2,427,427
+
+Amb+gort spine_7.png
+size:860,431
+filter:Linear,Linear
+pma:true
+scale:0.5
+kaych atak/Energy 0 Ray Right32
+bounds:2,2,427,427
+kaych atak/Energy 0 Ray Right33
+bounds:431,2,427,427

@@ -1,0 +1,460 @@
+kroks spine fayl.png
+size:1953,1953
+filter:Linear,Linear
+pma:true
+scale:0.5
+BG
+bounds:920,227,693,133
+M_T_1
+bounds:1930,1415,12,88
+M_T_2
+bounds:1928,1248,17,99
+ajz_1
+bounds:1841,1245,85,102
+ajz_2
+bounds:1782,680,76,80
+ajz_bib1
+bounds:1930,938,21,41
+ajz_bib2
+bounds:1918,1505,25,49
+ajz_blik1
+bounds:1325,79,72,56
+ajz_blik2
+bounds:1325,79,72,56
+atam
+bounds:728,240,56,100
+benz
+bounds:1059,103,129,122
+chxjik_1
+bounds:1631,1582,208,369
+chxjik_2
+bounds:1631,1131,208,369
+cilindr
+bounds:1308,37,78,40
+cilindr_A
+bounds:1929,1381,19,22
+cilindr_B
+bounds:1918,1556,30,43
+cilindr_C
+bounds:1915,607,29,73
+cilindr_shadow
+bounds:1841,1138,47,105
+detal_brnak_R
+bounds:1325,137,73,88
+detal_mat
+bounds:1836,1073,113,56
+detal_pnt_R
+bounds:1929,1357,17,22
+detal_poqr
+bounds:1890,1148,42,45
+detal_ruyl
+bounds:1869,42,81,40
+offsets:0,3,81,43
+detal_truba
+bounds:1841,1692,95,17
+detal_truba_verev
+bounds:1059,41,63,60
+dinamit
+bounds:1631,680,149,151
+offsets:0,0,150,151
+dinamit_stver
+bounds:1782,762,141,69
+dinamit_tel
+bounds:1841,1585,48,105
+offsets:13,0,66,107
+dzer_L_tel
+bounds:486,11,106,542
+dzer_krok_1
+bounds:1264,50,42,29
+dzer_krok_2
+bounds:1271,104,40,29
+dzer_krok_3
+bounds:1890,1195,59,48
+dzer_krok_4
+bounds:1593,2,124,73
+dzer_krok_detal
+bounds:1535,150,68,75
+dzer_krok_tel
+bounds:1742,84,141,549
+glusitel_L
+bounds:1631,982,203,147
+glusitel_R
+bounds:1631,833,203,147
+jan
+bounds:2,169,482,384
+jxayn_unq
+bounds:786,254,127,86
+kriska
+bounds:447,129,37,38
+krok_Vot_R1
+bounds:1841,1711,97,117
+krok_Vot_R2
+bounds:1841,1405,87,95
+krok_Vot_R3
+bounds:1891,1601,60,89
+krok_dzer_R
+bounds:1124,20,67,59
+krok_glux
+bounds:920,362,602,191
+offsets:0,7,602,198
+krok_kakanj
+bounds:1836,981,112,90
+offsets:5,0,117,90
+krok_qitcak
+bounds:447,96,36,31
+krok_stver1
+bounds:594,73,463,152
+offsets:0,2,463,165
+krok_stver2
+bounds:2,4,443,163
+offsets:3,2,461,173
+krok_tatL
+bounds:1190,135,133,90
+krok_tat_R
+bounds:1400,140,133,85
+krok_tati_stver
+bounds:594,238,132,102
+krok_vorL
+bounds:1841,1830,105,121
+mator
+bounds:1400,63,125,75
+mator_cilindr
+bounds:1742,635,143,43
+mator_tak
+bounds:1742,3,125,79
+pntik
+bounds:1918,735,24,25
+pntik_A
+bounds:1535,96,79,52
+pntik_B
+bounds:1190,81,79,52
+pntik_shadow
+bounds:1836,918,92,61
+poj
+bounds:594,342,324,211
+porshin_L
+bounds:1860,682,56,78
+porshin_R
+bounds:1527,7,64,87
+remen
+bounds:1631,1502,285,78
+slang
+bounds:1631,77,109,601
+slang_stver
+bounds:1925,871,26,45
+tart1
+bounds:1841,1349,86,54
+offsets:0,4,86,62
+tart2
+bounds:1193,31,69,48
+offsets:0,3,69,52
+unq1
+bounds:1524,362,80,90
+offsets:1,1,82,91
+unq2
+bounds:1869,3,70,37
+offsets:0,0,71,37
+unq_tak_L
+bounds:1524,454,82,99
+unq_tak_R
+bounds:1836,841,87,75
+val
+bounds:1885,98,44,38
+val_1
+bounds:1925,770,26,99
+val_2
+bounds:1887,138,26,542
+Группа 1
+bounds:2,555,1627,1396
+
+kroks spine fayl_2.png
+size:1062,418
+filter:Linear,Linear
+pma:true
+scale:0.5
+FX_1/Electricity 008 Impact Up00
+bounds:2,210,263,206
+FX_1/Electricity 008 Impact Up02
+bounds:267,210,263,206
+FX_1/Electricity 008 Impact Up04
+bounds:532,210,263,206
+FX_1/Electricity 008 Impact Up06
+bounds:797,210,263,206
+FX_1/Electricity 008 Impact Up08
+bounds:2,2,263,206
+FX_1/Electricity 008 Impact Up11
+bounds:267,2,263,206
+FX_1/Electricity 008 Impact Up13
+bounds:532,2,263,206
+FX_1/Electricity 008 Impact Up15
+bounds:797,2,263,206
+
+kroks spine fayl_3.png
+size:2034,256
+filter:Linear,Linear
+pma:true
+scale:0.5
+FX_2FAYR/Sparks 016 Impact Explosion Radial1
+bounds:2,2,252,252
+FX_2FAYR/Sparks 016 Impact Explosion Radial2
+bounds:256,2,252,252
+FX_2FAYR/Sparks 016 Impact Explosion Radial3
+bounds:510,2,252,252
+FX_2FAYR/Sparks 016 Impact Explosion Radial4
+bounds:764,2,252,252
+FX_2FAYR/Sparks 016 Impact Explosion Radial5
+bounds:1018,2,252,252
+FX_2FAYR/Sparks 016 Impact Explosion Radial6
+bounds:1272,2,252,252
+FX_2FAYR/Sparks 016 Impact Explosion Radial7
+bounds:1526,2,252,252
+FX_2FAYR/Sparks 016 Impact Explosion Radial8
+bounds:1780,2,252,252
+
+kroks spine fayl_4.png
+size:1707,731
+filter:Linear,Linear
+pma:true
+scale:0.5
+FX_3/Smoke 030 Shot Impact Explosion Up00
+bounds:2,488,339,241
+FX_3/Smoke 030 Shot Impact Explosion Up01
+bounds:343,488,339,241
+FX_3/Smoke 030 Shot Impact Explosion Up02
+bounds:684,488,339,241
+FX_3/Smoke 030 Shot Impact Explosion Up03
+bounds:1025,488,339,241
+FX_3/Smoke 030 Shot Impact Explosion Up04
+bounds:1366,488,339,241
+FX_3/Smoke 030 Shot Impact Explosion Up05
+bounds:2,245,339,241
+FX_3/Smoke 030 Shot Impact Explosion Up06
+bounds:343,245,339,241
+FX_3/Smoke 030 Shot Impact Explosion Up07
+bounds:684,245,339,241
+FX_3/Smoke 030 Shot Impact Explosion Up08
+bounds:1025,245,339,241
+FX_3/Smoke 030 Shot Impact Explosion Up09
+bounds:1366,245,339,241
+FX_3/Smoke 030 Shot Impact Explosion Up10
+bounds:2,2,339,241
+FX_3/Smoke 030 Shot Impact Explosion Up11
+bounds:343,2,339,241
+FX_3/Smoke 030 Shot Impact Explosion Up12
+bounds:684,2,339,241
+FX_3/Smoke 030 Shot Impact Explosion Up13
+bounds:1025,2,339,241
+FX_3/Smoke 030 Shot Impact Explosion Up14
+bounds:1025,2,339,241
+
+kroks spine fayl_5.png
+size:1987,796
+filter:Linear,Linear
+pma:true
+scale:0.5
+FX_S/Energy 036 Ray Right0
+bounds:2,399,395,395
+FX_S/Energy 036 Ray Right1
+bounds:399,399,395,395
+FX_S/Energy 036 Ray Right2
+bounds:796,399,395,395
+FX_S/Energy 036 Ray Right3
+bounds:1193,399,395,395
+FX_S/Energy 036 Ray Right4
+bounds:1590,399,395,395
+FX_S/Energy 036 Ray Right5
+bounds:2,2,395,395
+FX_S/Energy 036 Ray Right6
+bounds:399,2,395,395
+FX_S/Energy 036 Ray Right7
+bounds:796,2,395,395
+FX_S/Energy 036 Ray Right8
+bounds:1193,2,395,395
+FX_S/Energy 036 Ray Right9
+bounds:1590,2,395,395
+
+kroks spine fayl_6.png
+size:1667,1667
+filter:Linear,Linear
+pma:true
+scale:0.5
+FX_qami/Smoke 057 Impact Ray Explosion Up00
+bounds:2,1334,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up01
+bounds:335,1334,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up02
+bounds:668,1334,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up03
+bounds:1001,1334,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up04
+bounds:1334,1334,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up05
+bounds:2,1001,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up06
+bounds:335,1001,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up07
+bounds:668,1001,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up08
+bounds:1001,1001,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up09
+bounds:1334,1001,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up10
+bounds:2,668,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up11
+bounds:335,668,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up12
+bounds:668,668,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up13
+bounds:1001,668,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up14
+bounds:1334,668,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up15
+bounds:2,335,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up16
+bounds:335,335,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up17
+bounds:668,335,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up18
+bounds:1001,335,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up19
+bounds:1334,335,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up20
+bounds:2,2,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up21
+bounds:335,2,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up22
+bounds:668,2,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up23
+bounds:1001,2,331,331
+FX_qami/Smoke 057 Impact Ray Explosion Up24
+bounds:1334,2,331,331
+
+kroks spine fayl_7.png
+size:1501,894
+filter:Linear,Linear
+pma:true
+scale:0.5
+FX_sped F/Energy 105 Ray Left Loop00
+bounds:2,619,168,273
+offsets:96,79,385,385
+FX_sped F/Energy 105 Ray Left Loop01
+bounds:655,611,182,281
+offsets:96,72,385,385
+FX_sped F/Energy 105 Ray Left Loop02
+bounds:480,14,187,301
+offsets:93,55,385,385
+FX_sped F/Energy 105 Ray Left Loop03
+bounds:850,8,189,302
+offsets:92,55,385,385
+FX_sped F/Energy 105 Ray Left Loop04
+bounds:669,11,179,301
+offsets:103,55,385,385
+FX_sped F/Energy 105 Ray Left Loop05
+bounds:1041,6,171,302
+offsets:108,53,385,385
+FX_sped F/Energy 105 Ray Left Loop06
+bounds:156,23,162,300
+offsets:107,53,385,385
+FX_sped F/Energy 105 Ray Left Loop07
+bounds:2,28,152,302
+offsets:106,56,385,385
+FX_sped F/Energy 105 Ray Left Loop08
+bounds:1180,609,162,283
+offsets:101,75,385,385
+FX_sped F/Energy 105 Ray Left Loop09
+bounds:669,316,170,293
+offsets:98,69,385,385
+FX_sped F/Energy 105 Ray Left Loop10
+bounds:320,16,158,304
+offsets:105,61,385,385
+FX_sped F/Energy 105 Ray Left Loop11
+bounds:1214,2,168,306
+offsets:102,57,385,385
+FX_sped F/Energy 105 Ray Left Loop12
+bounds:490,317,177,292
+offsets:96,68,385,385
+FX_sped F/Energy 105 Ray Left Loop13
+bounds:157,325,180,289
+offsets:96,64,385,385
+FX_sped F/Energy 105 Ray Left Loop14
+bounds:841,314,177,295
+offsets:101,55,385,385
+FX_sped F/Energy 105 Ray Left Loop15
+bounds:1020,312,178,295
+offsets:105,55,385,385
+FX_sped F/Energy 105 Ray Left Loop16
+bounds:339,322,149,290
+offsets:132,61,385,385
+FX_sped F/Energy 105 Ray Left Loop17
+bounds:839,611,167,281
+offsets:115,71,385,385
+FX_sped F/Energy 105 Ray Left Loop18
+bounds:340,614,160,278
+offsets:125,70,385,385
+FX_sped F/Energy 105 Ray Left Loop19
+bounds:172,616,166,276
+offsets:119,70,385,385
+FX_sped F/Energy 105 Ray Left Loop20
+bounds:502,614,151,278
+offsets:133,69,385,385
+FX_sped F/Energy 105 Ray Left Loop21
+bounds:1344,607,155,285
+offsets:123,71,385,385
+FX_sped F/Energy 105 Ray Left Loop22
+bounds:2,332,153,285
+offsets:117,72,385,385
+FX_sped F/Energy 105 Ray Left Loop23
+bounds:1008,611,170,281
+offsets:101,72,385,385
+FX_sped F/Energy 105 Ray Left Loop24
+bounds:1200,310,168,295
+offsets:107,66,385,385
+
+kroks spine fayl_8.png
+size:554,923
+filter:Linear,Linear
+pma:true
+scale:0.5
+Smoke/Smoke0
+bounds:2,2,46,9
+offsets:112,23,274,89
+Smoke/Smoke1
+bounds:2,832,274,89
+Smoke/Smoke10
+bounds:278,832,274,89
+Smoke/Smoke11
+bounds:278,741,274,89
+Smoke/Smoke12
+bounds:2,741,274,89
+Smoke/Smoke13
+bounds:2,650,274,89
+Smoke/Smoke14
+bounds:278,650,274,89
+Smoke/Smoke15
+bounds:278,559,274,89
+Smoke/Smoke16
+bounds:2,559,274,89
+Smoke/Smoke17
+bounds:2,468,274,89
+Smoke/Smoke18
+bounds:278,468,274,89
+Smoke/Smoke19
+bounds:278,377,274,89
+Smoke/Smoke2
+bounds:2,377,274,89
+Smoke/Smoke20
+bounds:2,286,274,89
+Smoke/Smoke3
+bounds:278,286,274,89
+Smoke/Smoke4
+bounds:278,195,274,89
+Smoke/Smoke5
+bounds:2,195,274,89
+Smoke/Smoke6
+bounds:2,104,274,89
+Smoke/Smoke7
+bounds:278,104,274,89
+Smoke/Smoke8
+bounds:278,13,274,89
+Smoke/Smoke9
+bounds:2,13,274,89

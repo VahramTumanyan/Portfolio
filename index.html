@@ -1,159 +1,194 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#10151c" />
-  <title>Vahram Tumanyan — 2D Artist & Animator</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#141017">
+  <title>Vahram Tumanyan — 2D Artist & Spine Animator</title>
+  <meta name="description" content="Vahram Tumanyan — 2D artist, concept artist, illustrator and Spine animator. Interactive portfolio.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Rubik:wght@500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@4.3.13/dist/spine-player.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="noise"></div>
+  <div class="paper-noise"></div>
+  <div class="sky-blob blob-a"></div>
+  <div class="sky-blob blob-b"></div>
 
   <header class="topbar">
-    <a class="brand" href="#top">
-      <span class="brand-mark">VT</span>
-      <span><b>VAHRAM TUMANYAN</b><small>2D Artist · Animator · Spine</small></span>
+    <a class="brand" href="#top" aria-label="Vahram Tumanyan portfolio">
+      <span class="brand-badge">VT</span>
+      <span class="brand-copy"><b>VAHRAM TUMANYAN</b><small>2D ARTIST · SPINE ANIMATOR</small></span>
     </a>
     <nav>
-      <a href="#works">Works</a>
-      <a href="#about">About</a>
-      <a class="behance-btn" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">Behance ↗</a>
+      <a href="#works">WORKS</a>
+      <a href="#about">ABOUT</a>
+      <a class="behance-top" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">BEHANCE ↗</a>
     </nav>
   </header>
 
   <main id="top">
     <section class="hero">
-      <div class="hero-bg"></div>
-      <div class="hero-shade"></div>
+      <div class="hero-art"></div>
+      <div class="hero-vignette"></div>
       <div class="hero-copy">
-        <span class="eyebrow">2D ART · BACKGROUNDS · SPINE ANIMATION</span>
-        <h1>I build worlds<br><em>that move.</em></h1>
-        <p>Фоны для игр и кино, персонажи и интерактивная 2D-анимация. Этот сайт — тоже маленькая сцена.</p>
-        <div class="hero-actions">
-          <a class="primary" href="#works">Смотреть работы</a>
-          <a class="secondary" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">Открыть Behance</a>
+        <span class="kicker">CHARACTERS · ENVIRONMENT · SPINE</span>
+        <h1>Я рисую миры,<br><span>которые оживают.</span></h1>
+        <p>2D персонажи, игровые фоны и Spine-анимация. Здесь можно не только посмотреть мои работы, но и прямо на сайте включить мои реальные Spine-анимации.</p>
+        <div class="hero-buttons">
+          <a class="cartoon-btn primary" href="#works">Смотреть работы</a>
+          <a class="cartoon-btn ghost" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">Behance</a>
         </div>
       </div>
 
-      <aside class="spine-panel" aria-label="Spine animation controls">
-        <div class="panel-head">
-          <div><span class="bolt">⚡</span><b>Персонажи</b></div>
-          <label class="switch global-switch" title="Включить/выключить всех персонажей">
+      <aside class="control-panel" aria-label="Interactive Spine characters">
+        <div class="panel-title-row">
+          <div class="panel-title"><span class="bolt">⚡</span><span><b>Персонажи</b><small>Interactive Spine</small></span></div>
+          <label class="mini-switch global" title="Включить / выключить всех">
             <input id="allToggle" type="checkbox" checked>
-            <span class="slider"><span class="state on-label">Вкл</span><span class="state off-label">Выкл</span></span>
+            <span class="track"><span class="knob"></span></span>
           </label>
         </div>
 
-        <div class="character-card open" data-character="fly">
-          <div class="character-row">
-            <div class="char-icon fly-face">🪰</div>
-            <div class="char-name"><b>Муха</b><small>Interactive Spine</small></div>
-            <label class="switch char-switch">
-              <input type="checkbox" checked>
-              <span class="slider"></span>
+        <div class="char-card open" data-character="fly">
+          <div class="char-head">
+            <img class="char-avatar" src="https://mir-s3-cdn-cf.behance.net/projects/404/f5b125252415279.Y3JvcCwyMzM0LDE4MjYsMzQxNSwxMDIy.png" alt="Fly">
+            <div class="char-meta"><b>Муха</b><small>кликни по мухе → fire</small></div>
+            <label class="mini-switch">
+              <input class="char-toggle" type="checkbox" checked>
+              <span class="track"><span class="knob"></span></span>
             </label>
-            <button class="chev" aria-label="Развернуть">⌄</button>
+            <button class="fold" type="button" aria-label="Открыть список">⌄</button>
           </div>
-          <div class="anim-list">
-            <button class="anim active" data-anim="auto">▶ <span>Auto</span></button>
-            <button class="anim" data-anim="flies">▶ <span>flies</span></button>
-            <button class="anim" data-anim="flies_Run">▶ <span>flies_Run</span></button>
-            <button class="anim" data-anim="fire">▶ <span>fire</span></button>
-            <button class="anim" data-anim="Rig_View">▶ <span>Rig View</span></button>
+          <div class="anim-menu">
+            <button class="anim-btn active" data-mode="auto">▶ <span>Auto</span></button>
+            <button class="anim-btn" data-mode="flies">▶ <span>flies</span></button>
+            <button class="anim-btn" data-mode="flies_Run">▶ <span>flies_Run</span></button>
+            <button class="anim-btn" data-mode="fire">▶ <span>fire</span></button>
+            <button class="anim-btn" data-mode="Rig_View">▶ <span>Rig View</span></button>
           </div>
         </div>
 
-        <div class="character-card" data-character="croc">
-          <div class="character-row">
-            <div class="char-icon">🐊</div>
-            <div class="char-name"><b>Крокодил</b><small>Spine showcase</small></div>
-            <label class="switch char-switch">
-              <input type="checkbox">
-              <span class="slider"></span>
+        <div class="char-card" data-character="frog">
+          <div class="char-head">
+            <img class="char-avatar" src="https://mir-s3-cdn-cf.behance.net/projects/404/958e83179400911.Y3JvcCwyODIxLDIyMDYsMCw2.png" alt="Frog">
+            <div class="char-meta"><b>Лягушка</b><small>появится → выстрелит → исчезнет</small></div>
+            <label class="mini-switch">
+              <input class="char-toggle" type="checkbox">
+              <span class="track"><span class="knob"></span></span>
             </label>
-            <button class="chev" aria-label="Развернуть">⌄</button>
+            <button class="fold" type="button" aria-label="Открыть список">⌄</button>
           </div>
-          <div class="anim-list">
-            <button class="anim active">▶ <span>Auto</span></button>
-            <button class="anim">▶ <span>Animation</span></button>
-            <button class="anim">▶ <span>Rig View</span></button>
+          <div class="anim-menu">
+            <button class="anim-btn active" data-mode="fire">▶ <span>fire</span></button>
+            <button class="anim-btn" data-mode="Rig_View">▶ <span>Rig View</span></button>
           </div>
         </div>
 
-        <div class="character-card" data-character="frog">
-          <div class="character-row">
-            <div class="char-icon">🐸</div>
-            <div class="char-name"><b>Лягушка</b><small>Spine showcase</small></div>
-            <label class="switch char-switch">
-              <input type="checkbox">
-              <span class="slider"></span>
+        <div class="char-card" data-character="croc">
+          <div class="char-head">
+            <img class="char-avatar" src="https://mir-s3-cdn-cf.behance.net/projects/404/61f771227043203.Y3JvcCwxOTgxLDE1NTAsMCww.png" alt="Crocodile">
+            <div class="char-meta"><b>Крокодил</b><small>start → running → Happy</small></div>
+            <label class="mini-switch">
+              <input class="char-toggle" type="checkbox">
+              <span class="track"><span class="knob"></span></span>
             </label>
-            <button class="chev" aria-label="Развернуть">⌄</button>
+            <button class="fold" type="button" aria-label="Открыть список">⌄</button>
           </div>
-          <div class="anim-list">
-            <button class="anim active">▶ <span>Auto</span></button>
-            <button class="anim">▶ <span>Attack</span></button>
-            <button class="anim">▶ <span>Rig View</span></button>
+          <div class="anim-menu">
+            <button class="anim-btn active" data-mode="auto">▶ <span>Auto</span></button>
+            <button class="anim-btn" data-mode="start">▶ <span>start</span></button>
+            <button class="anim-btn" data-mode="running">▶ <span>running</span></button>
+            <button class="anim-btn" data-mode="Happy_1">▶ <span>Happy_1</span></button>
+            <button class="anim-btn" data-mode="Happy_2">▶ <span>Happy_2</span></button>
+            <button class="anim-btn" data-mode="Rig_View">▶ <span>Rig View</span></button>
           </div>
         </div>
-        <div class="panel-note">Тестовый интерфейс. Spine-файлы подключим следующим шагом.</div>
+
+        <div class="panel-status"><i></i><span id="runtimeStatus">Spine 4.3 · loading…</span></div>
       </aside>
 
-      <div id="characterStage" class="character-stage" aria-hidden="true">
-        <div id="flyDemo" class="demo fly-demo">🪰</div>
-        <img id="crocDemo" class="demo art-demo" src="assets/croc.png" alt="">
-        <img id="frogDemo" class="demo art-demo" src="assets/frog.png" alt="">
+      <div id="stage" class="stage">
+        <div id="flyActor" class="actor fly-actor active" title="Кликни — муха выстрелит">
+          <div id="flyPlayer" class="spine-host"></div>
+          <div class="click-hint">CLICK!</div>
+        </div>
+        <div id="frogActor" class="actor frog-actor">
+          <div id="frogPlayer" class="spine-host"></div>
+        </div>
+        <div id="crocActor" class="actor croc-actor">
+          <div id="crocPlayer" class="spine-host"></div>
+        </div>
       </div>
 
-      <div class="scroll-hint">SCROLL <span>↓</span></div>
+      <div class="scroll-sticker">↓ WORKS</div>
     </section>
 
-    <section class="works" id="works">
-      <div class="section-title">
-        <span>SELECTED WORK</span>
-        <h2>Мои миры и персонажи</h2>
-        <p>Пока карточки ведут на общий Behance. Потом подставим точные ссылки на каждую работу.</p>
+    <section id="works" class="works">
+      <div class="section-head">
+        <div><span class="kicker">SELECTED WORK</span><h2>Мои работы</h2></div>
+        <a class="cartoon-btn ghost small" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">Все на Behance ↗</a>
       </div>
 
       <div class="work-grid">
-        <a class="work-card wide" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">
-          <img src="assets/showcase.png" alt="Game art showcase">
-          <span class="tag">GAME ART</span><div><h3>Stylized Game Worlds</h3><p>Background · UI · Characters</p></div>
+        <a class="work-card featured" target="_blank" rel="noopener" href="https://www.behance.net/gallery/142574327/spine-animation-2d-Environment-Art">
+          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/ab37e3142574327.Y3JvcCwyOTQ2LDIzMDQsNTc2LDEzMQ.jpg" alt="Spine animation 2d Environment Art">
+          <div class="work-info"><span>SPINE · ENVIRONMENT</span><h3>Spine Animation + 2D Environment Art</h3></div>
         </a>
-        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">
-          <img src="assets/hero-art.png" alt="Forest slot game art">
-          <span class="tag">2D ART</span><div><h3>Forest Game Concept</h3><p>Symbols · Environment</p></div>
+        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/gallery/227043203/Flying-crocodile">
+          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/61f771227043203.Y3JvcCwxOTgxLDE1NTAsMCww.png" alt="Flying crocodile">
+          <div class="work-info"><span>SPINE CHARACTER</span><h3>Flying Crocodile</h3></div>
         </a>
-        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">
-          <img src="assets/symbols.png" alt="Symbols">
-          <span class="tag">CHARACTERS</span><div><h3>Character & Symbol Design</h3><p>Stylized 2D</p></div>
+        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/gallery/179400911/Spine-2D-CHARACTER-ANIMATIONS-frog-on-a-cloud">
+          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/958e83179400911.Y3JvcCwyODIxLDIyMDYsMCw2.png" alt="Frog on a cloud">
+          <div class="work-info"><span>SPINE CHARACTER</span><h3>Frog on a Cloud</h3></div>
         </a>
-        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">
-          <img src="assets/dark-forest.png" alt="Dark forest background">
-          <span class="tag">BACKGROUND</span><div><h3>Environment Painting</h3><p>Games · Film</p></div>
+        <a class="work-card tall" target="_blank" rel="noopener" href="https://www.behance.net/gallery/218300215/cartoon-bird-of-prey">
+          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/62f576218300215.Y3JvcCwxMTY5LDkxNCw2MywyMjI.png" alt="Cartoon bird of prey">
+          <div class="work-info"><span>CHARACTER DESIGN</span><h3>Cartoon Bird of Prey</h3></div>
         </a>
-        <a class="work-card wide" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">
-          <img src="assets/rig-breakdown.png" alt="Rig breakdown">
-          <span class="tag">SPINE</span><div><h3>Rig View / Breakdown</h3><p>How the character is built</p></div>
+        <a class="work-card wide" target="_blank" rel="noopener" href="https://www.behance.net/gallery/230209447/background-games-THUMBNAILSAI">
+          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/a8fcd4230209447.Y3JvcCwxNzY4LDEzODMsMTE2NCwzOQ.png" alt="Game backgrounds">
+          <div class="work-info"><span>BACKGROUND ART</span><h3>Background Games</h3></div>
+        </a>
+        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/gallery/175945285/2D-games-ENVIRONMENT-DESIGN-Character-Design-skech">
+          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/fc32b8175945285.Y3JvcCwzODk0LDMwNDYsMCww.jpg" alt="2D game environment design">
+          <div class="work-info"><span>ENVIRONMENT</span><h3>2D Game Environment</h3></div>
+        </a>
+        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/gallery/177035915/Spine-2D-CHARACTER-ANIMATIONS-Dieselpunk-beetle">
+          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/97f28f177035915.Y3JvcCwyNDc4LDE5MzksNjcsMA.png" alt="Dieselpunk beetle">
+          <div class="work-info"><span>SPINE</span><h3>Dieselpunk Beetle</h3></div>
+        </a>
+        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/gallery/138330639/Environment-Art-Character-Design">
+          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/eaf5ab138330639.Y3JvcCwzODIxLDI5ODgsMzc4LDEzMg.jpg" alt="Environment Art Character Design">
+          <div class="work-info"><span>CONCEPT ART</span><h3>Environment + Character Design</h3></div>
+        </a>
+        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/gallery/252415279/Cartoon-Fly">
+          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/f5b125252415279.Y3JvcCwyMzM0LDE4MjYsMzQxNSwxMDIy.png" alt="Cartoon Fly">
+          <div class="work-info"><span>CHARACTER</span><h3>Cartoon Fly</h3></div>
+        </a>
+        <a class="work-card" target="_blank" rel="noopener" href="https://www.behance.net/gallery/227761179/it-caught-the-snake">
+          <img src="https://mir-s3-cdn-cf.behance.net/projects/404/5b2d7f227761179.Y3JvcCwxOTIwLDE1MDEsMCww.png" alt="It caught the snake">
+          <div class="work-info"><span>ILLUSTRATION</span><h3>It Caught the Snake</h3></div>
         </a>
       </div>
     </section>
 
-    <section class="about" id="about">
-      <div>
-        <span class="eyebrow">ABOUT</span>
-        <h2>2D Artist & Animator</h2>
+    <section id="about" class="about">
+      <div class="about-card">
+        <span class="kicker">ABOUT ME</span>
+        <h2>2D Artist · Concept Artist · Spine Animator</h2>
+        <p>Я создаю персонажей, игровые и кинематографические фоны и 2D-анимацию. На этой странице интерактивные персонажи используют мои реальные экспортированные Spine-файлы — не GIF и не подмена CSS-анимацией.</p>
+        <a class="cartoon-btn primary" target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">Открыть Behance ↗</a>
       </div>
-      <p>Я создаю игровые и кинематографические фоны, стилизованных персонажей и Spine-анимации. Мне важно показывать не только готовый кадр, но и то, как он собран и оживает.</p>
-      <a target="_blank" rel="noopener" href="https://www.behance.net/vahramtumanyan?locale=ru_RU">Все работы на Behance ↗</a>
     </section>
   </main>
 
-  <footer>© 2026 Vahram Tumanyan · Portfolio prototype v1</footer>
+  <footer>© 2026 Vahram Tumanyan · Interactive portfolio</footer>
+
+  <script src="https://unpkg.com/@esotericsoftware/spine-player@4.3.13/dist/iife/spine-player.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
