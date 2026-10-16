@@ -276,3 +276,311 @@ button,a{font:inherit}.app{height:100vh;display:flex;flex-direction:column}.topb
   border-radius:999px;
   background:linear-gradient(90deg,rgba(49,168,255,0),rgba(117,226,255,.8));
 }
+
+/* ============================================================
+   CARTOON PHOTOSHOP V3
+   More playful, bigger, chunkier, still Photoshop-inspired.
+   ============================================================ */
+
+:root{
+  --toon-yellow:#ffd447;
+  --toon-blue:#31a8ff;
+  --toon-ink:#121212;
+  --toon-panel:#2c2d31;
+  --toon-panel2:#34363b;
+  --toon-line:#0c0c0c;
+}
+
+body{
+  background:#17181b;
+  font-size:16px;
+}
+
+.topbar{
+  height:72px !important;
+  background:linear-gradient(#2b2c30,#232428) !important;
+  border-bottom:3px solid #0b0b0c !important;
+  box-shadow:0 3px 0 rgba(255,255,255,.03);
+}
+
+.brand{
+  position:relative;
+  width:54px !important;
+  height:48px !important;
+  border-radius:8px !important;
+  transform:rotate(-2deg);
+  box-shadow:3px 3px 0 #0b0b0c;
+}
+.brand span{
+  font-size:20px;
+  font-weight:900;
+}
+.brand i{
+  position:absolute;
+  right:-13px;
+  top:-8px;
+  font-style:normal;
+  background:var(--toon-yellow);
+  color:#111;
+  border:2px solid #111;
+  border-radius:999px;
+  font-size:8px;
+  font-weight:900;
+  padding:3px 5px;
+  transform:rotate(10deg);
+}
+
+.menu button{
+  font-size:18px !important;
+  font-weight:700;
+  padding:0 16px !important;
+}
+.menu button:hover{
+  background:#3a3d43 !important;
+  color:#fff;
+}
+
+.work-area{
+  grid-template-columns:82px minmax(0,1fr) 470px !important;
+}
+
+.toolbar{
+  background:#26272b !important;
+  border-right:3px solid #0d0d0e !important;
+  padding:11px 9px !important;
+  gap:8px !important;
+}
+.toolbar button{
+  width:60px !important;
+  height:58px !important;
+  font-size:24px !important;
+  border:2px solid transparent !important;
+  border-radius:9px !important;
+}
+.toolbar button:hover{
+  border-color:#141414 !important;
+  background:#3e4147 !important;
+  transform:translateY(-1px);
+  box-shadow:3px 3px 0 #111;
+}
+
+.doc-tabs{
+  height:76px !important;
+  background:#202125 !important;
+  border-bottom:3px solid #0c0c0d !important;
+  padding-top:8px;
+}
+.doc-tab{
+  height:66px !important;
+  min-width:250px !important;
+  font-size:18px !important;
+  font-weight:800 !important;
+  border-right:2px solid #111 !important;
+  border-top:2px solid #444 !important;
+  border-radius:10px 10px 0 0 !important;
+  padding:0 22px !important;
+  margin-right:4px;
+  transform-origin:bottom center;
+}
+.doc-tab:hover{
+  transform:translateY(-3px);
+}
+.doc-tab.active{
+  background:#3b3d43 !important;
+  box-shadow:inset 0 -5px var(--toon-blue),0 -3px 0 rgba(255,255,255,.03) !important;
+  color:#fff !important;
+}
+
+.home-canvas{
+  border:4px solid #101010 !important;
+  border-radius:18px !important;
+  overflow:hidden !important;
+  box-shadow:10px 12px 0 #101010,0 18px 45px rgba(0,0,0,.45) !important;
+}
+.home-copy.cartoon-copy{
+  background:rgba(20,22,28,.52);
+  border:2px solid rgba(255,255,255,.13);
+  border-radius:20px;
+  padding:24px 26px 26px;
+  backdrop-filter:blur(4px);
+}
+.home-copy h1{
+  font-size:clamp(72px,8vw,126px) !important;
+  text-shadow:4px 4px 0 rgba(0,0,0,.32) !important;
+  transform:rotate(-1deg);
+}
+.home-copy h2{
+  color:#fff7d1;
+}
+.home-copy .primary{
+  background:var(--toon-yellow) !important;
+  color:#111 !important;
+  border:3px solid #111 !important;
+  border-radius:12px !important;
+  box-shadow:5px 5px 0 #111 !important;
+  font-size:16px;
+}
+.home-copy .primary:hover{
+  transform:translate(2px,2px);
+  box-shadow:3px 3px 0 #111 !important;
+}
+.scribble-arrow{
+  display:inline-block;
+  color:var(--toon-yellow);
+  font:900 34px Kalam,cursive;
+  transform:rotate(13deg);
+  margin-left:12px;
+}
+.hero-note{
+  position:absolute;
+  right:24px;
+  top:20px;
+  background:#fff3b0;
+  color:#191919;
+  border:3px solid #171717;
+  border-radius:6px;
+  padding:10px 13px;
+  font:700 14px Kalam,cursive;
+  box-shadow:5px 5px 0 #141414;
+  transform:rotate(3deg);
+}
+
+.rightbar{
+  background:#28292e !important;
+  border-left:3px solid #0d0d0e !important;
+}
+.right-tabs{
+  height:66px !important;
+}
+.right-tabs button{
+  font-size:16px !important;
+  font-weight:800;
+}
+.right-tabs button.active{
+  box-shadow:inset 0 -5px var(--toon-blue) !important;
+}
+
+.cartoon-layers-title{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  padding:16px 18px !important;
+  background:#303238;
+}
+.cartoon-layers-title>div{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.layer-sticker{
+  background:var(--toon-yellow);
+  color:#111;
+  border:3px solid #111;
+  border-radius:50%;
+  width:58px;
+  height:58px;
+  display:grid;
+  place-items:center;
+  font:900 15px Kalam,cursive;
+  transform:rotate(8deg);
+  box-shadow:4px 4px 0 #111;
+}
+
+.layers-list{
+  padding:14px !important;
+}
+.layer-card{
+  border:3px solid #151515 !important;
+  border-radius:14px !important;
+  margin-bottom:16px !important;
+  background:#34363c !important;
+  box-shadow:5px 6px 0 #151515 !important;
+  overflow:hidden;
+}
+.layer-card:hover{
+  transform:translate(-2px,-2px) !important;
+  box-shadow:7px 8px 0 #111 !important;
+  border-color:var(--toon-blue) !important;
+}
+.layer-card.active{
+  border-color:var(--toon-blue) !important;
+  box-shadow:0 0 0 3px rgba(49,168,255,.25),6px 7px 0 #111 !important;
+}
+.layer-thumb{
+  border-radius:10px !important;
+}
+.layer-copy h3{
+  font-size:18px !important;
+  font-weight:900 !important;
+}
+.layer-copy p{
+  font-size:12px !important;
+}
+
+.project-stage-shell{
+  border:4px solid #111 !important;
+  border-radius:16px !important;
+  overflow:hidden;
+  box-shadow:8px 10px 0 #111;
+}
+.stage-header{
+  min-height:88px !important;
+  background:#303238 !important;
+}
+.stage-header b{
+  font-size:22px !important;
+}
+.stage-actions button,.behance-link{
+  border:2px solid #111 !important;
+  border-radius:9px !important;
+  box-shadow:3px 3px 0 #111;
+  font-weight:700;
+}
+.stage-actions button:hover,.behance-link:hover{
+  transform:translate(1px,1px);
+  box-shadow:2px 2px 0 #111;
+}
+
+.about-left,.about-right{
+  border:3px solid #111 !important;
+  border-radius:16px !important;
+  box-shadow:6px 7px 0 #111;
+}
+.info-panel{
+  border:2px solid #111 !important;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.status{
+  height:38px !important;
+  border-top:3px solid #0e0e0f !important;
+}
+
+/* Spine fly slightly bigger for this version */
+.spine-fly-wrap{
+  width:250px !important;
+  height:190px !important;
+}
+
+/* little cartoon wobble on some UI */
+.layer-sticker,
+.hero-note,
+.brand{
+  transition:transform .2s ease;
+}
+.layer-sticker:hover{
+  transform:rotate(-5deg) scale(1.05);
+}
+.hero-note:hover{
+  transform:rotate(-2deg) scale(1.03);
+}
+
+@media(max-width:1200px){
+  .work-area{grid-template-columns:70px minmax(0,1fr) 380px !important}
+  .doc-tab{min-width:220px !important}
+}
+@media(max-width:850px){
+  .work-area{grid-template-columns:1fr !important}
+  .rightbar{height:560px !important}
+}
