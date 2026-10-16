@@ -138,111 +138,190 @@ stage.addEventListener('touchmove',e=>{
 
 window.addEventListener('resize',()=>{if(currentProject>=0) resetView(false)});
 
-/* creatures — single improved upright fly */
+
+/* spine fly */
 const speech=document.getElementById('speech');
-const fly=document.getElementById('portfolioFly');
+const flyWrap=document.getElementById('spineFlyWrap');
+const flyPlayerEl=document.getElementById('spineFlyPlayer');
 
 const flyLines=[
   'Bzz! Vahram draws really cool characters 😎',
-  'Big green eyes approved! 👀',
-  'Check out his Behance — lots of art 🎨',
-  'Character design? He knows his stuff ✨',
-  'I am the portfolio inspector. Looks good ✅',
-  'He makes concepts, animation and game art 🔥',
-  'Bzzzz… this artist has imagination!',
-  'I refuse to fly upside-down now 😂'
+  'This fly is now your real Spine animation 🎬',
+  'Idle… run… fire! 🎯',
+  'Check Vahram\'s Behance — lots of creative art 🎨',
+  'Cursor too close? I run. Cursor touches? I fire! 🔥',
+  'Spine 4.3 animation connected successfully ✅'
 ];
 
+let flyPlayer=null;
+let flyReady=false;
+let currentFlyAnim='';
+let fireCooldownUntil=0;
+let forcedRunUntil=0;
+let mx=-999,my=-999;
+let fx=innerWidth*.62, fy=innerHeight*.67;
+let tx=fx, ty=fy;
+let nextMove=0, restUntil=0;
+
 function sayFly(message){
-  if(!fly || !speech) return;
-  const r=fly.getBoundingClientRect();
+  if(!flyWrap || !speech) return;
+  const r=flyWrap.getBoundingClientRect();
   speech.textContent=message || flyLines[Math.floor(Math.random()*flyLines.length)];
-  speech.style.left=Math.max(8,Math.min(innerWidth-280,r.left+r.width*.62))+'px';
+  speech.style.left=Math.max(8,Math.min(innerWidth-310,r.left+r.width*.6))+'px';
   speech.style.top=Math.max(8,r.top-46)+'px';
   speech.classList.add('show');
   clearTimeout(window.__flySpeech);
   window.__flySpeech=setTimeout(()=>speech.classList.remove('show'),1800);
 }
 
-let mx=-999,my=-999;
-addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
-
-let fx=innerWidth*.62;
-let fy=innerHeight*.67;
-let tx=fx,ty=fy;
-let nextMove=0;
-let restUntil=0;
-
-function newFlyTarget(){
-  tx=50+Math.random()*Math.max(100,innerWidth-120);
-  // mostly lower/middle part of the page
-  ty=innerHeight*(.44+Math.random()*.40);
+function setFlyAnim(name, loop=true, force=false){
+  if(!flyReady || !flyPlayer) return;
+  if(!force && currentFlyAnim===name) return;
+  currentFlyAnim=name;
+  flyWrap.classList.toggle('is-running', name==='run');
+  flyWrap.classList.toggle('is-firing', name==='fire');
+  try{
+    if(name==='fire'){
+      flyPlayer.animationState.setAnimation(0, 'fire', false);
+      flyPlayer.animationState.addAnimation(0, 'run', true, 0);
+    }else{
+      flyPlayer.setAnimation(name, loop);
+    }
+  }catch(err){
+    console.warn('Spine animation change failed', err);
+  }
 }
 
+function faceTarget(x){
+  if(!flyWrap) return;
+  if(x < fx) {
+    flyWrap.classList.add('face-left');
+    flyWrap.classList.remove('face-right');
+  } else {
+    flyWrap.classList.add('face-right');
+    flyWrap.classList.remove('face-left');
+  }
+}
+
+function newFlyTarget(){
+  tx=55 + Math.random()*Math.max(120, innerWidth-130);
+  ty=innerHeight*(.44 + Math.random()*.40);
+}
 newFlyTarget();
 
-if(fly){
-  fly.addEventListener('click',()=>{
-    sayFly();
-    tx=50+Math.random()*Math.max(100,innerWidth-120);
-    ty=innerHeight*(.45+Math.random()*.38);
-  });
+function initSpineFly(){
+  if(!window.spine || !flyPlayerEl) return;
+  try{
+    flyPlayer = new spine.SpinePlayer('spineFlyPlayer', {
+      skeleton: 'assets/spine/jeko_spine_final.json',
+      atlas: 'assets/spine/jeko_spine_final.atlas',
+      animation: 'idle',
+      scale: 0.5,
+      premultipliedAlpha: true,
+      alpha: true,
+      showControls: false,
+      interactive: false,
+      backgroundColor: '#00000000',
+      defaultMix: 0.12,
+      success: function(player){
+        flyReady=true;
+        currentFlyAnim='idle';
+        faceTarget(tx);
+        try{ player.setAnimation('idle', true); }catch(e){}
+        setTimeout(()=>sayFly('Your Spine fly is connected 😎'), 700);
+      },
+      error: function(player, reason){
+        console.error('Spine fly error:', reason);
+        sayFly('Spine loading error 😥');
+      }
+    });
+  }catch(err){
+    console.error('Failed to initialize Spine fly', err);
+  }
+}
 
-  fly.addEventListener('mouseenter',()=>{
-    if(Math.random()>.22) sayFly();
+addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+});
+
+if(flyWrap){
+  flyWrap.addEventListener('mouseenter',()=>{
+    if(Math.random()>.2) sayFly();
+  });
+  flyWrap.addEventListener('click',()=>{
+    sayFly('Bzz! Fire animation! 🎯');
+    faceTarget(mx);
+    setFlyAnim('fire', false, true);
+    fireCooldownUntil = performance.now() + 950;
+    forcedRunUntil = performance.now() + 1250;
+    tx = Math.max(60, Math.min(innerWidth-120, fx - (mx-fx)*2.2 + (Math.random()-.5)*140));
+    ty = Math.max(innerHeight*.38, Math.min(innerHeight*.88, fy - (my-fy)*1.8));
   });
 }
 
 function animateFly(t){
-  if(!fly) return;
+  if(!flyWrap){ requestAnimationFrame(animateFly); return; }
 
-  if(t>nextMove){
-    if(Math.random()<.20){
-      restUntil=t+500+Math.random()*1100;
-      nextMove=restUntil+350;
-      if(Math.random()<.35) sayFly();
-    }else{
+  if(t > nextMove){
+    if(Math.random() < .18){
+      restUntil = t + 450 + Math.random()*900;
+      nextMove = restUntil + 400;
+      if(Math.random() < .30) sayFly();
+    } else {
       newFlyTarget();
-      nextMove=t+900+Math.random()*1900;
+      nextMove = t + 1000 + Math.random()*2200;
     }
   }
 
-  const dxMouse=mx-fx;
-  const dyMouse=my-fy;
-  const dist=Math.hypot(dxMouse,dyMouse);
+  const dxMouse = mx - fx;
+  const dyMouse = my - fy;
+  const dist = Math.hypot(dxMouse, dyMouse);
 
-  if(dist<135){
-    tx=fx-dxMouse*2.5+(Math.random()-.5)*100;
-    ty=Math.max(innerHeight*.40,Math.min(innerHeight*.88,fy-dyMouse*1.75));
-    nextMove=t+700;
+  // State logic requested by the user:
+  // idle = normal, run = when cursor is near, fire = when cursor touches / very close.
+  if(dist < 65 && t > fireCooldownUntil){
+    faceTarget(mx);
+    setFlyAnim('fire', false, true);
+    fireCooldownUntil = t + 1000;
+    forcedRunUntil = t + 1350;
+    tx = Math.max(60, Math.min(innerWidth-120, fx - dxMouse*2.8 + (Math.random()-.5)*120));
+    ty = Math.max(innerHeight*.38, Math.min(innerHeight*.90, fy - dyMouse*2.0));
+    nextMove = t + 900;
+  } else if(dist < 190 || t < forcedRunUntil){
+    faceTarget(tx);
+    setFlyAnim('run', true);
+    tx = Math.max(60, Math.min(innerWidth-120, fx - dxMouse*2.3 + (Math.random()-.5)*120));
+    ty = Math.max(innerHeight*.38, Math.min(innerHeight*.90, fy - dyMouse*1.6));
+    nextMove = t + 650;
+  } else {
+    faceTarget(tx);
+    setFlyAnim('idle', true);
   }
 
-  if(t>restUntil){
-    fx+=(tx-fx)*.022;
-    fy+=(ty-fy)*.022;
+  let speed = 0.018;
+  if(currentFlyAnim==='run') speed = 0.045;
+  if(currentFlyAnim==='fire') speed = 0.035;
+
+  if(t > restUntil || currentFlyAnim!=='idle'){
+    fx += (tx - fx) * speed;
+    fy += (ty - fy) * speed;
   }
 
-  fx=Math.max(8,Math.min(innerWidth-90,fx));
-  fy=Math.max(innerHeight*.36,Math.min(innerHeight-80,fy));
+  fx = Math.max(20, Math.min(innerWidth-110, fx));
+  fy = Math.max(innerHeight*.34, Math.min(innerHeight-90, fy));
 
-  /* IMPORTANT:
-     only a tiny left/right tilt based on horizontal travel.
-     No atan2 rotation, so the fly can NEVER turn upside-down. */
-  const horizontal=tx-fx;
-  const tilt=Math.max(-12,Math.min(12,horizontal*.035));
-
-  fly.style.left=fx+'px';
-  fly.style.top=fy+'px';
-  fly.style.transform=`translate(-50%,-50%) rotate(${tilt}deg)`;
+  flyWrap.style.left = fx + 'px';
+  flyWrap.style.top = fy + 'px';
 
   requestAnimationFrame(animateFly);
 }
 
-requestAnimationFrame(animateFly);
-
 window.addEventListener('resize',()=>{
-  fx=Math.min(fx,innerWidth-90);
-  fy=Math.min(fy,innerHeight-80);
+  fx=Math.min(fx,innerWidth-110);
+  fy=Math.min(fy,innerHeight-90);
   newFlyTarget();
 });
+
+initSpineFly();
+requestAnimationFrame(animateFly);
 

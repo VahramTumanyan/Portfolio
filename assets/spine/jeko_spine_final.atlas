@@ -1,0 +1,222 @@
+jeko_spine_final.png
+size:1460,523
+filter:Linear,Linear
+pma:true
+scale:0.5
+Eye_bib_l
+bounds:13,9,8,9
+Eye_blik_l
+bounds:1398,187,44,54
+Eye_klir_l
+bounds:1402,409,44,54
+Eye_tak
+bounds:1402,335,36,25
+Eye_tak_L
+bounds:1238,54,37,22
+Eye_verev
+bounds:810,2,39,35
+Eye_verev_L
+bounds:1177,208,39,21
+offsets:1,0,40,21
+Eye_verev_bib_r
+bounds:2,9,9,9
+Eye_verev_blik_r
+bounds:1238,78,44,54
+Eye_verev_klir_r
+bounds:1370,131,44,54
+VFX_qitiki
+bounds:1398,243,58,83
+VFX_snaryad
+bounds:821,42,97,88
+beran_tak
+bounds:1008,9,58,47
+bodi
+bounds:705,338,304,183
+bodi_tak
+bounds:1170,46,66,86
+chanch_L
+bounds:1309,196,87,130
+chanch_L_poqr
+bounds:1096,160,79,89
+chanch_R
+bounds:1096,10,72,148
+chanch_R_poqr
+bounds:1211,231,96,95
+filtr_L
+bounds:1170,2,42,42
+filtr_R
+bounds:1402,362,43,45
+glusitel_L
+bounds:1177,134,71,60
+glusitel_R
+bounds:1250,134,71,60
+kanistr
+bounds:920,39,86,91
+klapn
+bounds:1370,25,21,31
+klapn_stver
+bounds:851,7,23,33
+mator
+bounds:1096,251,113,74
+offsets:0,2,113,76
+mator_mas
+bounds:705,6,59,39
+mator_mas_klor
+bounds:1068,33,26,23
+remen
+bounds:1323,30,45,164
+rotr_val0
+bounds:1370,58,24,18
+rotr_val1
+bounds:1214,8,23,36
+rotr_val2
+bounds:1218,196,23,33
+rotr_val3
+bounds:1323,2,23,26
+slang
+bounds:1416,78,42,107
+slang_stver
+bounds:1284,6,37,126
+snaryad
+bounds:1402,465,53,56
+tush
+bounds:705,47,114,93
+vfx_rotr1
+bounds:1207,328,193,193
+vfx_rotr2
+bounds:705,142,194,194
+vfx_rotr3
+bounds:901,132,193,193
+vfx_rotr_fr
+bounds:1011,327,194,194
+vfx_rotr_wayt
+bounds:1008,58,73,72
+zamok
+bounds:766,15,42,30
+Заливка цветом 1
+bounds:2,20,701,501
+
+jeko_spine_final_2.png
+size:1578,671
+filter:Linear,Linear
+pma:true
+scale:0.5
+vfiks krak/smoke_10_fill0000
+bounds:2,448,392,221
+vfiks krak/smoke_10_fill0001
+bounds:2,225,392,221
+vfiks krak/smoke_10_fill0002
+bounds:396,448,392,221
+vfiks krak/smoke_10_fill0003
+bounds:2,2,392,221
+vfiks krak/smoke_10_fill0004
+bounds:396,225,392,221
+vfiks krak/smoke_10_fill0005
+bounds:790,448,392,221
+vfiks krak/smoke_10_fill0006
+bounds:396,2,392,221
+vfiks krak/smoke_10_fill0007
+bounds:790,225,392,221
+vfiks krak/smoke_10_fill0008
+bounds:1184,448,392,221
+vfiks krak/smoke_10_fill0009
+bounds:790,2,392,221
+vfiks krak/smoke_10_fill0010
+bounds:1184,225,392,221
+vfiks krak/smoke_10_fill0011
+bounds:1184,2,392,221
+
+jeko_spine_final_3.png
+size:1930,586
+filter:Linear,Linear
+pma:true
+scale:0.5
+vfiks krak/air_vfx/Air_11_fill0000
+bounds:2,294,480,290
+vfiks krak/air_vfx/Air_11_fill0001
+bounds:2,2,480,290
+vfiks krak/air_vfx/Air_11_fill0002
+bounds:484,294,480,290
+vfiks krak/air_vfx/Air_11_fill0003
+bounds:484,2,480,290
+vfiks krak/air_vfx/Air_11_fill0004
+bounds:966,294,480,290
+vfiks krak/air_vfx/Air_11_fill0005
+bounds:966,2,480,290
+vfiks krak/air_vfx/Air_11_fill0006
+bounds:1448,294,480,290
+
+jeko_spine_final_4.png
+size:1759,297
+filter:Linear,Linear
+pma:true
+scale:0.5
+vfiks krak/enegia_vfx/energy_20_fill0000
+bounds:1698,241,59,54
+offsets:389,110,460,259
+vfiks krak/enegia_vfx/energy_20_fill0001
+bounds:1653,53,84,92
+offsets:366,94,460,259
+vfiks krak/enegia_vfx/energy_20_fill0002
+bounds:1545,44,106,101
+offsets:340,84,460,259
+vfiks krak/enegia_vfx/energy_20_fill0003
+bounds:1378,24,165,121
+offsets:278,74,460,259
+vfiks krak/enegia_vfx/energy_20_fill0004
+bounds:1186,13,190,132
+offsets:252,62,460,259
+vfiks krak/enegia_vfx/energy_20_fill0005
+bounds:988,4,196,148
+offsets:244,62,460,259
+vfiks krak/enegia_vfx/energy_20_fill0006
+bounds:1419,147,277,148
+offsets:160,59,460,259
+vfiks krak/enegia_vfx/energy_20_fill0007
+bounds:707,2,279,152
+offsets:144,54,460,259
+vfiks krak/enegia_vfx/energy_20_fill0008
+bounds:357,2,348,152
+offsets:74,54,460,259
+vfiks krak/enegia_vfx/energy_20_fill0009
+bounds:1073,154,344,141
+offsets:53,53,460,259
+vfiks krak/enegia_vfx/energy_20_fill0010
+bounds:365,156,352,139
+offsets:42,50,460,259
+vfiks krak/enegia_vfx/energy_20_fill0011
+bounds:2,163,361,132
+offsets:33,49,460,259
+vfiks krak/enegia_vfx/energy_20_fill0012
+bounds:719,167,352,128
+offsets:40,49,460,259
+vfiks krak/enegia_vfx/energy_20_fill0013
+bounds:2,50,353,111
+offsets:34,50,460,259
+vfiks krak/enegia_vfx/energy_20_fill0014
+bounds:2,17,318,31
+offsets:34,86,460,259
+
+jeko_spine_final_5.png
+size:1526,863
+filter:Linear,Linear
+pma:true
+scale:0.5
+vfiks krak/fier_vfx/fire_24_fill0000
+bounds:2,576,506,285
+vfiks krak/fier_vfx/fire_24_fill0001
+bounds:2,289,506,285
+vfiks krak/fier_vfx/fire_24_fill0002
+bounds:510,576,506,285
+vfiks krak/fier_vfx/fire_24_fill0003
+bounds:2,2,506,285
+vfiks krak/fier_vfx/fire_24_fill0004
+bounds:510,289,506,285
+vfiks krak/fier_vfx/fire_24_fill0005
+bounds:1018,576,506,285
+vfiks krak/fier_vfx/fire_24_fill0006
+bounds:510,2,506,285
+vfiks krak/fier_vfx/fire_24_fill0007
+bounds:1018,289,506,285
+vfiks krak/fier_vfx/fire_24_fill0008
+bounds:1018,2,506,285

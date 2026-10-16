@@ -197,3 +197,53 @@ button,a{font:inherit}.app{height:100vh;display:flex;flex-direction:column}.topb
     height:58px !important;
   }
 }
+
+
+/* ============================================================
+   SPINE FLY INTEGRATION
+   ============================================================ */
+.fly{display:none !important}
+.spine-fly-wrap{
+  position:fixed;
+  left:62vw;
+  top:66vh;
+  width:220px;
+  height:170px;
+  z-index:360;
+  pointer-events:auto;
+  transform:translate(-50%,-50%);
+  filter:drop-shadow(0 10px 10px rgba(0,0,0,.35));
+  user-select:none;
+}
+.spine-fly-player{
+  width:100%;
+  height:100%;
+  pointer-events:none;
+}
+.spine-fly-wrap canvas{
+  width:100% !important;
+  height:100% !important;
+}
+.spine-fly-wrap.is-running{filter:drop-shadow(0 12px 14px rgba(45,255,89,.18)) drop-shadow(0 8px 8px rgba(0,0,0,.4));}
+.spine-fly-wrap.is-firing{filter:drop-shadow(0 0 14px rgba(180,230,255,.4)) drop-shadow(0 10px 10px rgba(0,0,0,.45));}
+.spine-fly-wrap.face-left{transform:translate(-50%,-50%) scaleX(-1);}
+.spine-fly-wrap.face-right{transform:translate(-50%,-50%) scaleX(1);}
+.spine-fly-status{
+  position:fixed;
+  right:20px;
+  bottom:14px;
+  z-index:365;
+  font-size:11px;
+  color:#86c6ff;
+  background:rgba(18,20,24,.78);
+  border:1px solid rgba(49,168,255,.25);
+  border-radius:999px;
+  padding:7px 10px;
+  backdrop-filter:blur(8px);
+}
+@media(max-width:900px){
+  .spine-fly-wrap{width:180px;height:140px}
+}
+@media(max-width:560px){
+  .spine-fly-wrap{width:150px;height:116px}
+}

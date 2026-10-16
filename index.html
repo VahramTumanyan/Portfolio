@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@4.3.13/dist/spine-player.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -158,29 +159,11 @@
 
 <div id="speech" class="speech"></div>
 
-<!-- flies -->
-<div id="portfolioFly" class="fly f1" data-msg="Bzz! Vahram is a talented artist — check his Behance 😎🎨">
-  <span class="fly-wing wing-left"></span>
-  <span class="fly-wing wing-right"></span>
-
-  <span class="fly-body">
-    <span class="stripe stripe-1"></span>
-    <span class="stripe stripe-2"></span>
-  </span>
-
-  <span class="fly-head">
-    <span class="fly-eye eye-left"><i></i></span>
-    <span class="fly-eye eye-right"><i></i></span>
-    <span class="fly-mouth"></span>
-  </span>
-
-  <span class="fly-leg leg-1"></span>
-  <span class="fly-leg leg-2"></span>
-  <span class="fly-leg leg-3"></span>
-  <span class="fly-leg leg-4"></span>
-  <span class="fly-leg leg-5"></span>
-  <span class="fly-leg leg-6"></span>
+<!-- spine fly -->
+<div id="spineFlyWrap" class="spine-fly-wrap" aria-label="Interactive fly">
+  <div id="spineFlyPlayer" class="spine-fly-player"></div>
 </div>
+<script src="https://unpkg.com/@esotericsoftware/spine-player@4.3.13/dist/iife/spine-player.min.js"></script>
 <script src="projects.js"></script>
 <script src="script.js"></script>
 </body>
