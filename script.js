@@ -143,6 +143,7 @@ window.addEventListener('resize',()=>{if(currentProject>=0) resetView(false)});
 const speech=document.getElementById('speech');
 const flyWrap=document.getElementById('spineFlyWrap');
 const flyPlayerEl=document.getElementById('spineFlyPlayer');
+const projectile=document.getElementById('flyProjectile');
 
 const flyLines=[
   'Bzz! Vahram draws really cool characters 😎',
@@ -190,6 +191,44 @@ function setFlyAnim(name, loop=true, force=false){
   }catch(err){
     console.warn('Spine animation change failed', err);
   }
+}
+
+
+function fireProjectile(targetX,targetY){
+  if(!projectile || !flyWrap) return;
+
+  const r=flyWrap.getBoundingClientRect();
+  const startX=r.left+r.width*.5;
+  const startY=r.top+r.height*.48;
+
+  const dx=targetX-startX;
+  const dy=targetY-startY;
+  const dist=Math.max(1,Math.hypot(dx,dy));
+  const angle=Math.atan2(dy,dx)*180/Math.PI;
+
+  projectile.classList.add('active');
+  projectile.style.left=startX+'px';
+  projectile.style.top=startY+'px';
+  projectile.style.transform=`translate(-50%,-50%) rotate(${angle}deg)`;
+
+  const duration=Math.max(170,Math.min(430,dist*.42));
+  const start=performance.now();
+
+  function shotFrame(now){
+    const t=Math.min(1,(now-start)/duration);
+    const ease=1-Math.pow(1-t,2);
+    projectile.style.left=(startX+dx*ease)+'px';
+    projectile.style.top=(startY+dy*ease)+'px';
+
+    if(t<1){
+      requestAnimationFrame(shotFrame);
+    }else{
+      projectile.classList.remove('active');
+      projectile.style.left='-100px';
+      projectile.style.top='-100px';
+    }
+  }
+  requestAnimationFrame(shotFrame);
 }
 
 function faceTarget(x){
@@ -252,6 +291,7 @@ if(flyWrap){
     sayFly('Bzz! Fire animation! 🎯');
     faceTarget(mx);
     setFlyAnim('fire', false, true);
+    fireProjectile(mx,my);
     fireCooldownUntil = performance.now() + 950;
     forcedRunUntil = performance.now() + 1250;
     tx = Math.max(60, Math.min(innerWidth-120, fx - (mx-fx)*2.2 + (Math.random()-.5)*140));
@@ -282,6 +322,7 @@ function animateFly(t){
   if(dist < 65 && t > fireCooldownUntil){
     faceTarget(mx);
     setFlyAnim('fire', false, true);
+    fireProjectile(mx,my);
     fireCooldownUntil = t + 1000;
     forcedRunUntil = t + 1350;
     tx = Math.max(60, Math.min(innerWidth-120, fx - dxMouse*2.8 + (Math.random()-.5)*120));

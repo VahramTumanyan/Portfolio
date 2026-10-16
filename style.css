@@ -247,3 +247,32 @@ button,a{font:inherit}.app{height:100vh;display:flex;flex-direction:column}.topb
 @media(max-width:560px){
   .spine-fly-wrap{width:150px;height:116px}
 }
+
+/* projectile fired by Spine fly */
+.fly-projectile{
+  position:fixed;
+  left:-100px;
+  top:-100px;
+  width:22px;
+  height:8px;
+  z-index:370;
+  pointer-events:none;
+  opacity:0;
+  transform-origin:50% 50%;
+  border-radius:999px;
+  background:
+    radial-gradient(circle at 78% 50%, #ffffff 0 18%, transparent 19%),
+    linear-gradient(90deg,#aef7ff 0%,#51d9ff 45%,#0fa6ff 75%,rgba(15,166,255,0) 100%);
+  box-shadow:0 0 9px #67e6ff,0 0 20px rgba(42,196,255,.65);
+}
+.fly-projectile.active{opacity:1}
+.fly-projectile::after{
+  content:"";
+  position:absolute;
+  right:100%;
+  top:2px;
+  width:34px;
+  height:4px;
+  border-radius:999px;
+  background:linear-gradient(90deg,rgba(49,168,255,0),rgba(117,226,255,.8));
+}
