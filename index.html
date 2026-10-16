@@ -110,38 +110,29 @@
     .spine-host{width:100%;height:100%;background:transparent!important}
     .spine-player-canvas{background:transparent!important}
 
-    /* Fly: left -> right only. Inner wrapper bobs vertically. */
+    /* Fly: free viewport roaming. Real Spine animation stays inside. */
     #flyLane{
       position:absolute;
-      left:-280px;
-      top:34%;
-      width:250px;
-      height:200px;
+      left:12vw;
+      top:22vh;
+      width:260px;
+      height:205px;
       opacity:0;
       pointer-events:none;
-      will-change:transform;
+      will-change:left,top,transform;
+      transition:left 1.7s ease-in-out, top 1.7s ease-in-out, transform .2s ease;
     }
     #flyLane.on{opacity:1}
     #flyBob{
       width:100%;height:100%;
       pointer-events:auto;
       cursor:crosshair;
-      animation:flyBob 1.25s ease-in-out infinite alternate;
       transform-origin:center;
-    }
-    #flyLane.flying{
-      animation:flyAcross 7.8s linear infinite;
-    }
-    #flyLane.fast{
-      animation-duration:4.8s;
-    }
-    @keyframes flyAcross{
-      from{transform:translateX(0)}
-      to{transform:translateX(calc(100vw + 560px))}
+      animation:flyBob 1.15s ease-in-out infinite alternate;
     }
     @keyframes flyBob{
-      from{transform:translateY(-28px) rotate(-2deg)}
-      to{transform:translateY(30px) rotate(2deg)}
+      from{transform:translateY(-22px) rotate(-2deg) scaleX(var(--flyFace,-1))}
+      to{transform:translateY(26px) rotate(2deg) scaleX(var(--flyFace,-1))}
     }
     .click-label{
       position:absolute;left:50%;top:3px;transform:translateX(-50%);
@@ -150,10 +141,16 @@
       opacity:.78;pointer-events:none;
     }
 
+    /* Frog: larger and closer to the center-bottom. */
     /* Frog fixed bottom-right */
     #frogActor{
-      right:2vw;bottom:-2.5vw;
-      width:min(650px,43vw);height:min(520px,36vw);
+      left:50%;
+      right:auto;
+      bottom:-1.8vw;
+      width:min(820px,56vw);
+      height:min(650px,45vw);
+      transform:translateX(-50%);
+      transform-origin:50% 100%;
     }
 
     /* Croc moves horizontally across bottom */
@@ -163,6 +160,57 @@
       will-change:left,transform;
     }
     #crocActor.reverse{transform:scaleX(-1)}
+    #crocActor.forward{transform:scaleX(1)}
+    #crocActor{
+      transition:left 4.9s cubic-bezier(.22,.61,.36,1), transform .28s ease, opacity .22s ease;
+    }
+    .actor.rig-focus,
+    #flyLane.rig-focus{
+      position:fixed!important;
+      left:50%!important;
+      top:50%!important;
+      right:auto!important;
+      bottom:auto!important;
+      width:min(1180px,88vw)!important;
+      height:min(900px,82vh)!important;
+      transform:translate(-50%,-50%)!important;
+      z-index:80!important;
+      opacity:1!important;
+      transition:transform .28s ease, opacity .2s ease!important;
+    }
+    #flyLane.rig-focus #flyBob{
+      animation:none!important;
+      transform:none!important;
+    }
+    .rig-backdrop{
+      position:fixed;
+      inset:0;
+      background:radial-gradient(circle at 50% 45%,#263548d8 0,#0a0f16ef 65%,#05070af5 100%);
+      opacity:0;
+      pointer-events:none;
+      transition:.2s;
+      z-index:70;
+    }
+    .rig-backdrop.on{opacity:1}
+    .rig-label{
+      position:fixed;
+      z-index:85;
+      left:50%;
+      top:78px;
+      transform:translateX(-50%);
+      padding:8px 14px;
+      border-radius:999px;
+      background:#111923e8;
+      border:1px solid #51627a;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      opacity:0;
+      pointer-events:none;
+    }
+    .rig-label.on{opacity:1}
+
 
     .hint{
       position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
@@ -175,7 +223,7 @@
       .head{min-width:88px;padding:3px}
       .name,.sub{display:none}
       .avatar{width:32px;height:32px}
-      #frogActor{width:86vw;height:68vw;right:-8vw;bottom:-4vw}
+      #frogActor{width:92vw;height:72vw;left:50%;right:auto;bottom:-3vw;transform:translateX(-50%)}
       #crocActor{width:110vw;height:75vw;bottom:-5vw}
       #flyLane{width:220px;height:175px;top:30%}
     }
@@ -248,6 +296,7 @@
     </div>
   </div>
 
+  <div id="rigBackdrop" class="rig-backdrop"></div><div id="rigLabel" class="rig-label">Rig View</div>
   <div id="stage">
     <div id="flyLane">
       <div id="flyBob">
@@ -278,12 +327,17 @@
     const allToggle=document.getElementById('allToggle');
     let flyMode='auto';
     let crocToken=0;
+    let flyMoveTimer=null;
+    let flyMoveToken=0;
+    const rigBackdrop=document.getElementById('rigBackdrop');
+    const rigLabel=document.getElementById('rigLabel');
 
     function createPlayer(key,id,skeleton,atlas,animation){
       return new spine.SpinePlayer(id,{
         skeleton,atlas,animation,
         showControls:false,alpha:true,premultipliedAlpha:true,
         backgroundColor:'#00000000',
+        defaultMix:0.22,
         success(player){
           refs[key]=player;ready[key]=true;
           if(key==='fly') player.animationState.setAnimation(0,'flies',true);
@@ -358,15 +412,27 @@
     function setEnabled(key,on){
       if(key==='fly'){
         flyLane.classList.toggle('on',on);
-        if(on) setFly('auto'); else flyLane.classList.remove('flying','fast');
+        if(on) setFly('auto');
+        else{
+          flyMoveToken++;
+          clearTimeout(flyMoveTimer);
+          clearRigFocus('fly');
+        }
       }
       if(key==='frog'){
         frogActor.classList.toggle('on',on);
         if(on&&ready.frog) refs.frog.setAnimation('fire',false);
+        if(!on) clearRigFocus('frog');
       }
       if(key==='croc'){
         crocActor.classList.toggle('on',on);
-        if(on) startCroc(); else crocToken++;
+        if(on){
+          clearRigFocus('croc');
+          startCroc();
+        }else{
+          crocToken++;
+          clearRigFocus('croc');
+        }
       }
     }
 
@@ -374,36 +440,93 @@
       if(key==='fly') setFly(mode);
       if(key==='frog'&&ready.frog){
         frogActor.classList.add('on');
-        refs.frog.setAnimation(mode,false);
+        if(mode==='Rig_View'){
+          setRigFocus('frog');
+          refs.frog.setAnimation('Rig_View',false);
+        }else{
+          clearRigFocus('frog');
+          refs.frog.setAnimation(mode,false);
+        }
       }
       if(key==='croc'&&ready.croc){
         crocToken++;
         crocActor.classList.add('on');
-        crocActor.classList.remove('reverse');
-        refs.croc.setAnimation(mode,mode==='running');
+        crocActor.classList.remove('reverse','forward');
+        if(mode==='Rig_View'){
+          setRigFocus('croc');
+          refs.croc.setAnimation('Rig_View',false);
+        }else{
+          clearRigFocus('croc');
+          refs.croc.setAnimation(mode,mode==='running');
+        }
       }
     }
 
-    /* Fly: ONLY left -> right across screen + gentle vertical bobbing.
-       No random teleporting and no random 2D directions. */
+    /* Fly: free random roaming across the viewport.
+       The container changes direction; the real Spine animation remains untouched. */
+    function randomFlyTarget(){
+      const w=Math.max(220,flyLane.offsetWidth||260);
+      const h=Math.max(170,flyLane.offsetHeight||205);
+      const padX=24;
+      const topPad=82;
+      const bottomPad=28;
+      return {
+        x:padX+Math.random()*Math.max(40,innerWidth-w-padX*2),
+        y:topPad+Math.random()*Math.max(40,innerHeight-h-topPad-bottomPad)
+      };
+    }
+
+    function scheduleFlyRoam(){
+      const token=++flyMoveToken;
+
+      const step=()=>{
+        if(token!==flyMoveToken || !enabled('fly') || flyMode!=='auto') return;
+
+        const currentX=parseFloat(flyLane.style.left)||flyLane.getBoundingClientRect().left;
+        const target=randomFlyTarget();
+        const goingRight=target.x>=currentX;
+
+        // Source fly faces the opposite way, so flip based on travel direction.
+        flyBob.style.transformOrigin='center';
+        flyBob.style.setProperty('--flyFace',goingRight ? '-1' : '1');
+
+        const dist=Math.hypot(target.x-currentX,target.y-(parseFloat(flyLane.style.top)||flyLane.getBoundingClientRect().top));
+        const fast=dist>innerWidth*.45 && Math.random()>.35;
+        const duration=fast ? 1.05+Math.random()*.55 : 1.55+Math.random()*1.0;
+
+        if(ready.fly){
+          refs.fly.setAnimation(fast?'flies_Run':'flies',true);
+        }
+
+        flyLane.style.transition=`left ${duration}s ease-in-out, top ${duration}s ease-in-out`;
+        flyLane.style.left=target.x+'px';
+        flyLane.style.top=target.y+'px';
+
+        flyMoveTimer=setTimeout(step,duration*1000+300+Math.random()*700);
+      };
+
+      step();
+    }
+
     function setFly(mode){
       flyMode=mode;
+      flyMoveToken++;
+      clearTimeout(flyMoveTimer);
+      clearRigFocus('fly');
+
       if(!ready.fly) return;
       flyLane.classList.add('on');
-      flyLane.classList.remove('flying','fast');
 
       if(mode==='auto'){
         refs.fly.setAnimation('flies',true);
-        void flyLane.offsetWidth;
-        flyLane.classList.add('flying');
+        scheduleFlyRoam();
       }else if(mode==='flies'){
         refs.fly.setAnimation('flies',true);
-        void flyLane.offsetWidth;
-        flyLane.classList.add('flying');
       }else if(mode==='flies_Run'){
         refs.fly.setAnimation('flies_Run',true);
-        void flyLane.offsetWidth;
-        flyLane.classList.add('flying','fast');
+      }else if(mode==='Rig_View'){
+        refs.fly.setAnimation('Rig_View',false);
+        setRigFocus('fly');
       }else{
         refs.fly.setAnimation(mode,false);
       }
@@ -411,14 +534,49 @@
 
     flyBob.addEventListener('pointerdown',e=>{
       e.preventDefault();e.stopPropagation();
-      if(!enabled('fly')||!ready.fly) return;
-      const wasFast=flyLane.classList.contains('fast');
+      if(!enabled('fly')||!ready.fly||flyMode==='Rig_View') return;
+
+      const previous=flyMode;
+      flyMoveToken++;
+      clearTimeout(flyMoveTimer);
       refs.fly.setAnimation('fire',false);
+
       setTimeout(()=>{
         if(!enabled('fly')) return;
-        refs.fly.setAnimation(wasFast?'flies_Run':'flies',true);
+        if(previous==='auto'){
+          flyMode='auto';
+          refs.fly.setAnimation('flies',true);
+          scheduleFlyRoam();
+        }else{
+          refs.fly.setAnimation(previous,previous==='flies'||previous==='flies_Run');
+        }
       },900);
     });
+
+    function clearAllRigFocus(){
+      flyLane.classList.remove('rig-focus');
+      frogActor.classList.remove('rig-focus');
+      crocActor.classList.remove('rig-focus');
+      rigBackdrop.classList.remove('on');
+      rigLabel.classList.remove('on');
+    }
+
+    function clearRigFocus(key){
+      const el=key==='fly'?flyLane:(key==='frog'?frogActor:crocActor);
+      el.classList.remove('rig-focus');
+      if(!document.querySelector('.rig-focus')){
+        rigBackdrop.classList.remove('on');
+        rigLabel.classList.remove('on');
+      }
+    }
+
+    function setRigFocus(key){
+      clearAllRigFocus();
+      const el=key==='fly'?flyLane:(key==='frog'?frogActor:crocActor);
+      el.classList.add('rig-focus');
+      rigBackdrop.classList.add('on');
+      rigLabel.classList.add('on');
+    }
 
     function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
     function once(player,name){
@@ -430,40 +588,70 @@
 
     async function startCroc(){
       if(!ready.croc) return;
+
       const token=++crocToken;
       crocActor.classList.add('on');
+      clearRigFocus('croc');
+
       const width=Math.max(520,crocActor.getBoundingClientRect().width);
       const left=-width*.72;
       const right=innerWidth-width*.40;
 
-      while(token===crocToken && enabled('croc')){
-        crocActor.classList.remove('reverse');
+      async function travel(direction){
+        if(token!==crocToken||!enabled('croc')) return false;
+
+        const goingRight = direction==='right';
+
+        // Correct facing for the actual exported crocodile artwork.
+        crocActor.classList.toggle('forward', goingRight);
+        crocActor.classList.toggle('reverse', !goingRight);
+
+        // The real Spine running animation keeps playing for the entire travel.
+        refs.croc.setAnimation('running',true);
+
         crocActor.style.transition='none';
-        crocActor.style.left=left+'px';
-        refs.croc.setAnimation('running',true);
-        await sleep(60);
+        crocActor.style.left=(goingRight?left:right)+'px';
+        void crocActor.offsetWidth;
 
-        if(token!==crocToken||!enabled('croc')) break;
-        crocActor.style.transition='left 4.6s linear, transform .2s, opacity .2s';
-        crocActor.style.left=right+'px';
-        await sleep(4600);
+        // Main travel with smooth acceleration/deceleration instead of a hard linear stop.
+        crocActor.style.transition='left 4.75s cubic-bezier(.22,.61,.36,1), transform .28s ease, opacity .22s ease';
+        crocActor.style.left=(goingRight?right:left)+'px';
 
-        if(token!==crocToken||!enabled('croc')) break;
+        await sleep(4750);
+        if(token!==crocToken||!enabled('croc')) return false;
+
+        // Tiny "settle" so the character does not snap into the next animation.
+        crocActor.style.transition='transform .22s ease';
+        await sleep(140);
+
+        return token===crocToken && enabled('croc');
+      }
+
+      while(token===crocToken && enabled('croc')){
+        // Left -> right
+        if(!(await travel('right'))) break;
+
+        // Smoothly switch only after travel is fully complete.
         await once(refs.croc,Math.random()>.5?'Happy_1':'Happy_2');
-
         if(token!==crocToken||!enabled('croc')) break;
+
+        await sleep(180);
+
+        // Right -> left
+        if(!(await travel('left'))) break;
+
+        await once(refs.croc,Math.random()>.5?'Happy_1':'Happy_2');
+        if(token!==crocToken||!enabled('croc')) break;
+
+        await sleep(180);
+
+        // Per your rule: start is the last animation in the cycle.
+        crocActor.classList.remove('forward');
         crocActor.classList.add('reverse');
-        refs.croc.setAnimation('running',true);
-        crocActor.style.left=left+'px';
-        await sleep(4600);
-
-        if(token!==crocToken||!enabled('croc')) break;
-        await once(refs.croc,Math.random()>.5?'Happy_1':'Happy_2');
-
-        if(token!==crocToken||!enabled('croc')) break;
-        crocActor.classList.remove('reverse');
         await once(refs.croc,'start');
-        await sleep(250);
+        if(token!==crocToken||!enabled('croc')) break;
+
+        await sleep(220);
       }
     }
   </script>
