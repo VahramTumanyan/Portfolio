@@ -1,12 +1,187 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vahram Tumanyan — Creative Workspace</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Kalam:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"></head><body>
-<div class="app"><header class="topbar"><div class="psmark">VT</div><div class="menus"><button>File</button><button>Edit</button><button>Image</button><button>Layer</button><button>Type</button><button>Select</button><button>Filter</button><button>View</button><button>Window</button></div><div class="topright"><span>100%</span><span>RGB/8</span><button class="share">Share</button></div></header>
-<div class="workspace"><aside class="tools"><button>✥</button><button>▧</button><button>◯</button><button>🖌</button><button>◇</button><button>T</button><button>✋</button><button>⌕</button><div class="swatches"><i></i><b></b></div></aside>
-<main class="center"><div class="tabs"><button class="active">VAHRAM_HOME.psd ×</button><button>PORTFOLIO.psd ×</button><button>ABOUT.psd ×</button></div>
-<section class="canvasWrap" id="home"><div class="canvas"><img src="assets/hero-placeholder.jpg" alt="Hero"><div class="fade"></div><div class="heroCopy"><small>CREATIVE WORKSPACE / PORTFOLIO</small><h1>VAHRAM</h1><h2>Senior 2D Artist<br>Character Designer · Concept Artist · Animator</h2><p>Game Art / Illustration / 2D Animation / Comics / Visual Development</p><a href="#portfolio">Open Portfolio ↗</a></div><div class="filetag">hero-placeholder.jpg</div></div></section>
-<section class="portfolio" id="portfolio"><div class="phead"><div><span></span><b>Portfolio Browser</b><small>All projects</small></div><div><button id="prev">←</button><button id="next">→</button></div></div><div class="cards" id="cards"></div></section>
-<section class="about" id="about"><article><div class="kicker">ABOUT.TXT</div><h2>About Vahram</h2><p>Vahram Tumanyan is a Senior 2D Artist, Character Designer, Concept Artist and 2D Animator focused on expressive characters, stylized worlds and production-ready game art.</p><p>His experience includes character design, concept art, 2D game art, UI, illustration, comics, storyboards and 2D animation. He works from early visual ideas and sketches through polished assets for games and interactive projects.</p></article><article><div class="kicker">EXPERIENCE.LOG</div><h2>Experience</h2><div class="timeline"><div><b>Wind Company</b><span>Senior 2D Artist · 2D Animator · UI Design · Concept Artist</span></div><div><b>VivaroBet</b><span>Illustrator</span></div><div><b>Red Rock Revolution</b><span>Senior 2D Artist · Animator · UI Design · Concept Artist</span></div><div><b>Mayro Studio</b><span>Comics Artist · Concept Artist · Character Design · Storyboard</span></div><div><b>HY Pictures</b><span>Concept Artist · Comics Artist · Character Design</span></div></div></article></section></main>
-<aside class="right"><section class="panel"><div class="ptabs"><button class="active">Layers</button><button>Channels</button><button>Paths</button></div><div class="layer active">👁 <i></i><b>Hero Artwork</b></div><div class="layer">👁 <i></i><b>Vahram / Title</b></div><div class="layer">👁 <i></i><b>Portfolio Cards</b></div><div class="layer">👁 <i></i><b>About</b></div><div class="layer">👁 <i></i><b>Interactive Creatures</b></div></section><section class="panel skills"><div class="ptabs"><button class="active">Properties</button></div><h3>Skills</h3><div class="skill">Character Design <b>95%</b><i><em style="width:95%"></em></i></div><div class="skill">Concept Art <b>94%</b><i><em style="width:94%"></em></i></div><div class="skill">2D Game Art <b>93%</b><i><em style="width:93%"></em></i></div><div class="skill">Illustration <b>92%</b><i><em style="width:92%"></em></i></div><div class="skill">2D Animation <b>89%</b><i><em style="width:89%"></em></i></div><div class="skill">UI / Storyboard <b>82%</b><i><em style="width:82%"></em></i></div></section><section class="panel software"><div class="ptabs"><button class="active">Software</button></div><div class="softwaregrid"><span>Photoshop</span><span>Illustrator</span><span>Spine Pro</span><span>DragonBones</span><span>ZBrush</span><span>3ds Max</span><span>Unity</span><span>3D-Coat</span></div></section></aside></div><footer>Vahram Tumanyan © 2026 <span>Doc: Portfolio / 100% / RGB</span><a href="https://www.behance.net/vahramtumanyan" target="_blank">Behance ↗</a></footer></div>
-<div class="viewer" id="viewer"><div class="vbg"></div><div class="vwin"><div class="vtop"><div><span class="ficon">PS</span><b id="viewerTitle"></b><small id="viewerCategory"></small></div><div><a id="behanceBtn" target="_blank">Open this project on Behance ↗</a><button id="closeViewer">×</button></div></div><div class="stage"><button id="imgPrev" class="side left">‹</button><img id="viewerImage"><button id="imgNext" class="side right">›</button></div><div class="vstatus"><span id="counter"></span><div><button id="zoomOut">−</button><button id="zoomReset">100%</button><button id="zoomIn">+</button></div></div></div></div>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vahram Tumanyan — Portfolio Workspace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">VT</div>
+    <nav class="menu">
+      <button>File</button><button>Edit</button><button>Image</button><button>Layer</button>
+      <button>Type</button><button>Select</button><button>Filter</button><button>View</button><button>Window</button>
+    </nav>
+    <div class="top-right"><span id="zoomReadoutTop">100%</span><span>RGB/8</span><button class="share">Share</button></div>
+  </header>
+
+  <div class="work-area">
+    <aside class="toolbar">
+      <button title="Move">✥</button>
+      <button title="Select">▧</button>
+      <button title="Lasso">◯</button>
+      <button title="Brush">🖌</button>
+      <button title="Eraser">◇</button>
+      <button title="Text">T</button>
+      <button title="Hand">✋</button>
+      <button title="Zoom">⌕</button>
+      <div class="swatches"><i></i><b></b></div>
+    </aside>
+
+    <section class="center">
+      <div id="docTabs" class="doc-tabs">
+        <button class="doc-tab active" data-page="home">VAHRAM_HOME.psd <span>×</span></button>
+        <button class="doc-tab" data-page="portfolio">PORTFOLIO.psd <span>×</span></button>
+        <button class="doc-tab" data-page="about">ABOUT.psd <span>×</span></button>
+      </div>
+
+      <section id="page-home" class="page active-page">
+        <div class="home-canvas">
+          <img src="assets/hero-placeholder.jpg" alt="Hero artwork">
+          <div class="home-shade"></div>
+          <div class="home-copy">
+            <small>VAHRAM / CREATIVE WORKSPACE</small>
+            <h1>VAHRAM</h1>
+            <h2>Senior 2D Artist<br>Character Designer · Concept Artist · Animator</h2>
+            <p>Game Art / Illustration / 2D Animation / Comics / Visual Development</p>
+            <button class="primary goto-portfolio">Open PORTFOLIO.psd ↗</button>
+          </div>
+          <div class="file-chip">hero-placeholder.jpg</div>
+        </div>
+      </section>
+
+      <section id="page-portfolio" class="page">
+        <div class="portfolio-layout">
+          <div class="project-stage-shell">
+            <div class="stage-header">
+              <div>
+                <b id="stageTitle">Select a layer →</b>
+                <small id="stageCategory">Choose one of your Behance projects from Layers.</small>
+              </div>
+              <div class="stage-actions">
+                <button id="fitBtn">Fit</button>
+                <button id="hundredBtn">100%</button>
+                <a id="behanceLink" target="_blank" class="behance-link">Behance ↗</a>
+              </div>
+            </div>
+
+            <div id="projectStage" class="project-stage">
+              <div id="emptyStage" class="empty-stage">
+                <div class="ps-big">PS</div>
+                <h2>Your project opens here</h2>
+                <p>Click a large layer on the right. Use mouse wheel to zoom, drag to pan, or pinch with two fingers.</p>
+              </div>
+              <img id="stageImage" alt="Selected artwork">
+            </div>
+
+            <div class="stage-footer">
+              <div class="image-nav">
+                <button id="prevImage">←</button>
+                <span id="imageCounter">0 / 0</span>
+                <button id="nextImage">→</button>
+              </div>
+              <div class="zoom-tools">
+                <button id="zoomMinus">−</button>
+                <span id="zoomReadout">100%</span>
+                <button id="zoomPlus">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="page-about" class="page">
+        <div class="about-canvas">
+          <div class="about-left">
+            <small>ABOUT.psd / PROFILE</small>
+            <h1>Vahram Tumanyan</h1>
+            <h2>Senior 2D Artist · Character Designer · Concept Artist · 2D Animator</h2>
+            <p>Vahram creates expressive characters, stylized environments, illustrations, game-ready visual assets and 2D animation. His background includes character design, concept art, UI design, comics and storyboards.</p>
+            <p>He has worked across game development, illustration and animation, taking projects from rough visual ideas to polished production assets.</p>
+            <div class="about-buttons">
+              <a class="primary" href="https://www.behance.net/vahramtumanyan" target="_blank">Behance ↗</a>
+            </div>
+          </div>
+          <div class="about-right">
+            <div class="info-panel">
+              <h3>CONTACTS</h3>
+              <div><span>Email</span><b>tumanyanvahram@gmail.com</b></div>
+              <div><span>Phone</span><b>094 82 82 57</b></div>
+              <div><span>Location</span><b>Armenia</b></div>
+            </div>
+            <div class="info-panel">
+              <h3>EXPERIENCE</h3>
+              <div><span>Wind Company</span><b>Senior 2D Artist · Animator · UI · Concept Art</b></div>
+              <div><span>VivaroBet</span><b>Illustrator</b></div>
+              <div><span>Red Rock Revolution</span><b>Senior 2D Artist · Animator · UI · Concept Art</b></div>
+              <div><span>Mayro Studio</span><b>Comics · Concept Art · Character Design · Storyboard</b></div>
+              <div><span>HY Pictures</span><b>Concept Art · Comics · Character Design</b></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <aside class="rightbar">
+      <div class="right-tabs">
+        <button class="active">Layers</button><button>Channels</button><button>Paths</button>
+      </div>
+
+      <div class="layers-title">
+        <b>MY BEHANCE WORK</b>
+        <small>Click a layer to open it</small>
+      </div>
+      <div id="layersList" class="layers-list"></div>
+
+      <div class="properties">
+        <div class="prop-tabs"><button class="active">Properties</button><button>Skills</button></div>
+        <div id="selectedInfo" class="selected-info">
+          <small>SELECTED LAYER</small>
+          <h3>No project selected</h3>
+          <p>Choose a Behance work above.</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="status">
+    <span>Vahram Tumanyan © 2026</span>
+    <span>Workspace: Portfolio / RGB / Interactive</span>
+    <a target="_blank" href="https://www.behance.net/vahramtumanyan">Behance ↗</a>
+  </footer>
+</div>
+
 <div id="speech" class="speech"></div>
-<div class="fly f1" data-msg="Bzz! Nice brushwork 😎"><i class="wl"></i><i class="wr"></i><i class="fb"></i><i class="fe a"></i><i class="fe b"></i></div><div class="fly f2" data-msg="I found another layer 👀"><i class="wl"></i><i class="wr"></i><i class="fb"></i><i class="fe a"></i><i class="fe b"></i></div><div class="fly f3" data-msg="Ctrl+Z? Never 😜"><i class="wl"></i><i class="wr"></i><i class="fb"></i><i class="fe a"></i><i class="fe b"></i></div><div class="fly f4" data-msg="Open the artwork! 🎨"><i class="wl"></i><i class="wr"></i><i class="fb"></i><i class="fe a"></i><i class="fe b"></i></div>
-<div class="spider s1" data-msg="I live near the timeline 👀"><i class="leg l1"></i><i class="leg l2"></i><i class="leg l3"></i><i class="leg l4"></i><i class="leg l5"></i><i class="leg l6"></i><i class="leg l7"></i><i class="leg l8"></i><i class="abd"></i><i class="head"></i><i class="eye e1"></i><i class="eye e2"></i></div><div class="spider s2" data-msg="Don't delete my layer 🕷️"><i class="leg l1"></i><i class="leg l2"></i><i class="leg l3"></i><i class="leg l4"></i><i class="leg l5"></i><i class="leg l6"></i><i class="leg l7"></i><i class="leg l8"></i><i class="abd"></i><i class="head"></i><i class="eye e1"></i><i class="eye e2"></i></div><script src="projects.js"></script><script src="script.js"></script></body></html>
+
+<!-- flies -->
+<div id="portfolioFly" class="fly f1" data-msg="Bzz! Vahram is a talented artist — check his Behance 😎🎨">
+  <span class="fly-wing wing-left"></span>
+  <span class="fly-wing wing-right"></span>
+
+  <span class="fly-body">
+    <span class="stripe stripe-1"></span>
+    <span class="stripe stripe-2"></span>
+  </span>
+
+  <span class="fly-head">
+    <span class="fly-eye eye-left"><i></i></span>
+    <span class="fly-eye eye-right"><i></i></span>
+    <span class="fly-mouth"></span>
+  </span>
+
+  <span class="fly-leg leg-1"></span>
+  <span class="fly-leg leg-2"></span>
+  <span class="fly-leg leg-3"></span>
+  <span class="fly-leg leg-4"></span>
+  <span class="fly-leg leg-5"></span>
+  <span class="fly-leg leg-6"></span>
+</div>
+<script src="projects.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
