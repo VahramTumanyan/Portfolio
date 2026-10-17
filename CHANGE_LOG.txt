@@ -1,0 +1,3 @@
+CHANGE:
+- Removed only the on-page interactive demo section containing Fly, Crocodile and Frog.
+- The rest of the site remains unchanged.

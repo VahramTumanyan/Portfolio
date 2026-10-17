@@ -129,22 +129,16 @@ const privateProjects = {
       'assets/private/hostel/02.jpg',
       'assets/private/hostel/03.jpg',
       'assets/private/hostel/04.jpg',
-      'assets/private/hostel/05.jpg',
-      'assets/private/hostel/06.jpg',
-      'assets/private/hostel/07.jpg',
-      'assets/private/hostel/08.jpg',
-      'assets/private/hostel/09.jpg',
-      'assets/private/hostel/10.jpg',
-      'assets/private/hostel/11.jpg',
-      'assets/private/hostel/12.jpg',
-      'assets/private/hostel/13.jpg',
-      'assets/private/hostel/14.jpg',
-      'assets/private/hostel/15.jpg',
-      'assets/private/hostel/16.jpg',
-      'assets/private/hostel/17.jpg',
-      'assets/private/hostel/18.jpg',
-      'assets/private/hostel/19.jpg',
-      'assets/private/hostel/20.jpg'
+      'assets/private/hostel/05.jpg'
+    ]
+  },
+  'house-of-greed': {
+    title: 'House of Greed',
+    subtitle: 'Slot Game',
+    images: [
+      'assets/private/house-of-greed/01.jpg',
+      'assets/private/house-of-greed/02.jpg',
+      'assets/private/house-of-greed/03.jpg'
     ]
   },
   'deadwater': {
@@ -156,21 +150,7 @@ const privateProjects = {
       'assets/private/deadwater/03.jpg',
       'assets/private/deadwater/04.jpg',
       'assets/private/deadwater/05.jpg',
-      'assets/private/deadwater/06.jpg',
-      'assets/private/deadwater/07.jpg',
-      'assets/private/deadwater/08.jpg',
-      'assets/private/deadwater/09.jpg',
-      'assets/private/deadwater/10.jpg',
-      'assets/private/deadwater/11.jpg',
-      'assets/private/deadwater/12.jpg',
-      'assets/private/deadwater/13.jpg',
-      'assets/private/deadwater/14.jpg',
-      'assets/private/deadwater/15.jpg',
-      'assets/private/deadwater/16.jpg',
-      'assets/private/deadwater/17.jpg',
-      'assets/private/deadwater/18.jpg',
-      'assets/private/deadwater/19.jpg',
-      'assets/private/deadwater/20.jpg'
+      'assets/private/deadwater/06.jpg'
     ]
   },
   'ed-games': {
@@ -208,9 +188,67 @@ const privateViewerCount = document.getElementById('privateViewerCount');
 const privateViewerThumbs = document.getElementById('privateViewerThumbs');
 const privatePrev = document.querySelector('.private-viewer-prev');
 const privateNext = document.querySelector('.private-viewer-next');
+const privateViewerImageWrap = document.getElementById('privateViewerImageWrap');
 
 let privateCurrentProject = null;
 let privateCurrentIndex = 0;
+
+let privateZoom = 1;
+let privatePanX = 0;
+let privatePanY = 0;
+let privateDragging = false;
+let privateDragStartX = 0;
+let privateDragStartY = 0;
+let privatePanStartX = 0;
+let privatePanStartY = 0;
+
+const PRIVATE_ZOOM_MIN = 1;
+const PRIVATE_ZOOM_MAX = 2.6;
+const PRIVATE_ZOOM_STEP = 0.14;
+
+function clampPrivatePan(){
+  if(privateZoom <= 1){
+    privatePanX = 0;
+    privatePanY = 0;
+    return;
+  }
+
+  const wrap = privateViewerImageWrap?.getBoundingClientRect();
+  if(!wrap) return;
+
+  // Keep panning restrained so the artwork cannot be lost completely off-screen.
+  const maxX = wrap.width * (privateZoom - 1) * 0.5;
+  const maxY = wrap.height * (privateZoom - 1) * 0.5;
+  privatePanX = Math.max(-maxX, Math.min(maxX, privatePanX));
+  privatePanY = Math.max(-maxY, Math.min(maxY, privatePanY));
+}
+
+function applyPrivateZoom(){
+  if(!privateViewerImage || !privateViewerImageWrap) return;
+  clampPrivatePan();
+  privateViewerImage.style.transform =
+    `translate(${privatePanX}px, ${privatePanY}px) scale(${privateZoom})`;
+  privateViewerImageWrap.classList.toggle('is-zoomed', privateZoom > 1.001);
+}
+
+function resetPrivateZoom(){
+  privateZoom = 1;
+  privatePanX = 0;
+  privatePanY = 0;
+  privateDragging = false;
+  privateViewerImageWrap?.classList.remove('is-dragging','is-zoomed');
+  applyPrivateZoom();
+}
+
+function setPrivateZoom(nextZoom){
+  privateZoom = Math.max(PRIVATE_ZOOM_MIN, Math.min(PRIVATE_ZOOM_MAX, nextZoom));
+  if(privateZoom <= 1.001){
+    privatePanX = 0;
+    privatePanY = 0;
+  }
+  applyPrivateZoom();
+}
+
 
 function renderPrivateViewer(){
   if(!privateCurrentProject) return;
@@ -220,6 +258,7 @@ function renderPrivateViewer(){
   privateViewerTitle.textContent = data.title;
   privateViewerImage.src = src;
   privateViewerImage.alt = `${data.title} — image ${privateCurrentIndex + 1}`;
+  resetPrivateZoom();
   privateViewerCount.textContent = `${privateCurrentIndex + 1} / ${data.images.length}`;
 
   privateViewerThumbs.innerHTML = '';
@@ -257,6 +296,7 @@ async function openPrivateViewer(projectKey){
 }
 
 function closePrivateViewer(){
+  resetPrivateZoom();
   privateViewer.classList.remove('open');
   privateViewer.setAttribute('aria-hidden','true');
   document.body.style.overflow = '';
@@ -282,6 +322,95 @@ privateNext?.addEventListener('click',()=>{
   renderPrivateViewer();
 });
 
+
+// Mouse wheel: zoom in/out while the pointer is over the artwork.
+privateViewerImageWrap?.addEventListener('wheel', e=>{
+  if(!privateViewer?.classList.contains('open')) return;
+  e.preventDefault();
+
+  const direction = e.deltaY < 0 ? 1 : -1;
+  setPrivateZoom(privateZoom + direction * PRIVATE_ZOOM_STEP);
+}, { passive:false });
+
+// Mouse drag: pan the image after zooming in.
+privateViewerImageWrap?.addEventListener('mousedown', e=>{
+  if(privateZoom <= 1.001 || e.button !== 0) return;
+  e.preventDefault();
+  privateDragging = true;
+  privateDragStartX = e.clientX;
+  privateDragStartY = e.clientY;
+  privatePanStartX = privatePanX;
+  privatePanStartY = privatePanY;
+  privateViewerImageWrap.classList.add('is-dragging');
+});
+
+window.addEventListener('mousemove', e=>{
+  if(!privateDragging) return;
+  privatePanX = privatePanStartX + (e.clientX - privateDragStartX);
+  privatePanY = privatePanStartY + (e.clientY - privateDragStartY);
+  applyPrivateZoom();
+});
+
+window.addEventListener('mouseup', ()=>{
+  privateDragging = false;
+  privateViewerImageWrap?.classList.remove('is-dragging');
+});
+
+// Double click: quick comfortable zoom / reset.
+privateViewerImageWrap?.addEventListener('dblclick', e=>{
+  e.preventDefault();
+  if(privateZoom > 1.001) resetPrivateZoom();
+  else setPrivateZoom(1.65);
+});
+
+// Touch: pinch to zoom and one-finger pan while zoomed.
+let privateTouchStartDistance = 0;
+let privateTouchStartZoom = 1;
+let privateTouchStartX = 0;
+let privateTouchStartY = 0;
+let privateTouchPanStartX = 0;
+let privateTouchPanStartY = 0;
+
+function privateTouchDistance(touches){
+  const dx = touches[0].clientX - touches[1].clientX;
+  const dy = touches[0].clientY - touches[1].clientY;
+  return Math.hypot(dx, dy);
+}
+
+privateViewerImageWrap?.addEventListener('touchstart', e=>{
+  if(e.touches.length === 2){
+    e.preventDefault();
+    privateTouchStartDistance = privateTouchDistance(e.touches);
+    privateTouchStartZoom = privateZoom;
+  }else if(e.touches.length === 1 && privateZoom > 1.001){
+    e.preventDefault();
+    privateTouchStartX = e.touches[0].clientX;
+    privateTouchStartY = e.touches[0].clientY;
+    privateTouchPanStartX = privatePanX;
+    privateTouchPanStartY = privatePanY;
+    privateViewerImageWrap.classList.add('is-dragging');
+  }
+}, { passive:false });
+
+privateViewerImageWrap?.addEventListener('touchmove', e=>{
+  if(e.touches.length === 2 && privateTouchStartDistance > 0){
+    e.preventDefault();
+    const currentDistance = privateTouchDistance(e.touches);
+    const ratio = currentDistance / privateTouchStartDistance;
+    setPrivateZoom(privateTouchStartZoom * ratio);
+  }else if(e.touches.length === 1 && privateZoom > 1.001){
+    e.preventDefault();
+    privatePanX = privateTouchPanStartX + (e.touches[0].clientX - privateTouchStartX);
+    privatePanY = privateTouchPanStartY + (e.touches[0].clientY - privateTouchStartY);
+    applyPrivateZoom();
+  }
+}, { passive:false });
+
+privateViewerImageWrap?.addEventListener('touchend', ()=>{
+  privateTouchStartDistance = 0;
+  privateViewerImageWrap?.classList.remove('is-dragging');
+});
+
 window.addEventListener('keydown',e=>{
   if(!privateViewer?.classList.contains('open')) return;
   if(e.key === 'Escape') closePrivateViewer();
@@ -290,43 +419,83 @@ window.addEventListener('keydown',e=>{
 });
 
 
-// ===== ACTIVE NAVIGATION ON SCROLL =====
-const navLinks = [...document.querySelectorAll('.topbar nav .nav-link')];
-const navSections = navLinks
-  .map(link => {
-    const id = link.getAttribute('href');
-    const section = id && id.startsWith('#') ? document.querySelector(id) : null;
-    return section ? { link, section } : null;
-  })
-  .filter(Boolean);
+// ===== ANIMATED HAND-DRAWN NAV CIRCLE =====
+(function(){
+  const navLinks = [...document.querySelectorAll('.topbar nav .nav-link')];
 
-function updateActiveNav(){
-  if(!navSections.length) return;
+  const inkMarkup = `
+    <svg class="nav-ink" viewBox="0 0 170 60" preserveAspectRatio="none" aria-hidden="true">
+      <path class="nav-ink-stroke-1" d="M14 30 C 16 12, 52 7, 87 8 C 122 8, 156 12, 156 30 C 156 47, 121 52, 86 52 C 52 52, 18 48, 14 30 Z"></path>
+      <path class="nav-ink-stroke-2" d="M21 30 C 24 14, 56 11, 87 11 C 118 11, 148 15, 149 30 C 149 44, 119 49, 87 49 C 56 49, 26 46, 21 30 Z"></path>
+    </svg>`;
 
-  const marker = window.innerHeight * 0.34;
-  let current = navSections[0];
-
-  for(const item of navSections){
-    const rect = item.section.getBoundingClientRect();
-    if(rect.top <= marker){
-      current = item;
+  navLinks.forEach(link => {
+    if(!link.querySelector('.nav-ink')){
+      link.insertAdjacentHTML('beforeend', inkMarkup);
     }
+  });
+
+  function triggerInkAnimation(link){
+    if(!link) return;
+    navLinks.forEach(item => item.classList.remove('animate-draw'));
+    // force restart
+    void link.offsetWidth;
+    link.classList.add('animate-draw');
+    window.clearTimeout(link._inkTimer);
+    link._inkTimer = window.setTimeout(()=>{
+      link.classList.remove('animate-draw');
+    }, 1100);
   }
 
-  navLinks.forEach(link => link.classList.remove('active'));
-  current.link.classList.add('active');
-}
+  const sectionPairs = navLinks
+    .map(link => {
+      const id = link.getAttribute('href');
+      const section = id && id.startsWith('#') ? document.querySelector(id) : null;
+      return section ? { link, section } : null;
+    })
+    .filter(Boolean);
 
-window.addEventListener('scroll', updateActiveNav, {passive:true});
-window.addEventListener('resize', updateActiveNav);
-updateActiveNav();
+  let currentActiveLink = null;
 
-// Smooth section navigation
-navLinks.forEach(link=>{
-  link.addEventListener('click', e=>{
-    const target = document.querySelector(link.getAttribute('href'));
-    if(!target) return;
-    e.preventDefault();
-    target.scrollIntoView({behavior:'smooth', block:'start'});
+  function setActiveLink(link, animate=true){
+    if(!link) return;
+    if(currentActiveLink === link){
+      if(animate) triggerInkAnimation(link);
+      return;
+    }
+    navLinks.forEach(item => item.classList.remove('active'));
+    link.classList.add('active');
+    currentActiveLink = link;
+    if(animate) triggerInkAnimation(link);
+  }
+
+  function updateActiveNavAnimated(){
+    if(!sectionPairs.length) return;
+    const marker = window.innerHeight * 0.34;
+    let current = sectionPairs[0];
+    for(const item of sectionPairs){
+      const rect = item.section.getBoundingClientRect();
+      if(rect.top <= marker){
+        current = item;
+      }
+    }
+    setActiveLink(current.link, currentActiveLink !== current.link);
+  }
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      const target = document.querySelector(link.getAttribute('href'));
+      if(!target) return;
+      e.preventDefault();
+      setActiveLink(link, true);
+      target.scrollIntoView({behavior:'smooth', block:'start'});
+    });
   });
-});
+
+  window.addEventListener('scroll', updateActiveNavAnimated, {passive:true});
+  window.addEventListener('resize', updateActiveNavAnimated);
+  setTimeout(()=>{
+    setActiveLink(navLinks[0], true);
+    updateActiveNavAnimated();
+  }, 80);
+})();

@@ -1101,3 +1101,560 @@ h1{
     height:34px;
   }
 }
+
+
+/* ===== ANIMATED HAND-DRAWN YELLOW CIRCLE FOR ACTIVE NAV ===== */
+.topbar nav{
+  align-items:center;
+  gap:20px;
+}
+
+.topbar nav .nav-link{
+  position:relative;
+  z-index:1;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:34px;
+  padding:0 4px;
+  color:#aeb5bd;
+  transition:color .18s ease, transform .18s ease;
+}
+
+.topbar nav .nav-link:hover{
+  color:#f4f4f2;
+  text-decoration:none;
+}
+
+.topbar nav .nav-link.active{
+  color:#ffffff;
+  font-weight:900;
+  text-shadow:0 0 8px rgba(244,240,0,.08);
+}
+
+/* disable old pseudo-circle so the new SVG circle is used */
+.topbar nav .nav-link::before,
+.topbar nav .nav-link::after{
+  content:none !important;
+}
+
+.topbar nav .nav-link .nav-ink{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:calc(100% + 34px);
+  height:42px;
+  transform:translate(-50%,-50%);
+  overflow:visible;
+  pointer-events:none;
+  z-index:-1;
+  opacity:0;
+}
+
+.topbar nav .nav-link.active .nav-ink{
+  opacity:1;
+}
+
+.topbar nav .nav-link .nav-ink path{
+  fill:none;
+  stroke:#f4f000;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  vector-effect:non-scaling-stroke;
+  filter:drop-shadow(0 0 3px rgba(244,240,0,.18));
+}
+
+.topbar nav .nav-link .nav-ink .nav-ink-stroke-1{
+  stroke-width:3.2;
+  stroke-dasharray:390;
+  stroke-dashoffset:390;
+}
+
+.topbar nav .nav-link .nav-ink .nav-ink-stroke-2{
+  stroke-width:2.2;
+  opacity:.75;
+  stroke-dasharray:370;
+  stroke-dashoffset:370;
+}
+
+/* when active and settled */
+.topbar nav .nav-link.active:not(.animate-draw) .nav-ink .nav-ink-stroke-1,
+.topbar nav .nav-link.active:not(.animate-draw) .nav-ink .nav-ink-stroke-2{
+  stroke-dashoffset:0;
+}
+
+/* replay the drawing animation */
+.topbar nav .nav-link.active.animate-draw .nav-ink .nav-ink-stroke-1{
+  animation:navInkDraw1 .75s cubic-bezier(.22,.61,.36,1) forwards;
+}
+
+.topbar nav .nav-link.active.animate-draw .nav-ink .nav-ink-stroke-2{
+  animation:navInkDraw2 .68s cubic-bezier(.22,.61,.36,1) .12s forwards;
+}
+
+@keyframes navInkDraw1{
+  from{ stroke-dashoffset:390; }
+  to{ stroke-dashoffset:0; }
+}
+
+@keyframes navInkDraw2{
+  from{ stroke-dashoffset:370; }
+  to{ stroke-dashoffset:0; }
+}
+
+@media(max-width:900px){
+  .topbar nav .nav-link .nav-ink{
+    width:calc(100% + 22px);
+    height:36px;
+  }
+}
+
+
+/* ===== WORK V1: TWO ROWS / MORE CARDS / SMALLER HEADER ===== */
+
+#work.section-pad{
+  padding-top:54px !important;
+  padding-bottom:62px !important;
+}
+
+#work .section-heading{
+  grid-template-columns:.65fr 1fr .75fr !important;
+  gap:20px !important;
+  margin-bottom:26px !important;
+  align-items:end !important;
+}
+
+#work .section-heading h2{
+  font-size:clamp(32px,4vw,58px) !important;
+  line-height:.95 !important;
+  letter-spacing:-1.5px !important;
+}
+
+#work .section-heading .kicker{
+  font-size:10px !important;
+  opacity:.72;
+}
+
+#work .section-heading p:last-child{
+  max-width:330px !important;
+  font-size:11px !important;
+  line-height:1.45 !important;
+  opacity:.55 !important;
+}
+
+/* 2 horizontal rows. About 3 columns visible = 6 cards at once. */
+#work .work-carousel{
+  display:grid !important;
+  grid-template-rows:repeat(2, 230px) !important;
+  grid-auto-flow:column !important;
+  grid-auto-columns:calc((100% - 32px) / 3) !important;
+  gap:16px !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  align-items:stretch !important;
+  padding:4px 4px 18px !important;
+}
+
+#work .carousel-card{
+  width:auto !important;
+  min-width:0 !important;
+  min-height:0 !important;
+  height:230px !important;
+  flex:none !important;
+  border-radius:15px !important;
+}
+
+#work .carousel-card img{
+  width:100% !important;
+  height:100% !important;
+  min-height:0 !important;
+  object-fit:cover !important;
+}
+
+#work .carousel-card .project-copy{
+  left:7px !important;
+  right:7px !important;
+  bottom:7px !important;
+  padding:5px 7px !important;
+  border-radius:10px !important;
+  border-width:1px !important;
+}
+
+#work .carousel-card .project-copy span{
+  font-size:5.5px !important;
+  opacity:.55 !important;
+}
+
+#work .carousel-card .project-copy h3{
+  font-size:11px !important;
+  line-height:1.05 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+
+#work .carousel-card .project-copy b{
+  font-size:6.5px !important;
+  padding:2px 5px !important;
+  border-width:1px !important;
+}
+
+#work .work-arrow{
+  width:46px !important;
+  height:64px !important;
+  font-size:24px !important;
+}
+
+#work .work-carousel-shell{
+  grid-template-columns:46px minmax(0,1fr) 46px !important;
+  gap:10px !important;
+}
+
+#work .work-scroll-hint{
+  margin-top:4px !important;
+  font-size:9px !important;
+  opacity:.5;
+}
+
+@media(max-width:1050px){
+  #work .work-carousel{
+    grid-auto-columns:calc((100% - 16px) / 2) !important;
+  }
+}
+
+@media(max-width:700px){
+  #work .section-heading{
+    grid-template-columns:1fr !important;
+    margin-bottom:20px !important;
+  }
+
+  #work .section-heading h2{
+    font-size:38px !important;
+  }
+
+  #work .work-carousel{
+    grid-template-rows:repeat(2, 210px) !important;
+    grid-auto-columns:82% !important;
+    gap:12px !important;
+  }
+
+  #work .carousel-card{
+    height:210px !important;
+  }
+}
+
+
+/* ===== WORK V2: SLIGHTLY LARGER CARDS ===== */
+#work .work-carousel{
+  grid-template-rows:repeat(2, 270px) !important;
+  grid-auto-columns:calc((100% - 18px) / 2.6) !important;
+  gap:18px !important;
+}
+
+#work .carousel-card{
+  height:270px !important;
+}
+
+#work .carousel-card img{
+  height:270px !important;
+}
+
+@media(max-width:1050px){
+  #work .work-carousel{
+    grid-template-rows:repeat(2, 245px) !important;
+    grid-auto-columns:56% !important;
+  }
+
+  #work .carousel-card,
+  #work .carousel-card img{
+    height:245px !important;
+  }
+}
+
+@media(max-width:700px){
+  #work .work-carousel{
+    grid-template-rows:repeat(2, 220px) !important;
+    grid-auto-columns:88% !important;
+  }
+
+  #work .carousel-card,
+  #work .carousel-card img{
+    height:220px !important;
+  }
+}
+
+
+/* ===== FIXED SQUARE PORTFOLIO CARDS =====
+   Same fixed square size for:
+   1) top ANIMATION cards
+   2) lower WORK cards
+*/
+:root{
+  --portfolio-card-size:320px;
+}
+
+/* TOP ANIMATION CARDS */
+.top-characters-scroll{
+  align-items:start !important;
+}
+
+.top-characters-scroll .top-character-card{
+  flex:0 0 var(--portfolio-card-size) !important;
+  width:var(--portfolio-card-size) !important;
+  height:var(--portfolio-card-size) !important;
+  min-width:var(--portfolio-card-size) !important;
+  min-height:var(--portfolio-card-size) !important;
+  aspect-ratio:1 / 1 !important;
+}
+
+.top-characters-scroll .top-character-card img{
+  width:100% !important;
+  height:100% !important;
+  min-height:0 !important;
+  object-fit:cover !important;
+}
+
+/* LOWER WORK CARDS: two rows, fixed square size */
+#work .work-carousel{
+  grid-template-rows:repeat(2, var(--portfolio-card-size)) !important;
+  grid-auto-columns:var(--portfolio-card-size) !important;
+  grid-auto-flow:column !important;
+  align-items:start !important;
+}
+
+#work .carousel-card{
+  width:var(--portfolio-card-size) !important;
+  height:var(--portfolio-card-size) !important;
+  min-width:var(--portfolio-card-size) !important;
+  min-height:var(--portfolio-card-size) !important;
+  aspect-ratio:1 / 1 !important;
+}
+
+#work .carousel-card img{
+  width:100% !important;
+  height:100% !important;
+  min-height:0 !important;
+  object-fit:cover !important;
+}
+
+/* Keep the cards fixed even when viewport size changes.
+   They simply scroll horizontally instead of stretching/shrinking. */
+@media(max-width:1050px){
+  .top-characters-scroll .top-character-card,
+  #work .carousel-card{
+    flex-basis:var(--portfolio-card-size) !important;
+    width:var(--portfolio-card-size) !important;
+    height:var(--portfolio-card-size) !important;
+    min-width:var(--portfolio-card-size) !important;
+    min-height:var(--portfolio-card-size) !important;
+  }
+
+  #work .work-carousel{
+    grid-template-rows:repeat(2, var(--portfolio-card-size)) !important;
+    grid-auto-columns:var(--portfolio-card-size) !important;
+  }
+}
+
+@media(max-width:700px){
+  .top-characters-scroll .top-character-card,
+  #work .carousel-card{
+    flex-basis:var(--portfolio-card-size) !important;
+    width:var(--portfolio-card-size) !important;
+    height:var(--portfolio-card-size) !important;
+    min-width:var(--portfolio-card-size) !important;
+    min-height:var(--portfolio-card-size) !important;
+  }
+
+  #work .work-carousel{
+    grid-template-rows:repeat(2, var(--portfolio-card-size)) !important;
+    grid-auto-columns:var(--portfolio-card-size) !important;
+  }
+}
+
+
+/* ===== PRIVATE VIEWER: WHEEL / TOUCH ZOOM =====
+   Only affects the closed/private portfolio viewer.
+*/
+.private-viewer-image-wrap{
+  position:relative;
+  width:100%;
+  max-height:76vh;
+  min-height:180px;
+  overflow:hidden;
+  border-radius:12px;
+  background:#090c10;
+  border:1px solid rgba(255,255,255,.08);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  touch-action:none;
+  cursor:zoom-in;
+  user-select:none;
+}
+
+.private-viewer-image-wrap.is-zoomed{
+  cursor:grab;
+}
+
+.private-viewer-image-wrap.is-dragging{
+  cursor:grabbing;
+}
+
+.private-viewer-image-wrap #privateViewerImage{
+  width:100% !important;
+  height:auto !important;
+  max-width:100% !important;
+  max-height:76vh !important;
+  object-fit:contain !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  transform-origin:center center;
+  will-change:transform;
+  transition:transform .12s ease-out;
+  pointer-events:none;
+}
+
+.private-viewer-image-wrap.is-dragging #privateViewerImage{
+  transition:none;
+}
+
+@media(max-width:900px){
+  .private-viewer-image-wrap{
+    max-height:74vh;
+  }
+  .private-viewer-image-wrap #privateViewerImage{
+    max-height:74vh !important;
+  }
+}
+
+@media(max-width:520px){
+  .private-viewer-image-wrap{
+    max-height:70vh;
+  }
+  .private-viewer-image-wrap #privateViewerImage{
+    max-height:70vh !important;
+  }
+}
+
+
+/* ===== PRIVATE VIEWER V2: SERIOUS CLOSE BUTTON ONLY ===== */
+.private-viewer-close{
+  width:44px !important;
+  height:44px !important;
+  border-radius:10px !important;
+  border:1px solid rgba(255,255,255,.16) !important;
+  background:#15191f !important;
+  color:#f2f4f7 !important;
+  font-family:Arial, Helvetica, sans-serif !important;
+  font-size:27px !important;
+  font-weight:400 !important;
+  line-height:1 !important;
+  box-shadow:0 8px 22px rgba(0,0,0,.28) !important;
+  text-shadow:none !important;
+  transform:none !important;
+  transition:background .18s ease, border-color .18s ease, color .18s ease, transform .18s ease !important;
+}
+
+.private-viewer-close:hover{
+  background:#20262e !important;
+  border-color:rgba(255,255,255,.30) !important;
+  color:#ffffff !important;
+  transform:translateY(-1px) !important;
+}
+
+.private-viewer-close:active{
+  transform:translateY(0) !important;
+  background:#101419 !important;
+}
+
+
+/* =========================================================
+   NAV: keep the OLD yellow hand-drawn active marker
+   for ANIMATION / WORK / ABOUT / CONTACT.
+   PRIVATE ARCHIVE gets its own active-red state.
+   ========================================================= */
+
+/* PRIVATE ARCHIVE is calm/neutral when not active. */
+.topbar nav .nav-private-archive{
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:7px !important;
+  color:inherit !important;
+  border:1px solid transparent !important;
+  border-radius:8px !important;
+  padding:7px 11px !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  transform:none !important;
+}
+
+/* Do not show the OLD yellow ink circle on PRIVATE ARCHIVE. */
+.topbar nav .nav-private-archive .nav-ink{
+  display:none !important;
+}
+
+.topbar nav .nav-private-archive::before,
+.topbar nav .nav-private-archive::after{
+  content:none !important;
+}
+
+/* Small code-drawn lock, neutral by default. */
+.topbar nav .private-lock{
+  position:relative;
+  width:13px;
+  height:12px;
+  flex:0 0 13px;
+  border:1.7px solid currentColor;
+  border-radius:2px;
+  box-sizing:border-box;
+  opacity:.9;
+}
+
+.topbar nav .private-lock::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:-8px;
+  width:9px;
+  height:8px;
+  transform:translateX(-50%);
+  border:1.7px solid currentColor;
+  border-bottom:0;
+  border-radius:7px 7px 0 0;
+  box-sizing:border-box;
+}
+
+/* Only when PRIVATE section is active/clicked:
+   make the archive clearly red / classified. */
+.topbar nav .nav-private-archive.active{
+  color:#ff5148 !important;
+  border-color:#ff5148 !important;
+  background:
+    repeating-linear-gradient(
+      -12deg,
+      rgba(255,81,72,.09) 0 2px,
+      transparent 2px 7px
+    ),
+    rgba(120,16,14,.08) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,81,72,.10) inset,
+    0 0 16px rgba(255,65,58,.16) !important;
+  transform:rotate(-1deg) !important;
+}
+
+/* Slight irregular second outline for active PRIVATE only. */
+.topbar nav .nav-private-archive.active::before{
+  content:"" !important;
+  position:absolute !important;
+  inset:-4px -5px !important;
+  border:1px solid rgba(255,81,72,.72) !important;
+  border-radius:9px 7px 10px 8px !important;
+  transform:rotate(1.4deg) !important;
+  pointer-events:none !important;
+}
+
+.topbar nav .nav-private-archive.active:hover{
+  color:#ff6a62 !important;
+  border-color:#ff6a62 !important;
+}

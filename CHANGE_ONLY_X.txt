@@ -1,0 +1,9 @@
+PRIVATE VIEWER V2
+
+Only the X / close button styling was changed.
+
+- Removed bright red/cartoon appearance.
+- New dark neutral button.
+- Smaller and more professional.
+- Existing click behavior is untouched.
+- Viewer zoom, arrows, thumbnails, projects, navigation and all other site sections are unchanged.
