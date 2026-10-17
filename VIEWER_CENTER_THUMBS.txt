@@ -1,0 +1,4 @@
+Change made:
+- The thumbnail strip at the bottom of the private-project viewer is centered on desktop.
+- On small screens it remains horizontally scrollable from the left so nothing gets cut off.
+- No other viewer mechanics were changed.

@@ -1,1499 +1,449 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Vahram Tumanyan — 2D Artist / Spine Animator</title>
-  <link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@4.3.13/dist/spine-player.css">
-  <style>
-    *{box-sizing:border-box}
-    html,body{margin:0;width:100%;min-height:100%;overflow-x:hidden;background:#0b0f14;font-family:Inter,Arial,sans-serif;color:#fff;scroll-behavior:smooth}
-    body{
-      background:#080b10;
-    }
-
-    /* ===== compact top controls ===== */
-    .controls{
-      position:fixed;
-      top:10px;
-      left:50%;
-      transform:translateX(-50%);
-      z-index:100;
-      display:flex;
-      align-items:center;
-      gap:6px;
-      padding:5px;
-      border:1px solid #3d4b5d;
-      border-radius:18px;
-      background:#121923e8;
-      box-shadow:0 12px 35px #000b, inset 0 0 0 1px #ffffff08;
-      backdrop-filter:blur(14px);
-    }
-    .master{
-      display:flex;align-items:center;gap:5px;
-      padding:0 7px 0 5px;
-      border-right:1px solid #334052;
-      height:42px;
-    }
-    .bolt{font-size:18px;filter:drop-shadow(0 0 8px #ff9d28)}
-    .card{position:relative}
-    .head{
-      height:42px;
-      min-width:118px;
-      display:flex;
-      align-items:center;
-      gap:6px;
-      padding:3px 6px;
-      border:1px solid #334052;
-      border-radius:12px;
-      background:linear-gradient(#1a2330,#101720);
-    }
-    .avatar{
-      width:34px;height:34px;border-radius:10px;
-      display:grid;place-items:center;
-      font-size:21px;
-      background:#0d151f;
-      border:2px solid #f4a73c;
-      box-shadow:0 0 14px #ff9c3133;
-    }
-    .name{font-weight:800;font-size:12px;line-height:1}
-    .sub{font-size:8px;color:#8696ab;margin-top:3px}
-    .fold{
-      width:18px;height:24px;padding:0;border:0;background:transparent;color:#b8c2d0;
-      font-size:15px;cursor:pointer;
-    }
-    .switch{position:relative;width:36px;height:20px;display:inline-block;margin-left:auto}
-    .switch input{display:none}
-    .track{
-      position:absolute;inset:0;border-radius:999px;
-      background:#8e1823;border:1px solid #ff4051;
-      box-shadow:0 0 10px #ff243b88,inset 0 0 7px #ff304166;
-      transition:.18s;
-    }
-    .knob{
-      position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;
-      background:#fff3d8;box-shadow:0 1px 4px #0008;
-      transition:.18s;
-    }
-    .switch input:checked + .track{
-      background:#087b40;border-color:#2dff86;
-      box-shadow:0 0 12px #25ff7faa,inset 0 0 8px #42ff9177;
-    }
-    .switch input:checked + .track .knob{transform:translateX(16px)}
-    .menu{
-      display:none;
-      position:absolute;
-      top:48px;left:0;
-      min-width:165px;
-      padding:7px;
-      border:1px solid #405066;
-      border-radius:12px;
-      background:#111923f7;
-      box-shadow:0 20px 40px #000c;
-    }
-    .card.open .menu{display:grid;gap:4px}
-    .anim{
-      border:1px solid #273346;
-      border-radius:8px;
-      background:#18212d;color:#dbe4ef;
-      padding:7px 9px;text-align:left;font-size:11px;cursor:pointer;
-    }
-    .anim:hover,.anim.active{border-color:#f3a63c;color:#fff;background:#2a2218}
-
-    .menu-loading{
-      padding:7px 9px;
-      color:#8290a2;
-      font-size:10px;
-      white-space:nowrap;
-    }
-
-
-    /* ===== full-screen character stage ===== */
-    #stage{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:30}
-    .actor{position:absolute;opacity:0;transition:opacity .22s;pointer-events:none}
-    .actor.on{opacity:1}
-
-    .spine-host{width:100%;height:100%;background:transparent!important}
-    .spine-player-canvas{background:transparent!important}
-
-
-    /* Fly: do not crop/mask any part of the Spine character. */
-    #flyLane,
-    #flyBob,
-    #flyPlayer,
-    #flyPlayer *,
-    #flyPlayer canvas{
-      overflow:visible!important;
-      clip:auto!important;
-      clip-path:none!important;
-      mask:none!important;
-      -webkit-mask:none!important;
-      border-radius:0!important;
-    }
-
-    /* Fly: free viewport roaming. Real Spine animation stays inside. */
-    #flyLane{
-      position:absolute;
-      left:12vw;
-      top:22vh;
-      width:260px;
-      height:205px;
-      opacity:0;
-      pointer-events:none;
-      will-change:left,top,transform;
-      transition:left 1.7s ease-in-out, top 1.7s ease-in-out, transform .2s ease;
-    }
-    #flyLane.on{opacity:1}
-    #flyBob{
-      width:100%;height:100%;
-      pointer-events:auto;
-      cursor:crosshair;
-      transform-origin:center;
-      animation:flyBob 1.15s ease-in-out infinite alternate;
-    }
-    @keyframes flyBob{
-      from{transform:translateY(-22px) rotate(-2deg) scaleX(var(--flyFace,-1))}
-      to{transform:translateY(26px) rotate(2deg) scaleX(var(--flyFace,-1))}
-    }
-    .click-label{
-      position:absolute;left:50%;top:3px;transform:translateX(-50%);
-      font-size:10px;font-weight:900;letter-spacing:.08em;
-      color:#ffd27a;text-shadow:0 2px 8px #000;
-      opacity:.78;pointer-events:none;
-    }
-
-    /* Frog: larger and closer to the center-bottom. */
-    /* Frog fixed bottom-right */
-    #frogActor{
-      left:50%;
-      right:auto;
-      bottom:-4vw;
-      width:min(1180px,78vw);
-      height:min(900px,62vw);
-      transform:translateX(-50%);
-      transform-origin:50% 100%;
-    }
-
-    /* Croc moves horizontally across bottom */
-    #crocActor{
-      left:-48vw;bottom:-2.5vw;
-      width:min(760px,48vw);height:min(500px,34vw);
-      will-change:left,transform;
-    }
-    #crocActor.reverse{transform:scaleX(1)}
-    #crocActor.forward{transform:scaleX(-1)}
-    #crocActor{
-      transition:left 4.9s cubic-bezier(.22,.61,.36,1), transform .28s ease, opacity .22s ease;
-    }
-    .actor.rig-focus{
-      position:fixed!important;
-      left:50%!important;
-      top:50%!important;
-      right:auto!important;
-      bottom:auto!important;
-      width:min(1100px,82vw)!important;
-      height:min(820px,78vh)!important;
-      transform:translate(-50%,-50%)!important;
-      z-index:80!important;
-      opacity:1!important;
-      transition:none!important;
-    }
-    
-
-
-
-    .actor.manual-focus{
-      position:fixed!important;
-      left:50%!important;
-      top:50%!important;
-      right:auto!important;
-      bottom:auto!important;
-      width:min(900px,68vw)!important;
-      height:min(680px,62vh)!important;
-      transform:translate(-50%,-50%)!important;
-      z-index:75!important;
-      opacity:1!important;
-      transition:none!important;
-    }
-    .actor.manual-away{
-      opacity:.18!important;
-      transform:translateX(38vw) scale(.72)!important;
-      pointer-events:none!important;
-    }
-
-
-    .actor.preview-focus{
-      position:fixed!important;
-      left:50%!important;
-      top:50%!important;
-      right:auto!important;
-      bottom:auto!important;
-      width:min(1260px,88vw)!important;
-      height:min(920px,84vh)!important;
-      transform:translate(-50%,-50%) scale(1)!important;
-      z-index:999!important;
-      opacity:1!important;
-      visibility:visible!important;
-      display:block!important;
-      pointer-events:none!important;
-      transition:none!important;
-    }
-
-    #frogActor.frog-rig-center{
-      position:fixed!important;
-      left:50%!important;
-      top:50%!important;
-      right:auto!important;
-      bottom:auto!important;
-      width:min(1360px,92vw)!important;
-      height:min(980px,88vh)!important;
-      transform:translate(-50%,-50%)!important;
-      z-index:1000!important;
-      opacity:1!important;
-      visibility:visible!important;
-      display:block!important;
-    }
-
-    #crocActor.preview-focus{
-      left:50%!important;
-      top:52%!important;
-      bottom:auto!important;
-      width:min(1320px,90vw)!important;
-      height:min(940px,86vh)!important;
-      transform:translate(-50%,-50%)!important;
-    }
-    .actor.preview-hidden,
-    #flyLane.preview-hidden{
-      opacity:0!important;
-      pointer-events:none!important;
-    }
-
-    .hint{display:none!important;
-      position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
-      color:#7f8c9f;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-      pointer-events:none;
-    }
-
-    @media(max-width:850px){
-      .controls{left:8px;right:8px;transform:none;justify-content:center;gap:3px}
-      .head{min-width:88px;padding:3px}
-      .name,.sub{display:none}
-      .avatar{width:32px;height:32px}
-      #frogActor{width:125vw;height:96vw;left:50%;right:auto;bottom:-7vw;transform:translateX(-50%)}
-      #crocActor{width:110vw;height:75vw;bottom:-5vw}
-      #flyLane{width:220px;height:175px;top:30%}
-    }
-  
-    /* ===== Portfolio website ===== */
-    :root{
-      --ink:#080b10;
-      --panel:#111822;
-      --panel2:#171f2a;
-      --line:#2b3747;
-      --muted:#8e9caf;
-      --accent:#f6a83b;
-      --accent2:#ff6a32;
-      --cream:#ffe1aa;
-    }
-
-    .site-shell{
-      position:relative;
-      z-index:1;
-      min-height:100vh;
-      isolation:isolate;
-    }
-
-    .site-shell:before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:-2;
-      background:
-        radial-gradient(circle at 18% 16%,#30261a 0,transparent 27%),
-        radial-gradient(circle at 85% 32%,#19283a 0,transparent 30%),
-        linear-gradient(180deg,#0a0e13 0%,#0c1118 48%,#080b10 100%);
-    }
-
-    .site-shell:after{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:-1;
-      opacity:.14;
-      background-image:
-        linear-gradient(#ffffff08 1px,transparent 1px),
-        linear-gradient(90deg,#ffffff08 1px,transparent 1px);
-      background-size:42px 42px;
-      mask-image:linear-gradient(to bottom,#000,transparent 82%);
-    }
-
-    .brand-chip{
-      position:fixed;
-      left:18px;
-      top:15px;
-      z-index:95;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      color:#fff;
-      text-decoration:none;
-      font-weight:950;
-      letter-spacing:.08em;
-      font-size:12px;
-      text-transform:uppercase;
-      mix-blend-mode:normal;
-    }
-    .brand-mark{
-      width:34px;height:34px;border-radius:11px;
-      display:grid;place-items:center;
-      color:#161009;background:var(--accent);
-      box-shadow:0 0 22px #f6a83b44;
-      font-weight:1000;
-    }
-
-    .site-nav{
-      position:fixed;
-      right:18px;
-      top:16px;
-      z-index:95;
-      display:flex;
-      gap:7px;
-    }
-    .site-nav a{
-      color:#b8c4d2;
-      text-decoration:none;
-      font-size:11px;
-      font-weight:800;
-      padding:9px 12px;
-      border:1px solid #2c3948;
-      border-radius:999px;
-      background:#0f151dcc;
-      backdrop-filter:blur(12px);
-      transition:.2s ease;
-    }
-    .site-nav a:hover{color:#fff;border-color:#f6a83b88;transform:translateY(-1px)}
-
-    .hero{
-      min-height:100vh;
-      display:grid;
-      align-items:center;
-      padding:132px clamp(24px,7vw,110px) 100px;
-    }
-    .hero-inner{
-      width:min(820px,78vw);
-      position:relative;
-    }
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:9px;
-      margin-bottom:20px;
-      color:var(--cream);
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-    }
-    .eyebrow:before{
-      content:"";
-      width:38px;height:2px;background:var(--accent);
-      box-shadow:0 0 12px #f6a83b88;
-    }
-    .hero h1{
-      margin:0;
-      max-width:950px;
-      font-size:clamp(56px,9vw,150px);
-      line-height:.82;
-      letter-spacing:-.07em;
-      text-transform:uppercase;
-      font-weight:1000;
-      text-wrap:balance;
-    }
-    .hero h1 .stroke{
-      color:transparent;
-      -webkit-text-stroke:1.5px #ffdfaa;
-      opacity:.7;
-    }
-    .hero-copy{
-      margin:30px 0 0;
-      max-width:650px;
-      color:#a8b4c3;
-      font-size:clamp(15px,1.45vw,20px);
-      line-height:1.6;
-    }
-    .hero-actions{
-      display:flex;flex-wrap:wrap;gap:12px;margin-top:30px;
-    }
-    .cta{
-      display:inline-flex;align-items:center;justify-content:center;gap:9px;
-      min-height:48px;padding:0 18px;border-radius:14px;
-      text-decoration:none;font-size:12px;font-weight:950;letter-spacing:.05em;
-      text-transform:uppercase;
-      transition:.2s ease;
-    }
-    .cta.primary{color:#15100b;background:linear-gradient(135deg,#ffc45c,#f38a32);box-shadow:0 14px 40px #f28a2733}
-    .cta.secondary{color:#fff;background:#101721dd;border:1px solid #344154}
-    .cta:hover{transform:translateY(-2px)}
-
-    .character-help{
-      margin-top:34px;
-      display:inline-flex;align-items:center;gap:10px;
-      max-width:520px;
-      padding:12px 14px;
-      color:#8e9caf;
-      background:#0d131bbb;
-      border:1px solid #263242;
-      border-radius:14px;
-      font-size:11px;
-      line-height:1.45;
-    }
-    .character-help b{color:#ffd58a}
-
-    .section{
-      position:relative;
-      padding:120px clamp(24px,7vw,110px);
-    }
-    .section-heading{
-      display:flex;align-items:end;justify-content:space-between;gap:25px;
-      margin-bottom:34px;
-    }
-    .section-kicker{
-      color:var(--accent);
-      font-size:11px;font-weight:950;letter-spacing:.18em;text-transform:uppercase;
-      margin-bottom:10px;
-    }
-    .section h2{
-      margin:0;
-      font-size:clamp(38px,6vw,84px);
-      line-height:.92;
-      letter-spacing:-.055em;
-      text-transform:uppercase;
-    }
-    .section-note{
-      max-width:460px;color:#8493a7;font-size:13px;line-height:1.55;
-    }
-
-    .cap-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:14px;
-    }
-    .cap-card{
-      min-height:260px;
-      display:flex;flex-direction:column;justify-content:space-between;
-      padding:22px;
-      border:1px solid var(--line);
-      border-radius:22px;
-      background:
-        radial-gradient(circle at 80% 10%,#f6a83b18,transparent 36%),
-        linear-gradient(150deg,#171f2aee,#0d131bee);
-      box-shadow:0 20px 50px #0005;
-      transition:.25s ease;
-    }
-    .cap-card:hover{transform:translateY(-5px);border-color:#f6a83b66}
-    .cap-index{font-size:11px;font-weight:900;color:#637083}
-    .cap-icon{font-size:40px;filter:drop-shadow(0 6px 18px #0006)}
-    .cap-card h3{margin:18px 0 8px;font-size:22px;letter-spacing:-.03em}
-    .cap-card p{margin:0;color:#8d9aad;font-size:13px;line-height:1.55}
-
-    .showcase{
-      display:grid;
-      grid-template-columns:1.25fr .75fr;
-      gap:16px;
-    }
-    .show-main,.show-side{
-      min-height:480px;
-      border:1px solid var(--line);
-      border-radius:26px;
-      overflow:hidden;
-      position:relative;
-      background:#111923;
-    }
-    .show-main{
-      padding:34px;
-      background:
-        radial-gradient(circle at 72% 35%,#f6a83b33,transparent 25%),
-        radial-gradient(circle at 33% 72%,#243e5b88,transparent 32%),
-        linear-gradient(145deg,#1b232e,#0c1118);
-    }
-    .show-main:after{
-      content:"SPINE";
-      position:absolute;right:-16px;bottom:-26px;
-      font-size:clamp(100px,17vw,260px);
-      font-weight:1000;letter-spacing:-.08em;
-      color:#ffffff05;
-      pointer-events:none;
-    }
-    .show-main h3{font-size:clamp(34px,5vw,66px);max-width:680px;margin:0;letter-spacing:-.05em;line-height:.95}
-    .show-main p{max-width:590px;color:#94a1b3;line-height:1.6}
-    .show-badge{
-      display:inline-flex;padding:8px 11px;border-radius:999px;border:1px solid #f6a83b66;
-      color:#ffd28a;background:#261d13;font-size:10px;font-weight:950;text-transform:uppercase;letter-spacing:.1em;
-    }
-    .show-side{
-      display:grid;
-      grid-template-rows:1fr 1fr;
-      gap:0;
-      background:#0e151e;
-    }
-    .mini-project{
-      padding:26px;
-      display:flex;flex-direction:column;justify-content:end;
-      border-bottom:1px solid var(--line);
-      background:
-        linear-gradient(180deg,transparent,#0b1018dd),
-        radial-gradient(circle at 70% 25%,#30465f66,transparent 38%);
-    }
-    .mini-project:last-child{border-bottom:0;background:
-      linear-gradient(180deg,transparent,#0b1018dd),
-      radial-gradient(circle at 30% 25%,#70401e66,transparent 38%)}
-    .mini-project small{color:#f4ae50;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
-    .mini-project h4{font-size:28px;margin:8px 0 0}
-
-    .about-grid{
-      display:grid;
-      grid-template-columns:.8fr 1.2fr;
-      gap:28px;
-      align-items:start;
-    }
-    .about-number{
-      font-size:clamp(90px,16vw,240px);
-      line-height:.8;
-      font-weight:1000;
-      letter-spacing:-.08em;
-      color:transparent;
-      -webkit-text-stroke:1px #f6a83b77;
-    }
-    .about-copy{
-      max-width:780px;
-      padding-top:10px;
-    }
-    .about-copy p{
-      margin:0 0 18px;
-      color:#9ca9ba;
-      font-size:clamp(16px,1.5vw,20px);
-      line-height:1.65;
-    }
-    .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:25px}
-    .tag{
-      padding:8px 11px;border-radius:999px;
-      color:#c6d0dc;background:#111923;border:1px solid #2b3747;
-      font-size:11px;font-weight:800;
-    }
-
-    .contact-panel{
-      min-height:460px;
-      display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
-      padding:clamp(28px,6vw,78px);
-      border:1px solid #44341f;
-      border-radius:30px;
-      background:
-        radial-gradient(circle at 80% 25%,#ff9c2b2e,transparent 30%),
-        linear-gradient(145deg,#21180f,#111821 62%,#0c1118);
-      overflow:hidden;
-      position:relative;
-    }
-    .contact-panel h2{max-width:900px}
-    .contact-panel p{max-width:600px;color:#a9b2bf;line-height:1.6}
-
-    .footer{
-      padding:28px clamp(24px,7vw,110px) 45px;
-      display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
-      color:#667487;font-size:11px;border-top:1px solid #1f2935;
-    }
-
-    @media(max-width:980px){
-      .cap-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .showcase{grid-template-columns:1fr}
-      .show-side{grid-template-columns:1fr 1fr;grid-template-rows:none}
-      .mini-project{border-bottom:0;border-right:1px solid var(--line)}
-      .mini-project:last-child{border-right:0}
-      .about-grid{grid-template-columns:1fr}
-      .about-number{font-size:120px}
-    }
-
-    @media(max-width:720px){
-      .brand-chip{display:none}
-      .site-nav{display:none}
-      .hero{padding-top:150px;padding-left:20px;padding-right:20px}
-      .hero-inner{width:100%}
-      .hero h1{font-size:clamp(54px,17vw,92px)}
-      .section{padding:90px 20px}
-      .section-heading{display:block}
-      .section-note{margin-top:16px}
-      .cap-grid{grid-template-columns:1fr}
-      .show-side{grid-template-columns:1fr}
-      .mini-project{min-height:220px;border-right:0;border-bottom:1px solid var(--line)}
-      .about-number{font-size:100px}
-      .contact-panel{min-height:420px}
-    }
-
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Vahram Tumanyan — Senior Character Designer, Concept Artist, Illustrator and 2D Animator." />
+  <title>Vahram Tumanyan — Cartoon Art Portfolio</title>
+  <link rel="preconnect" href="https://mir-s3-cdn-cf.behance.net" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="paper-noise" aria-hidden="true"></div>
 
-  <div class="controls">
-    <div class="master">
-      <span class="bolt">⚡</span>
-      <label class="switch" title="Все персонажи">
-        <input id="allToggle" type="checkbox">
-        <span class="track"><span class="knob"></span></span>
-      </label>
-    </div>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="Vahram Tumanyan home">
+      <span class="brand-splat">VT</span>
+      <span>VAHRAM<br><b>TUMANYAN</b></span>
+    </a>
+    <nav>
+      <a href="#interactive-demo" class="nav-link active">LIVE DEMO</a>
+      <a href="#animations" class="nav-link">ANIMATION</a>
+      <a href="#work" class="nav-link">WORK</a>
+      <a href="#private-portfolio" class="nav-link">PRIVATE</a>
+      <a href="#about" class="nav-link">ABOUT</a>
+      <a href="#contact" class="nav-link">CONTACT</a>
+    </nav>
+    <a class="pill small" href="https://www.behance.net/vahramtumanyan?locale=ru_RU" target="_blank" rel="noreferrer">BEHANCE ↗</a>
+  </header>
 
-    <div class="card" data-key="fly">
-      <div class="head">
-        <div class="avatar">🪰</div>
-        <div><div class="name">Муха</div><div class="sub">interactive</div></div>
-        <label class="switch">
-          <input class="toggle" type="checkbox" checked>
-          <span class="track"><span class="knob"></span></span>
-        </label>
-        <button class="fold">⌄</button>
+  <main id="top">
+    <section class="hero section-pad">
+      <div class="hero-copy">
+        <div class="eyebrow sticker">SENIOR 2D ARTIST · CHARACTER DESIGN · CONCEPT ART</div>
+        <h1>
+          VAHRAM<br>
+          <span class="scribble">TUMANYAN</span>
+        </h1>
+        <p class="lead">2D Artist, Concept Artist and Spine Animator. Selected animation, game-art and private portfolio work.</p>
+        <div class="hero-actions">
+          <a class="pill primary" href="#work">VIEW PORTFOLIO ↓</a>
+          <a class="pill ghost" href="https://www.behance.net/vahramtumanyan?locale=ru_RU" target="_blank" rel="noreferrer">FULL BEHANCE ↗</a>
+        </div>
+        <div class="skill-strip" aria-label="skills">
+          <span>CHARACTERS</span><span>ENVIRONMENTS</span><span>ILLUSTRATION</span><span>SPINE 2D</span><span>GAME ART</span>
+        </div>
       </div>
-      <div class="menu">
-        <div class="menu-loading">Читаю анимации из JSON…</div>
+
+      <div class="hero-art" aria-hidden="true">
+        <div class="blob blob-a"></div>
+        <div class="blob blob-b"></div>
+        <div class="hero-card rotate-a"><img src="https://mir-s3-cdn-cf.behance.net/projects/404/62f576218300215.Y3JvcCwxMTY5LDkxNCw2MywyMjI.png" alt=""></div>
+        <div class="hero-card rotate-b"><img src="https://mir-s3-cdn-cf.behance.net/projects/404/eaf5ab138330639.Y3JvcCwzODIxLDI5ODgsMzc4LDEzMg.jpg" alt=""></div>
+        <div class="burst">HEY!<br>LOOK HERE</div>
       </div>
-    </div>
-
-    <div class="card" data-key="croc">
-      <div class="head">
-        <div class="avatar">🐊</div>
-        <div><div class="name">Крокодил</div><div class="sub">running</div></div>
-        <label class="switch">
-          <input class="toggle" type="checkbox">
-          <span class="track"><span class="knob"></span></span>
-        </label>
-        <button class="fold">⌄</button>
-      </div>
-      <div class="menu">
-        <div class="menu-loading">Читаю анимации из JSON…</div>
-      </div>
-    </div>
-
-    <div class="card" data-key="frog">
-      <div class="head">
-        <div class="avatar">🐸</div>
-        <div><div class="name">Лягушка</div><div class="sub">fire</div></div>
-        <label class="switch">
-          <input class="toggle" type="checkbox">
-          <span class="track"><span class="knob"></span></span>
-        </label>
-        <button class="fold">⌄</button>
-      </div>
-      <div class="menu">
-        <div class="menu-loading">Читаю анимации из JSON…</div>
-      </div>
-    </div>
-  </div>
+    </section>
 
 
-  <a class="brand-chip" href="#top" aria-label="Back to top">
-    <span class="brand-mark">VT</span>
-    <span>Vahram Tumanyan</span>
-  </a>
-
-  <nav class="site-nav" aria-label="Portfolio navigation">
-    <a href="#work">Work</a>
-    <a href="#skills">Skills</a>
-    <a href="#about">About</a>
-    <a href="#contact">Contact</a>
-  </nav>
-
-  <main class="site-shell" id="top">
-    <section class="hero">
-      <div class="hero-inner">
-        <div class="eyebrow">2D Artist · Concept Artist · Spine Animator</div>
-        <h1>Game art<br><span class="stroke">in motion.</span></h1>
-        <p class="hero-copy">
-          Персонажи, окружение и анимация для игр и интерактивных проектов.
-          Этот сайт сам является частью портфолио: персонажи сверху — реальные Spine-экспорты,
-          а не декоративные GIF-анимации.
+    
+    <section class="interactive-demo section-pad" id="interactive-demo">
+      <div class="interactive-demo-head">
+        <p class="kicker">INTERACTIVE 2D ANIMATION</p>
+        <h2>Live character animation.</h2>
+        <p>
+          A live Spine 2D demonstration. The Fly runs automatically and stays enabled. Use the two switches to turn the Crocodile and Frog on or off.
         </p>
-        <div class="hero-actions">
-          <a class="cta primary" href="#work">Смотреть работы ↓</a>
-          <a class="cta secondary" href="https://www.behance.net/vahramtumanyan?locale=ru_RU" target="_blank" rel="noopener">Behance ↗</a>
-        </div>
-        <div class="character-help">
-          <span>⚡</span>
-          <span><b>Интерактивно:</b> включай персонажей в верхней панели, открывай их настоящие Spine-анимации и кликай по мухе, чтобы она стреляла.</span>
-        </div>
+      </div>
+
+      <div class="interactive-demo-frame">
+        <iframe
+          src="spine_demo.html"
+          title="Interactive Spine character animation demo"
+          loading="eager"
+          allow="fullscreen">
+        </iframe>
       </div>
     </section>
 
-    <section class="section" id="skills">
-      <div class="section-heading">
+    <section class="top-characters section-pad" id="animations">
+      <div class="top-characters-head">
         <div>
-          <div class="section-kicker">What I do</div>
-          <h2>Art + animation</h2>
+          <p class="kicker">MY 2D ANIMATION</p>
+          <h2>Characters in motion.</h2>
         </div>
-        <div class="section-note">От идеи и визуального языка до собранного персонажа, рига и готовой игровой анимации.</div>
+        <p>Five animation projects in order: Fly, Crocodile, Frog, Environment Animation and base.io SPINE 2D.</p>
       </div>
 
-      <div class="cap-grid">
-        <article class="cap-card">
-          <div><div class="cap-index">01</div><div class="cap-icon">✦</div></div>
-          <div><h3>Concept Art</h3><p>Силуэты, персонажи, props, визуальный поиск и финальная подача.</p></div>
-        </article>
-        <article class="cap-card">
-          <div><div class="cap-index">02</div><div class="cap-icon">◈</div></div>
-          <div><h3>Background Art</h3><p>Игровые сцены, окружение, атмосфера, свет и композиция.</p></div>
-        </article>
-        <article class="cap-card">
-          <div><div class="cap-index">03</div><div class="cap-icon">⚙</div></div>
-          <div><h3>Spine Rigging</h3><p>Разделение персонажа, кости, деформации и подготовка к анимации.</p></div>
-        </article>
-        <article class="cap-card">
-          <div><div class="cap-index">04</div><div class="cap-icon">▶</div></div>
-          <div><h3>2D Animation</h3><p>Gameplay-анимации, acting, effects и циклы для игровых персонажей.</p></div>
-        </article>
-      </div>
+      <div class="top-characters-scroll-shell">
+        <button class="top-characters-arrow top-characters-arrow-left" type="button" aria-label="Previous animations">←</button>
+
+        <div class="top-characters-scroll" id="topCharactersScroll" tabindex="0" aria-label="2D animation projects">
+          <a class="top-character-card fly-card"
+             href="https://www.behance.net/gallery/177035915/Spine-2D-CHARACTER-ANIMATIONS-Dieselpunk-beetle"
+             target="_blank" rel="noreferrer">
+            <img src="https://mir-s3-cdn-cf.behance.net/projects/404/97f28f177035915.Y3JvcCwyNDc4LDE5MzksNjcsMA.png"
+                 alt="Spine 2D Character Animations — Dieselpunk Beetle">
+            <div class="top-character-info">
+              <span>SPINE / 2D ANIMATION</span>
+              <h3>Dieselpunk Beetle</h3>
+              <b>VIEW PROJECT ↗</b>
+            </div>
+          </a>
+
+          <a class="top-character-card croc-card"
+             href="https://www.behance.net/gallery/227043203/Flying-crocodile"
+             target="_blank" rel="noreferrer">
+            <img src="https://mir-s3-cdn-cf.behance.net/projects/404/61f771227043203.Y3JvcCwxOTgxLDE1NTAsMCww.png"
+                 alt="Flying Crocodile">
+            <div class="top-character-info">
+              <span>SPINE / CHARACTER</span>
+              <h3>Flying Crocodile</h3>
+              <b>VIEW PROJECT ↗</b>
+            </div>
+          </a>
+
+          <a class="top-character-card frog-card"
+             href="https://www.behance.net/gallery/179400911/Spine-2D-CHARACTER-ANIMATIONS-frog-on-a-cloud"
+             target="_blank" rel="noreferrer">
+            <img src="https://mir-s3-cdn-cf.behance.net/projects/404/958e83179400911.Y3JvcCwyODIxLDIyMDYsMCw2.png"
+                 alt="Frog on a Cloud">
+            <div class="top-character-info">
+              <span>SPINE / CHARACTER</span>
+              <h3>Frog on a Cloud</h3>
+              <b>VIEW PROJECT ↗</b>
+            </div>
+          </a>
+
+          <a class="top-character-card extra-animation-card"
+             href="https://www.behance.net/gallery/142574327/spine-animation-2d-Environment-Art"
+             target="_blank" rel="noreferrer">
+            <img src="https://mir-s3-cdn-cf.behance.net/projects/404/ab37e3142574327.Y3JvcCwyOTQ2LDIzMDQsNTc2LDEzMQ.jpg"
+                 alt="Spine Animation 2D Environment Art">
+            <div class="top-character-info">
+              <span>SPINE / ENVIRONMENT</span>
+              <h3>Spine Animation — 2D Environment Art</h3>
+              <b>VIEW PROJECT ↗</b>
+            </div>
+          </a>
+
+          <a class="top-character-card extra-animation-card"
+             href="https://www.behance.net/gallery/138096617/baseio-SPINE-2D"
+             target="_blank" rel="noreferrer">
+            <img src="https://mir-s3-cdn-cf.behance.net/projects/404/d7435d138096617.Y3JvcCwxOTk5LDE1NjQsMCw0MzA.jpg"
+                 alt="base.io SPINE 2D">
+            <div class="top-character-info">
+              <span>SPINE / 2D ANIMATION</span>
+              <h3>base.io — SPINE 2D</h3>
+              <b>VIEW PROJECT ↗</b>
+            </div>
+          </a>
+        </div>
+
+        <button class="top-characters-arrow top-characters-arrow-right" type="button" aria-label="Next animations">→</button>
+      </div></div>
     </section>
 
-    <section class="section" id="work">
+    <section id="work" class="work section-pad">
       <div class="section-heading">
-        <div>
-          <div class="section-kicker">Selected work</div>
-          <h2>Portfolio</h2>
-        </div>
-        <div class="section-note">Большая интерактивная зона для лучших проектов. Следующей правкой сюда можно поставить реальные обложки и отдельные ссылки на каждую работу.</div>
+        <p class="kicker">SELECTED WORK</p>
+        <h2>Big personality.<br>Bold worlds.</h2>
+        <p>39 Behance projects. Use the arrows, mouse wheel or the horizontal bar to browse.</p>
       </div>
 
-      <div class="showcase">
-        <article class="show-main">
-          <span class="show-badge">Interactive portfolio piece</span>
-          <h3>Characters that live inside the website.</h3>
-          <p>
-            Муха, лягушка и крокодил работают прямо поверх страницы.
-            Верхняя панель показывает реальные анимации из Spine JSON и позволяет открыть Rig View.
-          </p>
-          <div class="hero-actions">
-            <a class="cta secondary" href="#top">Попробовать персонажей ↑</a>
-            <a class="cta primary" href="https://www.behance.net/vahramtumanyan?locale=ru_RU" target="_blank" rel="noopener">Все работы ↗</a>
+      <div class="work-carousel-shell">
+          <button class="work-arrow work-arrow-left" type="button" aria-label="Previous projects">←</button>
+          <div class="work-carousel" id="workCarousel" tabindex="0" aria-label="Behance projects">
+            <a class="project carousel-card" href="https://www.behance.net/gallery/252390427/green-snake-national-geographic" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/5169db252390427.Y3JvcCwyNjYxLDIwODEsMTM4LDEyNTE.png" alt="green snake national geographic" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>green snake national geographic</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/252415279/Cartoon-Fly" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/f5b125252415279.Y3JvcCwyMzM0LDE4MjYsMzQxNSwxMDIy.png" alt="Cartoon Fly" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>Cartoon Fly</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/230209447/background-games-THUMBNAILSAI" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/a8fcd4230209447.Y3JvcCwxNzY4LDEzODMsMTE2NCwzOQ.png" alt="background games THUMBNAILS AI" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>background games THUMBNAILS AI</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/227761179/it-caught-the-snake" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/5b2d7f227761179.Y3JvcCwxOTIwLDE1MDEsMCww.png" alt="it caught the snake" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>it caught the snake</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/218300215/cartoon-bird-of-prey" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/62f576218300215.Y3JvcCwxMTY5LDkxNCw2MywyMjI.png" alt="cartoon bird of prey" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>cartoon bird of prey</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/142574327/spine-animation-2d-Environment-Art" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/ab37e3142574327.Y3JvcCwyOTQ2LDIzMDQsNTc2LDEzMQ.jpg" alt="spine animation 2d Environment Art" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>spine animation 2d Environment Art</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/175945285/2D-games-ENVIRONMENT-DESIGN-Character-Design-skech" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/fc32b8175945285.Y3JvcCwzODk0LDMwNDYsMCww.jpg" alt="2D games ENVIRONMENT DESIGN + Character Design skech" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>2D games ENVIRONMENT DESIGN + Character Design skech</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/177035915/Spine-2D-CHARACTER-ANIMATIONS-Dieselpunk-beetle" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/97f28f177035915.Y3JvcCwyNDc4LDE5MzksNjcsMA.png" alt="Spine 2D CHARACTER ANIMATIONS Dieselpunk beetle" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>Spine 2D CHARACTER ANIMATIONS Dieselpunk beetle</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/227043203/Flying-crocodile" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/61f771227043203.Y3JvcCwxOTgxLDE1NTAsMCww.png" alt="Flying crocodile" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>Flying crocodile</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/179400911/Spine-2D-CHARACTER-ANIMATIONS-frog-on-a-cloud" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/958e83179400911.Y3JvcCwyODIxLDIyMDYsMCw2.png" alt="Spine 2D CHARACTER ANIMATIONS frog on a cloud" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>Spine 2D CHARACTER ANIMATIONS frog on a cloud</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/138330639/Environment-Art-Character-Design" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/eaf5ab138330639.Y3JvcCwzODIxLDI5ODgsMzc4LDEzMg.jpg" alt="Environment Art + Character Design" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>Environment Art + Character Design</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/158361371/fish-games-casino-Dungeon-OF-Mermaids" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/b1af81158361371.Y3JvcCwxMDA3LDc4OCwxOTcsMA.jpg" alt="fish games casino Dungeon OF Mermaids" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>fish games casino Dungeon OF Mermaids</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/162621879/Backgrounds-FISH-GAMES" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/457b36162621879.Y3JvcCwxMDA4LDc4OSwwLDA.png" alt="Backgrounds FISH GAMES" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>Backgrounds FISH GAMES</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/161968549/background-for-a-short-cartoon" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/f2941a161968549.Y3JvcCw4NjIsNjc1LDc2LDA.jpg" alt="background for a short cartoon" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>background for a short cartoon</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/138401397/Isometric-Environment-Art" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/43a436138401397.Y3JvcCw1NDIwLDQyMzksMTIwNyw0MTU.jpg" alt="Isometric Environment Art" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>Isometric Environment Art</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/158607045/Jackpot-Game" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/5735b2158607045.Y3JvcCw4NjIsNjc1LDIwOSww.jpg" alt="Jackpot Game" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>Jackpot Game</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/173939781/egypt-Environment-Art" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/1ff969173939781.Y3JvcCwxODkzLDE0ODEsMzc5LDA.png" alt="egypt Environment Art" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>egypt Environment Art</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/229914195/armenian-painting-traditional-can-be" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/07e048229914195.Y3JvcCwxMDMyLDgwNywwLDU1MQ.png" alt="armenian painting traditional can be" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>armenian painting traditional can be</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/162176855/-The-secret-of-the-mountain" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/9f9c29162176855.Y3JvcCw4MjAsNjQxLDU3MiwyNjY.jpg" alt="The secret of the mountain" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>The secret of the mountain</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/162106723/Slots-Casino-Games" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/e531ac162106723.Y3JvcCwxNDM4LDExMjUsNTQ4LDA.png" alt="Slots Casino Games" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>Slots Casino Games</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/138096617/baseio-SPINE-2D" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/d7435d138096617.Y3JvcCwxOTk5LDE1NjQsMCw0MzA.jpg" alt="base.io SPINE 2D" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>base.io SPINE 2D</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/165616299/Saber-toothed-tiger-SMILODON" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/c8387b165616299.Y3JvcCwyNzExLDIxMjEsNzM4LDA.jpg" alt="Saber-toothed tiger SMILODON" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>Saber-toothed tiger SMILODON</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/143096005/big-African-ostriches" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/b0f11b143096005.Y3JvcCw3MjMsNTY1LDQ2NywxOTU.jpg" alt="big African ostriches" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>big African ostriches</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/161278887/my-work-that-I-drew-in-2017" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/c36c08161278887.Y3JvcCw1MzIsNDE2LDM0NCw2NjI.jpg" alt="my work that I drew in 2017" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>my work that I drew in 2017</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/142607885/Tiger-Frog" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/7b8707142607885.Y3JvcCw3ODksNjE3LDIwNSwxMDU.jpg" alt="Tiger Frog" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>Tiger Frog</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/142771855/Rat-Character-design" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/f41554142771855.Y3JvcCw4MDQsNjI5LDI1MCwzNjA.jpg" alt="Rat Character design" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>Rat Character design</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/201038611/Fantastic-Four-Character-Design-%282018%29" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/0371ea201038611.Y3JvcCw2MTQsNDgwLDI5MywxNjQ.jpg" alt="Fantastic Four Character Design (2018)" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>Fantastic Four Character Design (2018)</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/162151597/Boar-character-design" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/237aae162151597.Y3JvcCw5MjEsNzIwLDYzLDQx.jpg" alt="Boar character design" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>Boar character design</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/158210383/Bonus-Games-OKTOPUS" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/e3cb6d158210383.Y3JvcCw1NzksNDUzLDMyNCwxMTk.jpg" alt="Bonus Games OKTOPUS" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>Bonus Games OKTOPUS</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/198195713/Trailer-The-Legend" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/0eb41b198195713.Y3JvcCw2Njk3LDUyMzksMTI3Niww.jpg" alt="ԾԻԱԾԱՆԻ ԼԵԳԵՆԴԸ Trailer The Legend" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>ԾԻԱԾԱՆԻ ԼԵԳԵՆԴԸ Trailer The Legend</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/154952177/COLOR-SKETCH-THUMBNAILS" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/476bc4154952177.Y3JvcCw4OTgsNzAzLDEzMyw4OQ.jpg" alt="COLOR SKETCH THUMBNAILS" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>COLOR SKETCH THUMBNAILS</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/142596181/Lazy-shape" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/4804ce142596181.Y3JvcCw1NTgzLDQzNjYsMCw0Njk.jpg" alt="Lazy shape" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>Lazy shape</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/173353683/my-work-that-I-drew-in-2017" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/d7c296173353683.Y3JvcCw3MTcsNTYxLDE1NiwzMjM.jpg" alt="my work that I drew in 2017" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>my work that I drew in 2017</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/143221379/COLOR-SKETCH-THUMBNAILS" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/b01641143221379.Y3JvcCw4MTYxLDYzODMsNTQ1LDE2NTY.jpg" alt="COLOR SKETCH THUMBNAILS" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>COLOR SKETCH THUMBNAILS</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/191925273/ArArAt" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/8f91f8191925273.Y3JvcCw3NDQsNTgyLDM0NCwxMzY.png" alt="ArArAt" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>ArArAt</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/161281957/comics-background-Environment" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/20a0af161281957.Y3JvcCw4MzcsNjU0LDE5MCwxMDc.jpg" alt="comics background Environment" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>comics background Environment</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/142784141/Chameleon-clipart" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/1f1129142784141.Y3JvcCwxMTY5LDkxNCw5NSw3NQ.png" alt="Chameleon clipart" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>Chameleon clipart</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/162174601/concept-art-for-3d-cartoon-animator" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/38f443162174601.Y3JvcCwxNDAwLDEwOTUsMCwxNjk.jpg" alt="concept art for 3d cartoon animator" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>concept art for 3d cartoon animator</h3><b>OPEN ↗</b></div>
+    </a>
+<a class="project carousel-card" href="https://www.behance.net/gallery/142954727/ui-games" target="_blank" rel="noreferrer">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/e05b3d142954727.Y3JvcCw2NzcsNTI5LDY3LDI2.png" alt="ui games" loading="lazy">
+      <div class="project-copy"><span>BEHANCE PROJECT</span><h3>ui games</h3><b>OPEN ↗</b></div>
+    </a>
           </div>
-        </article>
-
-        <div class="show-side">
-          <article class="mini-project">
-            <small>Game Art</small>
-            <h4>Characters & worlds</h4>
-          </article>
-          <article class="mini-project">
-            <small>Animation</small>
-            <h4>Rig to final motion</h4>
-          </article>
+          <button class="work-arrow work-arrow-right" type="button" aria-label="Next projects">→</button>
         </div>
-      </div>
-    </section>
+        <div class="work-scroll-hint">
+          <span>← Scroll with mouse wheel or drag the bar →</span>
+        </div>
+      </section>
 
-    <section class="section" id="about">
-      <div class="section-heading">
+
+    <section class="private-portfolio section-pad" id="private-portfolio">
+      <div class="private-head">
         <div>
-          <div class="section-kicker">About</div>
-          <h2>Built for games</h2>
+          <p class="kicker">PRIVATE PORTFOLIO</p>
+          <h2>Selected private work.</h2>
         </div>
+        <p>
+          A private presentation of selected projects that are not published in my public portfolio. Choose a project below to open the image viewer.
+        </p>
       </div>
 
-      <div class="about-grid">
-        <div class="about-number">2D</div>
-        <div class="about-copy">
-          <p>
-            Фокус — выразительный игровой арт, персонажи и анимация, которые хорошо читаются не только на красивом кадре, но и непосредственно в движении.
-          </p>
-          <p>
-            Интерактивные персонажи на этой странице оставлены управляемыми специально: можно отдельно открыть анимации и посмотреть структуру работы через Rig View.
-          </p>
-          <div class="tags">
-            <span class="tag">Spine</span>
-            <span class="tag">2D Art</span>
-            <span class="tag">Concept Art</span>
-            <span class="tag">Background Art</span>
-            <span class="tag">Character Design</span>
-            <span class="tag">Game Art</span>
+      
+      <div class="private-projects">
+
+        <button class="private-card" type="button" data-private-project="crazy-frog">
+          <img src="assets/private-covers/crazy-frog.jpg" alt="Crazy Frog cover">
+          <div class="private-card-copy">
+            <span>SLOT GAME</span>
+            <h3>Crazy Frog</h3>
+            <b>OPEN VIEWER →</b>
           </div>
-        </div>
+        </button>
+
+        <button class="private-card" type="button" data-private-project="paris-hilton">
+          <img src="assets/private-covers/paris-hilton.jpg" alt="Paris Hilton cover">
+          <div class="private-card-copy">
+            <span>SLOT GAME</span>
+            <h3>Paris Hilton</h3>
+            <b>OPEN VIEWER →</b>
+          </div>
+        </button>
+
+        <button class="private-card" type="button" data-private-project="hostel">
+          <img src="assets/private-covers/hostel.svg" alt="Hostel cover">
+          <div class="private-card-copy">
+            <span>SLOT GAME</span>
+            <h3>Hostel</h3>
+            <b>OPEN VIEWER →</b>
+          </div>
+        </button>
+
+        <button class="private-card" type="button" data-private-project="deadwater">
+          <img src="assets/private-covers/deadwater.svg" alt="Deadwater cover">
+          <div class="private-card-copy">
+            <span>SLOT GAME</span>
+            <h3>Deadwater</h3>
+            <b>OPEN VIEWER →</b>
+          </div>
+        </button>
+
+        <button class="private-card" type="button" data-private-project="ed-games">
+          <img src="assets/private-covers/ed-games.jpg" alt="ED games cover">
+          <div class="private-card-copy">
+            <span>GAME ART</span>
+            <h3>ED games</h3>
+            <b>OPEN VIEWER →</b>
+          </div>
+        </button>
+
+        <button class="private-card" type="button" data-private-project="gta-armenya">
+          <img src="assets/private-covers/gta-armenya.jpg" alt="GTA armenya cover">
+          <div class="private-card-copy">
+            <span>GAME ART</span>
+            <h3>GTA armenya</h3>
+            <b>OPEN VIEWER →</b>
+          </div>
+        </button>
       </div>
     </section>
 
-    <section class="section" id="contact">
-      <div class="contact-panel">
-        <div class="section-kicker">Contact / New project</div>
-        <h2>Need art that moves?</h2>
-        <p>Открыт для работы над игровыми персонажами, окружением, concept art и Spine-анимацией.</p>
-        <div class="hero-actions">
-          <a class="cta primary" href="https://www.behance.net/vahramtumanyan?locale=ru_RU" target="_blank" rel="noopener">Открыть Behance ↗</a>
-          <a class="cta secondary" href="#top">Наверх ↑</a>
+    <div class="private-viewer" id="privateViewer" aria-hidden="true">
+      <div class="private-viewer-backdrop" data-close-private></div>
+      <div class="private-viewer-dialog" role="dialog" aria-modal="true" aria-labelledby="privateViewerTitle">
+        <button class="private-viewer-close" type="button" data-close-private aria-label="Close viewer">×</button>
+
+        <div class="private-viewer-header">
+          <div>
+            <h3 id="privateViewerTitle">Project</h3>
+          </div>
+          <div class="private-viewer-count" id="privateViewerCount">1 / 1</div>
         </div>
+
+        <div class="private-viewer-stage">
+          <button class="private-viewer-nav private-viewer-prev" type="button" aria-label="Previous image">←</button>
+          <img id="privateViewerImage" src="" alt="">
+          <button class="private-viewer-nav private-viewer-next" type="button" aria-label="Next image">→</button>
+        </div>
+
+        <div class="private-viewer-thumbs" id="privateViewerThumbs"></div>
+      </div>
+    </div>
+
+    <section id="about" class="about section-pad">
+      <div class="about-sticker">DRAW.<br>DESIGN.<br>ANIMATE.</div>
+      <div>
+        <p class="kicker">ABOUT THE ARTIST</p>
+        <h2>A versatile senior artist with a strong visual voice.</h2>
+      </div>
+      <div class="about-copy">
+        <p>Vahram works across character design, concept art, illustration, game environments and 2D animation. His portfolio combines stylized shapes, memorable silhouettes, expressive acting and richly built worlds.</p>
+        <p>From playful creatures to detailed game scenes, the focus stays the same: clear storytelling, appealing design and artwork that feels alive.</p>
+        <div class="tags"><span>Photoshop</span><span>Spine 2D</span><span>Concept Art</span><span>Game Art</span><span>Illustration</span></div>
       </div>
     </section>
 
-    <footer class="footer">
-      <span>Vahram Tumanyan · 2D Artist / Spine Animator</span>
-      <span>Interactive portfolio · Spine 4.3</span>
-    </footer>
+    <section class="marquee" aria-hidden="true">
+      <div>CHARACTER DESIGN ✦ GAME ART ✦ CONCEPT ART ✦ ILLUSTRATION ✦ SPINE 2D ✦ CHARACTER DESIGN ✦ GAME ART ✦</div>
+    </section>
+
+    <section id="contact" class="contact section-pad">
+      <p class="kicker">LET'S MAKE SOMETHING STRANGE & BEAUTIFUL</p>
+      <h2>Need a character<br>with a pulse?</h2>
+      <a class="pill primary giant" href="https://www.behance.net/vahramtumanyan?locale=ru_RU" target="_blank" rel="noreferrer">VIEW BEHANCE ↗</a>
+      <p class="micro">Portfolio concept prototype · built for GitHub Pages</p>
+    </section>
   </main>
-
-
-  <div id="stage">
-    <div id="flyLane">
-      <div id="flyBob">
-        <div id="flyPlayer" class="spine-host"></div>
-        <div class="click-label">CLICK → FIRE</div>
-      </div>
-    </div>
-
-    <div id="frogActor" class="actor">
-      <div id="frogPlayer" class="spine-host"></div>
-    </div>
-
-    <div id="crocActor" class="actor">
-      <div id="crocPlayer" class="spine-host"></div>
-    </div>
-  </div>
-
-  <div class="hint">Тест персонажей · меню автоматически читает ВСЕ animations из JSON</div>
-
-  <script src="https://unpkg.com/@esotericsoftware/spine-player@4.3.13/dist/iife/spine-player.min.js"></script>
-  <script>
-    const refs={fly:null,frog:null,croc:null};
-    const ready={fly:false,frog:false,croc:false};
-    const flyLane=document.getElementById('flyLane');
-    const flyBob=document.getElementById('flyBob');
-    const frogActor=document.getElementById('frogActor');
-    const crocActor=document.getElementById('crocActor');
-    const allToggle=document.getElementById('allToggle');
-    let flyMode='auto';
-    let crocToken=0;
-    let frogToken=0;
-    let previewOwner=null;
-    let manualPreviewToken=0;
-    let flyMoveTimer=null;
-    let flyMoveToken=0;
-
-    function createPlayer(key,id,skeleton,atlas,animation){
-      return new spine.SpinePlayer(id,{
-        skeleton,atlas,animation,
-        showControls:false,alpha:true,premultipliedAlpha:true,
-        backgroundColor:'#00000000',
-        defaultMix:0.22,
-        success(player){
-          refs[key]=player;ready[key]=true;
-          if(key==='fly') player.animationState.setAnimation(0,'flies',true);
-
-          // On the finished portfolio, any character whose toggle is already ON
-          // starts automatically once its Spine player is ready.
-          try{
-            if(key==='fly'){
-              const flyToggle=document.querySelector('.card[data-key="fly"] .toggle');
-              if(flyToggle) flyToggle.checked=true;
-              setEnabled('fly',true);
-            }else if(enabled(key)){
-              setEnabled(key,true);
-            }
-            syncMaster();
-          }catch(e){}
-        },
-        error(player,reason){console.error(key,reason)}
-      });
-    }
-
-    createPlayer('fly','flyPlayer',
-      'assets/spine/fly/jeko_spine_final.json',
-      'assets/spine/fly/jeko_spine_final.atlas','flies');
-
-    createPlayer('frog','frogPlayer',
-      'assets/spine/frog/Amb+gort spine.json',
-      'assets/spine/frog/Amb+gort spine.atlas','fire');
-
-    createPlayer('croc','crocPlayer',
-      'assets/spine/croc/kroks spine fayl.json',
-      'assets/spine/croc/kroks spine fayl.atlas','running');
-
-    const cards=[...document.querySelectorAll('.card')];
-
-    function cardFor(key){return document.querySelector(`.card[data-key="${key}"]`)}
-    function enabled(key){return cardFor(key).querySelector('.toggle').checked}
-
-    const jsonPaths={
-      fly:'assets/spine/fly/jeko_spine_final.json',
-      frog:'assets/spine/frog/Amb+gort spine.json',
-      croc:'assets/spine/croc/kroks spine fayl.json'
-    };
-
-    function bindCardBase(card){
-      const key=card.dataset.key;
-      const fold=card.querySelector('.fold');
-      const toggle=card.querySelector('.toggle');
-
-      fold.addEventListener('click',e=>{
-        e.stopPropagation();
-        const open=card.classList.contains('open');
-        cards.forEach(c=>c.classList.remove('open'));
-        if(!open) card.classList.add('open');
-      });
-
-      toggle.addEventListener('change',()=>{
-        setEnabled(key,toggle.checked);
-        syncMaster();
-      });
-    }
-
-    function bindAnimButton(card,btn){
-      const key=card.dataset.key;
-      const toggle=card.querySelector('.toggle');
-
-      btn.addEventListener('click',()=>{
-        card.querySelectorAll('.anim').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-
-        if(!toggle.checked){
-          toggle.checked=true;
-          setEnabled(key,true);
-        }
-
-        playMode(key,btn.dataset.mode);
-        syncMaster();
-      });
-    }
-
-    cards.forEach(bindCardBase);
-
-    async function loadAnimationMenu(key){
-      const card=cardFor(key);
-      const menu=card.querySelector('.menu');
-
-      try{
-        const res=await fetch(jsonPaths[key],{cache:'no-store'});
-        if(!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data=await res.json();
-
-        // Spine JSON stores exported animations in the "animations" object.
-        const names=Object.keys(data.animations||{});
-
-        menu.innerHTML='';
-
-        // Auto is page behavior, not a fake Spine animation.
-        if(key==='fly' || key==='croc'){
-          const auto=document.createElement('button');
-          auto.className='anim active';
-          auto.dataset.mode='auto';
-          auto.innerHTML='▶ <span>Auto</span>';
-          menu.appendChild(auto);
-          bindAnimButton(card,auto);
-        }
-
-        names.forEach(name=>{
-          const btn=document.createElement('button');
-          btn.className='anim';
-          btn.dataset.mode=name;
-          btn.innerHTML=`▶ <span>${name}</span>`;
-          menu.appendChild(btn);
-          bindAnimButton(card,btn);
-        });
-
-        if(!names.length){
-          menu.innerHTML='<div class="menu-loading">В JSON нет animations</div>';
-        }
-      }catch(err){
-        console.error('Animation list load error:',key,err);
-        menu.innerHTML='<div class="menu-loading">Не удалось прочитать JSON</div>';
-      }
-    }
-
-    Promise.all([
-      loadAnimationMenu('fly'),
-      loadAnimationMenu('croc'),
-      loadAnimationMenu('frog')
-    ]);
-
-    document.addEventListener('pointerdown',e=>{
-      if(!e.target.closest('.controls')) cards.forEach(c=>c.classList.remove('open'));
-    });
-
-    allToggle.addEventListener('change',()=>{
-      cards.forEach(card=>{
-        const t=card.querySelector('.toggle');
-        t.checked=allToggle.checked;
-        setEnabled(card.dataset.key,t.checked);
-      });
-    });
-
-    function syncMaster(){
-      const values=cards.map(c=>c.querySelector('.toggle').checked);
-      allToggle.checked=values.every(Boolean);
-      allToggle.indeterminate=values.some(Boolean)&&!values.every(Boolean);
-    }
-
-    function setEnabled(key,on){
-      if(key==='fly'){
-        flyLane.classList.toggle('on',on);
-        if(on) setFly('auto');
-        else{
-          flyMoveToken++;
-          clearTimeout(flyMoveTimer);
-          clearRigFocus('fly');
-          if(previewOwner==='fly') restoreEnabledCharacters();
-        }
-      }
-      if(key==='frog'){
-        frogActor.classList.toggle('on',on);
-        if(on){
-          clearRigFocus('frog');
-          clearManualFocus();
-          startFrogLoop();
-        }else{
-          frogToken++;
-          clearRigFocus('frog');
-        }
-      }
-      if(key==='croc'){
-        crocActor.classList.toggle('on',on);
-        if(on){
-          clearRigFocus('croc');
-          clearManualFocus();
-          startCroc();
-        }else{
-          crocToken++;
-          clearRigFocus('croc');
-          clearManualFocus();
-          if(previewOwner==='croc') restoreEnabledCharacters();
-        }
-      }
-    }
-
-    async function playMode(key,mode){
-      // Clicking Auto explicitly restores the normal mode immediately.
-      if((key==='fly' || key==='croc') && mode==='auto'){
-        restoreEnabledCharacters();
-        return;
-      }
-
-      const token=enterPreviewPresentation(key);
-
-      async function playSelectedTwice(player, animationName){
-        // Full exported animation #1.
-        await once(player,animationName);
-        if(token!==manualPreviewToken) return false;
-
-        // Full exported animation #2.
-        await once(player,animationName);
-        if(token!==manualPreviewToken) return false;
-
-        // Hold the real final pose for 2 seconds, then Auto.
-        await sleep(2000);
-        if(token!==manualPreviewToken) return false;
-
-        return true;
-      }
-
-      if(key==='fly' && ready.fly){
-        const ok=await playSelectedTwice(refs.fly,mode);
-        if(ok) restoreEnabledCharacters();
-        return;
-      }
-
-      if(key==='frog' && ready.frog){
-        if(mode==='Rig_View'){
-          frogActor.classList.add('frog-rig-center');
-        }else{
-          frogActor.classList.remove('frog-rig-center');
-        }
-
-        const ok=await playSelectedTwice(refs.frog,mode);
-        if(ok) restoreEnabledCharacters();
-        return;
-      }
-
-      if(key==='croc' && ready.croc){
-        crocActor.classList.add('on','preview-focus');
-        crocActor.classList.remove('reverse','forward');
-        crocActor.style.opacity='1';
-
-        const ok=await playSelectedTwice(refs.croc,mode);
-        if(ok) restoreEnabledCharacters();
-        return;
-      }
-    }
-
-    /* Fly: free random roaming across the viewport.
-       The container changes direction; the real Spine animation remains untouched. */
-    function randomFlyTarget(){
-      const w=Math.max(220,flyLane.offsetWidth||260);
-      const h=Math.max(170,flyLane.offsetHeight||205);
-      const padX=24;
-      const topPad=82;
-      const bottomPad=28;
-      return {
-        x:padX+Math.random()*Math.max(40,innerWidth-w-padX*2),
-        y:topPad+Math.random()*Math.max(40,innerHeight-h-topPad-bottomPad)
-      };
-    }
-
-    function scheduleFlyRoam(){
-      const token=++flyMoveToken;
-
-      const step=()=>{
-        if(token!==flyMoveToken || !enabled('fly') || flyMode!=='auto') return;
-
-        const currentX=parseFloat(flyLane.style.left)||flyLane.getBoundingClientRect().left;
-        const target=randomFlyTarget();
-        const goingRight=target.x>=currentX;
-
-        // Source fly faces the opposite way, so flip based on travel direction.
-        flyBob.style.transformOrigin='center';
-        flyBob.style.setProperty('--flyFace',goingRight ? '-1' : '1');
-
-        const dist=Math.hypot(target.x-currentX,target.y-(parseFloat(flyLane.style.top)||flyLane.getBoundingClientRect().top));
-        const fast=dist>innerWidth*.45 && Math.random()>.35;
-        const duration=fast ? 1.05+Math.random()*.55 : 1.55+Math.random()*1.0;
-
-        if(ready.fly){
-          refs.fly.setAnimation(fast?'flies_Run':'flies',true);
-        }
-
-        flyLane.style.transition=`left ${duration}s ease-in-out, top ${duration}s ease-in-out`;
-        flyLane.style.left=target.x+'px';
-        flyLane.style.top=target.y+'px';
-
-        flyMoveTimer=setTimeout(step,duration*1000+300+Math.random()*700);
-      };
-
-      step();
-    }
-
-    function setFly(mode){
-      flyMode=mode;
-      flyMoveToken++;
-      clearTimeout(flyMoveTimer);
-      clearRigFocus('fly');
-
-      if(!ready.fly) return;
-      flyLane.classList.add('on');
-
-      if(mode==='auto'){
-        clearPreviewPresentation();
-        refs.fly.setAnimation('flies',true);
-        scheduleFlyRoam();
-      }else if(mode==='flies'){
-        refs.fly.setAnimation('flies',true);
-      }else if(mode==='flies_Run'){
-        refs.fly.setAnimation('flies_Run',true);
-      }else if(mode==='Rig_View'){
-        refs.fly.setAnimation('Rig_View',false);
-      }else{
-        // Any other real animation found in the JSON is played exactly by its exported name.
-        refs.fly.setAnimation(mode,false);
-      }
-    }
-
-    flyBob.addEventListener('pointerdown',async e=>{
-      e.preventDefault();
-      e.stopPropagation();
-
-      if(!enabled('fly') || !ready.fly || flyMode==='Rig_View') return;
-
-      const previous=flyMode;
-
-      // Stop container roaming while the real Spine fire animation is playing.
-      flyMoveToken++;
-      clearTimeout(flyMoveTimer);
-
-      // Play FIRE to the very end. No timeout and no interruption.
-      await once(refs.fly,'fire');
-
-      if(!enabled('fly')) return;
-
-      // Resume exactly after FIRE completes.
-      if(previous==='auto'){
-        flyMode='auto';
-        refs.fly.setAnimation('flies',true);
-        scheduleFlyRoam();
-      }else if(previous==='flies_Run'){
-        refs.fly.setAnimation('flies_Run',true);
-      }else if(previous==='flies'){
-        refs.fly.setAnimation('flies',true);
-      }else{
-        refs.fly.setAnimation('flies',true);
-      }
-    });
-
-    function clearAllRigFocus(){
-      flyLane.classList.remove('rig-focus');
-      frogActor.classList.remove('rig-focus');
-      crocActor.classList.remove('rig-focus');
-    }
-
-    function clearRigFocus(key){
-      const el=key==='fly'?flyLane:(key==='frog'?frogActor:crocActor);
-      el.classList.remove('rig-focus');
-    }
-
-    function setRigFocus(key){
-      clearAllRigFocus();
-      const el=key==='fly'?flyLane:(key==='frog'?frogActor:crocActor);
-      // Rig View is intentionally plain: only center and enlarge the character.
-      if(key!=='fly') el.classList.add('rig-focus');
-    }
-
-    function clearManualFocus(){
-      frogActor.classList.remove('manual-focus','manual-away');
-      crocActor.classList.remove('manual-focus','manual-away');
-    }
-
-    function stopCharacterActivity(key){
-      if(key==='fly'){
-        flyMoveToken++;
-        clearTimeout(flyMoveTimer);
-      }
-      if(key==='frog') frogToken++;
-      if(key==='croc') crocToken++;
-    }
-
-    function clearPreviewPresentation(){
-      previewOwner=null;
-      flyLane.classList.remove('preview-hidden');
-      frogActor.classList.remove('preview-hidden','preview-focus','frog-rig-center');
-      crocActor.classList.remove('preview-hidden','preview-focus');
-      clearManualFocus();
-      clearAllRigFocus();
-    }
-
-    function enterPreviewPresentation(key){
-      manualPreviewToken++;
-      previewOwner=key;
-
-      // Stop every automatic sequence first.
-      flyMoveToken++;
-      clearTimeout(flyMoveTimer);
-      frogToken++;
-      crocToken++;
-
-      // Also stop any currently playing Spine tracks so nothing can overwrite
-      // the selected preview animation while it is being shown.
-      try{ if(ready.fly) refs.fly.animationState.clearTracks(); }catch(e){}
-      try{ if(ready.frog) refs.frog.animationState.clearTracks(); }catch(e){}
-      try{ if(ready.croc) refs.croc.animationState.clearTracks(); }catch(e){}
-
-      // Clear old preview classes without restarting anything.
-      flyLane.classList.remove('preview-hidden');
-      frogActor.classList.remove('preview-hidden','preview-focus','frog-rig-center');
-      crocActor.classList.remove('preview-hidden','preview-focus');
-      clearManualFocus();
-      clearAllRigFocus();
-
-      // Hide every non-selected character completely.
-      if(key!=='fly') flyLane.classList.add('preview-hidden');
-      if(key!=='frog') frogActor.classList.add('preview-hidden');
-      if(key!=='croc') crocActor.classList.add('preview-hidden');
-
-      // Force selected character visible.
-      if(key==='fly'){
-        flyLane.classList.add('on');
-      }
-
-      if(key==='frog'){
-        frogActor.classList.add('on','preview-focus');
-        frogActor.style.opacity='1';
-      }
-
-      if(key==='croc'){
-        crocActor.classList.add('on','preview-focus');
-        crocActor.classList.remove('reverse','forward');
-        crocActor.style.opacity='1';
-        crocActor.style.left='50%';
-        crocActor.style.top='52%';
-        crocActor.style.bottom='auto';
-        crocActor.style.transition='none';
-      }
-
-      return manualPreviewToken;
-    }
-
-
-    function resetCharacterPositionsToV12(){
-      // Fly: back to its normal roaming layer.
-      flyLane.classList.remove('preview-hidden','rig-focus');
-      flyLane.style.left='';
-      flyLane.style.top='';
-      flyLane.style.right='';
-      flyLane.style.bottom='';
-      flyLane.style.transform='';
-      flyLane.style.opacity='';
-
-      // Frog: back to original V12 center-bottom placement.
-      frogActor.classList.remove('preview-hidden','preview-focus','manual-focus','manual-away','rig-focus','frog-rig-center');
-      frogActor.style.left='';
-      frogActor.style.top='';
-      frogActor.style.right='';
-      frogActor.style.bottom='';
-      frogActor.style.transform='';
-      frogActor.style.opacity='';
-      frogActor.style.transition='';
-
-      // Crocodile: back to original V12 moving-bottom placement.
-      crocActor.classList.remove('preview-hidden','preview-focus','manual-focus','manual-away','rig-focus');
-      crocActor.style.left='';
-      crocActor.style.top='';
-      crocActor.style.right='';
-      crocActor.style.bottom='';
-      crocActor.style.transform='';
-      crocActor.style.opacity='';
-      crocActor.style.transition='';
-    }
-
-    function restoreEnabledCharacters(){
-      clearPreviewPresentation();
-      resetCharacterPositionsToV12();
-
-      // Visually return menu selection to Auto where that option exists.
-      cards.forEach(card=>{
-        const auto=card.querySelector('.anim[data-mode="auto"]');
-        if(auto){
-          card.querySelectorAll('.anim').forEach(b=>b.classList.remove('active'));
-          auto.classList.add('active');
-        }
-      });
-
-      // Remove preview-only inline placement from crocodile.
-      crocActor.style.top='';
-      crocActor.style.bottom='';
-      crocActor.style.left='';
-      crocActor.style.opacity='';
-      crocActor.style.transition='';
-
-      if(enabled('fly')){
-        setFly('auto');
-      }else{
-        flyLane.classList.remove('on');
-      }
-
-      if(enabled('frog')){
-        frogActor.classList.add('on');
-        startFrogLoop();
-      }else{
-        frogActor.classList.remove('on');
-      }
-
-      if(enabled('croc')){
-        crocActor.classList.add('on');
-        startCroc();
-      }else{
-        crocActor.classList.remove('on');
-      }
-    }
-
-    function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
-    function once(player,name){
-      return new Promise(resolve=>{
-        const state=player.animationState;
-
-        // Manual/sequence playback must show every frame exactly as exported.
-        // Disable cross-fade while this one-shot is playing so the beginning/end
-        // cannot be visually eaten by the previous/next animation.
-        const oldMix=state.data.defaultMix;
-        state.data.defaultMix=0;
-
-        state.clearTracks();
-
-        const entry=state.setAnimation(0,name,false);
-        entry.timeScale=1;
-
-        const animationDuration =
-          (entry.animation && Number.isFinite(entry.animation.duration))
-            ? entry.animation.duration
-            : (Number.isFinite(entry.animationEnd) ? entry.animationEnd : 0);
-
-        // We intentionally wait for the REAL exported duration instead of trusting
-        // only the complete callback, because another state change/mix can make
-        // completion appear visually early.
-        const waitMs=Math.max(80, Math.ceil(animationDuration*1000)+90);
-
-        setTimeout(()=>{
-          try{
-            // Hold the real last frame before the next animation can start.
-            if(entry && animationDuration>0){
-              entry.trackTime=animationDuration;
-              state.apply(player.skeleton);
-            }
-          }catch(e){}
-
-          state.data.defaultMix=oldMix;
-          resolve();
-        },waitMs);
-      });
-    }
-
-    async function startFrogLoop(){
-      if(!ready.frog) return;
-
-      const token=++frogToken;
-      frogActor.classList.add('on');
-      clearRigFocus('frog');
-
-      while(token===frogToken && enabled('frog')){
-        // Play the real Spine fire animation to completion.
-        await once(refs.frog,'fire');
-
-        if(token!==frogToken || !enabled('frog')) break;
-
-        // Tiny pause so the loop reads naturally instead of snapping.
-        await sleep(120);
-      }
-    }
-
-    async function startCroc(){
-      if(!ready.croc) return;
-
-      const token=++crocToken;
-      crocActor.classList.add('on');
-      clearRigFocus('croc');
-
-      const width=Math.max(520,crocActor.getBoundingClientRect().width);
-      const offLeft=-width*.78;
-      const startX=Math.max(14, innerWidth*0.03);
-      const centerX=innerWidth*0.50 - width*0.52;
-      const offRight=innerWidth - width*0.18;
-
-      while(token===crocToken && enabled('croc')){
-        // 1) Initial quick entrance using the real START animation.
-        crocActor.classList.remove('reverse');
-        crocActor.classList.add('forward');
-        crocActor.style.transition='none';
-        crocActor.style.left=offLeft+'px';
-        refs.croc.setAnimation('start',false);
-        void crocActor.offsetWidth;
-
-        crocActor.style.transition='left 0.9s cubic-bezier(.15,.85,.28,1), transform .18s ease, opacity .2s ease';
-        crocActor.style.left=startX+'px';
-        await sleep(900);
-        if(token!==crocToken || !enabled('croc')) break;
-
-        // 2) Then RUNNING until the center of the screen.
-        refs.croc.setAnimation('running',true);
-        crocActor.style.transition='left 2.5s linear, transform .18s ease, opacity .2s ease';
-        crocActor.style.left=centerX+'px';
-        await sleep(2500);
-        if(token!==crocToken || !enabled('croc')) break;
-
-        // 3) In the middle always play Happy_2.
-        await once(refs.croc,'Happy_2');
-        if(token!==crocToken || !enabled('croc')) break;
-
-        // 4) Continue RUNNING and leave the screen.
-        refs.croc.setAnimation('running',true);
-        crocActor.style.transition='left 2.8s linear, transform .18s ease, opacity .2s ease';
-        crocActor.style.left=offRight+'px';
-        await sleep(2800);
-        if(token!==crocToken || !enabled('croc')) break;
-
-        // 5) When fully off screen, start the next cycle again from START.
-        crocActor.style.transition='none';
-        crocActor.style.left=offLeft+'px';
-        await sleep(180);
-      }
-    }
-  </script>
+<script src="script.js"></script>
 </body>
 </html>

@@ -1,230 +1,332 @@
-const allToggle = document.getElementById('allToggle');
-const panelStatus = document.querySelector('.panel-status');
-const runtimeStatus = document.getElementById('runtimeStatus');
-const cards = [...document.querySelectorAll('.char-card')];
+// Gentle comic-card tilt
+for(const card of document.querySelectorAll('.project')){
+  card.addEventListener('pointermove', e=>{
+    const r=card.getBoundingClientRect();
+    const rx=((e.clientY-r.top)/r.height-.5)*-3;
+    const ry=((e.clientX-r.left)/r.width-.5)*4;
+    card.style.transform=`translateY(-7px) perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+  });
+  card.addEventListener('pointerleave',()=>card.style.transform='');
+}
 
-const actors = {
-  fly: document.getElementById('flyActor'),
-  frog: document.getElementById('frogActor'),
-  croc: document.getElementById('crocActor')
+
+// Behance carousel: arrows + mouse wheel + keyboard.
+const workCarousel = document.getElementById('workCarousel');
+const workPrev = document.querySelector('.work-arrow-left');
+const workNext = document.querySelector('.work-arrow-right');
+
+if(workCarousel && workPrev && workNext){
+  const pageStep = () => Math.max(280, workCarousel.clientWidth * .92);
+
+  function updateWorkArrows(){
+    const max = workCarousel.scrollWidth - workCarousel.clientWidth - 2;
+    workPrev.disabled = workCarousel.scrollLeft <= 2;
+    workNext.disabled = workCarousel.scrollLeft >= max;
+  }
+
+  workPrev.addEventListener('click',()=>workCarousel.scrollBy({left:-pageStep(),behavior:'smooth'}));
+  workNext.addEventListener('click',()=>workCarousel.scrollBy({left:pageStep(),behavior:'smooth'}));
+
+  workCarousel.addEventListener('wheel',(e)=>{
+    if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){
+      e.preventDefault();
+      workCarousel.scrollBy({left:e.deltaY * 1.2,behavior:'auto'});
+    }
+  },{passive:false});
+
+  workCarousel.addEventListener('keydown',(e)=>{
+    if(e.key==='ArrowRight'){e.preventDefault();workCarousel.scrollBy({left:pageStep()/2,behavior:'smooth'})}
+    if(e.key==='ArrowLeft'){e.preventDefault();workCarousel.scrollBy({left:-pageStep()/2,behavior:'smooth'})}
+  });
+
+  workCarousel.addEventListener('scroll',updateWorkArrows,{passive:true});
+  window.addEventListener('resize',updateWorkArrows);
+  updateWorkArrows();
+}
+
+
+// Top 5 animation carousel
+const topCharactersScroll = document.getElementById('topCharactersScroll');
+const topCharactersPrev = document.querySelector('.top-characters-arrow-left');
+const topCharactersNext = document.querySelector('.top-characters-arrow-right');
+
+if(topCharactersScroll && topCharactersPrev && topCharactersNext){
+  const topStep = () => Math.max(280, topCharactersScroll.clientWidth * .92);
+
+  function updateTopCharacterArrows(){
+    const max = topCharactersScroll.scrollWidth - topCharactersScroll.clientWidth - 2;
+    topCharactersPrev.disabled = topCharactersScroll.scrollLeft <= 2;
+    topCharactersNext.disabled = topCharactersScroll.scrollLeft >= max;
+  }
+
+  topCharactersPrev.addEventListener('click',()=>topCharactersScroll.scrollBy({left:-topStep(),behavior:'smooth'}));
+  topCharactersNext.addEventListener('click',()=>topCharactersScroll.scrollBy({left:topStep(),behavior:'smooth'}));
+
+  topCharactersScroll.addEventListener('wheel',(e)=>{
+    if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){
+      e.preventDefault();
+      topCharactersScroll.scrollBy({left:e.deltaY * 1.15,behavior:'auto'});
+    }
+  },{passive:false});
+
+  topCharactersScroll.addEventListener('keydown',(e)=>{
+    if(e.key==='ArrowRight'){e.preventDefault();topCharactersScroll.scrollBy({left:topStep()/2,behavior:'smooth'})}
+    if(e.key==='ArrowLeft'){e.preventDefault();topCharactersScroll.scrollBy({left:-topStep()/2,behavior:'smooth'})}
+  });
+
+  topCharactersScroll.addEventListener('scroll',updateTopCharacterArrows,{passive:true});
+  window.addEventListener('resize',updateTopCharacterArrows);
+  updateTopCharacterArrows();
+}
+
+
+
+
+async function resolveAvailablePrivateImages(projectKey){
+  const data = privateProjects[projectKey];
+  const checks = data.images.map(src => new Promise(resolve=>{
+    const img = new Image();
+    img.onload = ()=>resolve(src);
+    img.onerror = ()=>resolve(null);
+    img.src = src;
+  }));
+  const found = (await Promise.all(checks)).filter(Boolean);
+  return found;
+}
+
+// ===== PRIVATE PORTFOLIO VIEWER (demo data; replace later with user's real files) =====
+const privateProjects = {
+  'crazy-frog': {
+    title: 'Crazy Frog',
+    subtitle: 'Slot Game',
+    images: [
+      'assets/private/crazy-frog/01.jpg',
+      'assets/private/crazy-frog/02.jpg',
+      'assets/private/crazy-frog/03.jpg',
+      'assets/private/crazy-frog/04.jpg',
+      'assets/private/crazy-frog/05.jpg',
+      'assets/private/crazy-frog/06.jpg',
+      'assets/private/crazy-frog/07.jpg'
+    ]
+  },
+  'paris-hilton': {
+    title: 'Paris Hilton',
+    subtitle: 'Slot Game',
+    images: [
+      'assets/private/paris-hilton/01.jpg',
+      'assets/private/paris-hilton/02.jpg',
+      'assets/private/paris-hilton/03.jpg',
+      'assets/private/paris-hilton/04.jpg',
+      'assets/private/paris-hilton/05.jpg',
+      'assets/private/paris-hilton/06.jpg'
+    ]
+  },
+  'hostel': {
+    title: 'Hostel',
+    subtitle: 'Slot Game',
+    images: [
+      'assets/private/hostel/01.jpg',
+      'assets/private/hostel/02.jpg',
+      'assets/private/hostel/03.jpg',
+      'assets/private/hostel/04.jpg',
+      'assets/private/hostel/05.jpg',
+      'assets/private/hostel/06.jpg',
+      'assets/private/hostel/07.jpg',
+      'assets/private/hostel/08.jpg',
+      'assets/private/hostel/09.jpg',
+      'assets/private/hostel/10.jpg',
+      'assets/private/hostel/11.jpg',
+      'assets/private/hostel/12.jpg',
+      'assets/private/hostel/13.jpg',
+      'assets/private/hostel/14.jpg',
+      'assets/private/hostel/15.jpg',
+      'assets/private/hostel/16.jpg',
+      'assets/private/hostel/17.jpg',
+      'assets/private/hostel/18.jpg',
+      'assets/private/hostel/19.jpg',
+      'assets/private/hostel/20.jpg'
+    ]
+  },
+  'deadwater': {
+    title: 'Deadwater',
+    subtitle: 'Slot Game',
+    images: [
+      'assets/private/deadwater/01.jpg',
+      'assets/private/deadwater/02.jpg',
+      'assets/private/deadwater/03.jpg',
+      'assets/private/deadwater/04.jpg',
+      'assets/private/deadwater/05.jpg',
+      'assets/private/deadwater/06.jpg',
+      'assets/private/deadwater/07.jpg',
+      'assets/private/deadwater/08.jpg',
+      'assets/private/deadwater/09.jpg',
+      'assets/private/deadwater/10.jpg',
+      'assets/private/deadwater/11.jpg',
+      'assets/private/deadwater/12.jpg',
+      'assets/private/deadwater/13.jpg',
+      'assets/private/deadwater/14.jpg',
+      'assets/private/deadwater/15.jpg',
+      'assets/private/deadwater/16.jpg',
+      'assets/private/deadwater/17.jpg',
+      'assets/private/deadwater/18.jpg',
+      'assets/private/deadwater/19.jpg',
+      'assets/private/deadwater/20.jpg'
+    ]
+  },
+  'ed-games': {
+    title: 'ED games',
+    subtitle: 'Game Art',
+    images: [
+      'assets/private/ed-games/01.jpg',
+      'assets/private/ed-games/02.jpg',
+      'assets/private/ed-games/03.jpg',
+      'assets/private/ed-games/04.jpg',
+      'assets/private/ed-games/05.jpg',
+      'assets/private/ed-games/06.jpg',
+      'assets/private/ed-games/07.jpg',
+      'assets/private/ed-games/08.jpg'
+    ]
+  },
+  'gta-armenya': {
+    title: 'GTA armenya',
+    subtitle: 'Game Art',
+    images: [
+      'assets/private/gta-armenya/01.jpg',
+      'assets/private/gta-armenya/02.jpg',
+      'assets/private/gta-armenya/03.jpg',
+      'assets/private/gta-armenya/04.jpg',
+      'assets/private/gta-armenya/05.jpg',
+      'assets/private/gta-armenya/06.jpg'
+    ]
+  }
 };
 
-const playerRefs = { fly:null, frog:null, croc:null };
-const ready = { fly:false, frog:false, croc:false };
-let flyMode = 'auto';
-let flyMoveTimer = null;
-let flyReturnTimer = null;
-let crocRunToken = 0;
-let frogRunToken = 0;
+const privateViewer = document.getElementById('privateViewer');
+const privateViewerImage = document.getElementById('privateViewerImage');
+const privateViewerTitle = document.getElementById('privateViewerTitle');
+const privateViewerCount = document.getElementById('privateViewerCount');
+const privateViewerThumbs = document.getElementById('privateViewerThumbs');
+const privatePrev = document.querySelector('.private-viewer-prev');
+const privateNext = document.querySelector('.private-viewer-next');
 
-function setStatus(text, state=''){
-  runtimeStatus.textContent = text;
-  panelStatus.classList.remove('ready','error');
-  if(state) panelStatus.classList.add(state);
-}
+let privateCurrentProject = null;
+let privateCurrentIndex = 0;
 
-function makePlayer(key, containerId, skeleton, atlas, animation){
-  return new spine.SpinePlayer(containerId, {
-    skeleton,
-    atlas,
-    animation,
-    showControls:false,
-    alpha:true,
-    premultipliedAlpha:true,
-    backgroundColor:'#00000000',
-    defaultMix:0.12,
-    success(player){
-      playerRefs[key] = player;
-      ready[key] = true;
-      if(key === 'fly') player.animationState.setAnimation(0,'flies',true);
-      if(Object.values(ready).every(Boolean)) setStatus('Spine 4.3 · ready','ready');
-    },
-    error(player, reason){
-      console.error('Spine load error:', key, reason);
-      setStatus('Ошибка загрузки Spine — проверь GitHub Pages','error');
-    }
-  });
-}
+function renderPrivateViewer(){
+  if(!privateCurrentProject) return;
+  const data = privateProjects[privateCurrentProject];
+  const src = data.images[privateCurrentIndex];
 
-if(window.spine?.SpinePlayer){
-  setStatus('Spine 4.3 · loading…');
-  makePlayer('fly','flyPlayer','assets/spine/fly/jeko_spine_final.json','assets/spine/fly/jeko_spine_final.atlas','flies');
-  makePlayer('frog','frogPlayer','assets/spine/frog/Amb+gort spine.json','assets/spine/frog/Amb+gort spine.atlas','fire');
-  makePlayer('croc','crocPlayer','assets/spine/croc/kroks spine fayl.json','assets/spine/croc/kroks spine fayl.atlas','start');
-}else{
-  setStatus('Spine runtime не загрузился','error');
-}
+  privateViewerTitle.textContent = data.title;
+  privateViewerImage.src = src;
+  privateViewerImage.alt = `${data.title} — image ${privateCurrentIndex + 1}`;
+  privateViewerCount.textContent = `${privateCurrentIndex + 1} / ${data.images.length}`;
 
-function getCard(key){return document.querySelector(`.char-card[data-character="${key}"]`)}
-function isEnabled(key){return getCard(key).querySelector('.char-toggle').checked}
-function setActorVisible(key, visible){actors[key].classList.toggle('active', !!visible)}
-function selectButton(card, btn){card.querySelectorAll('.anim-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
-
-cards.forEach(card=>{
-  const key = card.dataset.character;
-  const toggle = card.querySelector('.char-toggle');
-  card.querySelector('.fold').addEventListener('click',()=>card.classList.toggle('open'));
-  toggle.addEventListener('change',()=>{
-    onToggleCharacter(key, toggle.checked);
-    syncGlobalVisual();
-  });
-  card.querySelectorAll('.anim-btn').forEach(btn=>{
+  privateViewerThumbs.innerHTML = '';
+  data.images.forEach((img, i)=>{
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = i === privateCurrentIndex ? 'active' : '';
+    btn.innerHTML = `<img src="${img}" alt="">`;
     btn.addEventListener('click',()=>{
-      selectButton(card,btn);
-      const mode = btn.dataset.mode;
-      if(!toggle.checked){ toggle.checked = true; onToggleCharacter(key,true); }
-      playManual(key,mode);
-      syncGlobalVisual();
+      privateCurrentIndex = i;
+      renderPrivateViewer();
     });
+    privateViewerThumbs.appendChild(btn);
   });
+}
+
+async function openPrivateViewer(projectKey){
+  const data = privateProjects[projectKey];
+  const available = await resolveAvailablePrivateImages(projectKey);
+
+  if(!available.length){
+    alert('Images for this project have not been uploaded yet.');
+    return;
+  }
+
+  data._originalImages = data._originalImages || data.images;
+  data.images = available;
+
+  privateCurrentProject = projectKey;
+  privateCurrentIndex = 0;
+  renderPrivateViewer();
+  privateViewer.classList.add('open');
+  privateViewer.setAttribute('aria-hidden','false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePrivateViewer(){
+  privateViewer.classList.remove('open');
+  privateViewer.setAttribute('aria-hidden','true');
+  document.body.style.overflow = '';
+}
+
+document.querySelectorAll('[data-private-project]').forEach(card=>{
+  card.addEventListener('click',()=>openPrivateViewer(card.dataset.privateProject));
 });
 
-allToggle.addEventListener('change',()=>{
-  cards.forEach(card=>{
-    const key=card.dataset.character;
-    const t=card.querySelector('.char-toggle');
-    t.checked=allToggle.checked;
-    onToggleCharacter(key,t.checked);
-  });
+document.querySelectorAll('[data-close-private]').forEach(el=>{
+  el.addEventListener('click',closePrivateViewer);
 });
 
-function syncGlobalVisual(){
-  const states=cards.map(c=>c.querySelector('.char-toggle').checked);
-  allToggle.checked=states.every(Boolean);
-  allToggle.indeterminate=!states.every(Boolean)&&states.some(Boolean);
+privatePrev?.addEventListener('click',()=>{
+  const data = privateProjects[privateCurrentProject];
+  privateCurrentIndex = (privateCurrentIndex - 1 + data.images.length) % data.images.length;
+  renderPrivateViewer();
+});
+
+privateNext?.addEventListener('click',()=>{
+  const data = privateProjects[privateCurrentProject];
+  privateCurrentIndex = (privateCurrentIndex + 1) % data.images.length;
+  renderPrivateViewer();
+});
+
+window.addEventListener('keydown',e=>{
+  if(!privateViewer?.classList.contains('open')) return;
+  if(e.key === 'Escape') closePrivateViewer();
+  if(e.key === 'ArrowLeft') privatePrev?.click();
+  if(e.key === 'ArrowRight') privateNext?.click();
+});
+
+
+// ===== ACTIVE NAVIGATION ON SCROLL =====
+const navLinks = [...document.querySelectorAll('.topbar nav .nav-link')];
+const navSections = navLinks
+  .map(link => {
+    const id = link.getAttribute('href');
+    const section = id && id.startsWith('#') ? document.querySelector(id) : null;
+    return section ? { link, section } : null;
+  })
+  .filter(Boolean);
+
+function updateActiveNav(){
+  if(!navSections.length) return;
+
+  const marker = window.innerHeight * 0.34;
+  let current = navSections[0];
+
+  for(const item of navSections){
+    const rect = item.section.getBoundingClientRect();
+    if(rect.top <= marker){
+      current = item;
+    }
+  }
+
+  navLinks.forEach(link => link.classList.remove('active'));
+  current.link.classList.add('active');
 }
 
-function onToggleCharacter(key,on){
-  if(key==='fly'){
-    if(on){ setActorVisible('fly',true); setFlyMode('auto'); }
-    else{ setActorVisible('fly',false); stopFlyMotion(); }
-  }
-  if(key==='frog'){
-    if(on) triggerFrogOnce('fire'); else { frogRunToken++; setActorVisible('frog',false); }
-  }
-  if(key==='croc'){
-    if(on) startCrocAuto(); else { crocRunToken++; setActorVisible('croc',false); }
-  }
-}
+window.addEventListener('scroll', updateActiveNav, {passive:true});
+window.addEventListener('resize', updateActiveNav);
+updateActiveNav();
 
-function playManual(key,mode){
-  if(key==='fly') setFlyMode(mode);
-  if(key==='frog') triggerFrogOnce(mode);
-  if(key==='croc'){
-    crocRunToken++;
-    setActorVisible('croc',true);
-    const p=playerRefs.croc;
-    if(p && ready.croc) p.setAnimation(mode==='auto'?'start':mode, mode==='running');
-    if(mode==='auto') startCrocAuto();
-  }
-}
-
-// -------- Fly --------
-function stopFlyMotion(){ clearTimeout(flyMoveTimer); clearTimeout(flyReturnTimer); }
-function setFlyMode(mode){
-  flyMode=mode;
-  stopFlyMotion();
-  const p=playerRefs.fly;
-  if(!p||!ready.fly) return;
-  setActorVisible('fly',true);
-  if(mode==='auto'){
-    p.setAnimation('flies',true);
-    moveFly(false);
-    scheduleFlyMove();
-  }else{
-    p.setAnimation(mode, mode==='flies'||mode==='flies_Run');
-  }
-}
-function scheduleFlyMove(){
-  if(flyMode!=='auto'||!isEnabled('fly')) return;
-  flyMoveTimer=setTimeout(()=>{
-    const fast=Math.random()>.58;
-    const p=playerRefs.fly;
-    if(p&&ready.fly) p.setAnimation(fast?'flies_Run':'flies',true);
-    moveFly(fast);
-    flyReturnTimer=setTimeout(()=>{ if(flyMode==='auto'&&p&&ready.fly) p.setAnimation('flies',true); }, fast?900:1500);
-    scheduleFlyMove();
-  },1700+Math.random()*1700);
-}
-function moveFly(fast){
-  const a=actors.fly;
-  const mobile=innerWidth<760;
-  const x=mobile ? 20+Math.random()*58 : 43+Math.random()*32;
-  const y=mobile ? 26+Math.random()*24 : 27+Math.random()*38;
-  const dur=fast?.55:1.6;
-  a.style.transition=`left ${dur}s cubic-bezier(.2,.8,.2,1), top ${dur}s cubic-bezier(.2,.8,.2,1), transform .22s, opacity .25s`;
-  a.style.left=x+'%';a.style.top=y+'%';
-  a.style.transform=`translate(-50%,-50%) scale(${fast?1.09:1}) rotate(${Math.random()*10-5}deg)`;
-}
-function fireFly(){
-  if(!isEnabled('fly')||!ready.fly) return;
-  const p=playerRefs.fly;
-  const previous=flyMode;
-  stopFlyMotion();
-  p.setAnimation('fire',false);
-  setTimeout(()=>{
-    if(!isEnabled('fly')) return;
-    if(previous==='auto'){flyMode='auto';p.setAnimation('flies',true);scheduleFlyMove();}
-    else if(previous==='fire'){p.setAnimation('flies',true);}
-    else p.setAnimation(previous,previous==='flies'||previous==='flies_Run');
-  },900);
-}
-actors.fly.addEventListener('pointerdown',e=>{e.preventDefault();fireFly();});
-
-// -------- Frog --------
-function triggerFrogOnce(mode='fire'){
-  const p=playerRefs.frog;
-  if(!p||!ready.frog) return;
-  const token=++frogRunToken;
-  setActorVisible('frog',true);
-  actors.frog.style.opacity='1';
-  p.setAnimation(mode,false);
-  if(mode==='Rig_View') return;
-  setTimeout(()=>{
-    if(token!==frogRunToken) return;
-    actors.frog.style.opacity='0';
-    setTimeout(()=>{ if(token===frogRunToken) setActorVisible('frog',false); },320);
-  },2100);
-}
-
-// -------- Crocodile --------
-function playOnce(player,name){
-  return new Promise(resolve=>{
-    if(!player){resolve();return;}
-    const entry=player.animationState.setAnimation(0,name,false);
-    entry.listener={complete(){resolve();}};
+// Smooth section navigation
+navLinks.forEach(link=>{
+  link.addEventListener('click', e=>{
+    const target = document.querySelector(link.getAttribute('href'));
+    if(!target) return;
+    e.preventDefault();
+    target.scrollIntoView({behavior:'smooth', block:'start'});
   });
-}
-function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
-async function startCrocAuto(){
-  if(!ready.croc) return;
-  const token=++crocRunToken;
-  const p=playerRefs.croc;
-  setActorVisible('croc',true);
-  actors.croc.style.transition='left .25s ease, opacity .25s';
-  actors.croc.style.left=innerWidth<760?'-58%':'-24%';
-  await playOnce(p,'start');
-  if(token!==crocRunToken||!isEnabled('croc')) return;
-  p.setAnimation('running',true);
-  actors.croc.style.transition='left 3.2s linear, opacity .25s';
-  actors.croc.style.left=innerWidth<760?'8%':'28%';
-  await sleep(3200);
-  if(token!==crocRunToken||!isEnabled('croc')) return;
-  const happy=Math.random()>.5?'Happy_1':'Happy_2';
-  await playOnce(p,happy);
-  if(token!==crocRunToken||!isEnabled('croc')) return;
-  await sleep(1100);
-  if(token!==crocRunToken||!isEnabled('croc')) return;
-  // repeat from start, so the cycle always resets cleanly
-  startCrocAuto();
-}
-
-// Start fly as soon as it is ready.
-const waitFly=setInterval(()=>{
-  if(ready.fly){clearInterval(waitFly);setFlyMode('auto');}
-},100);
-
-// Helpful local-file warning: Spine asset loading needs HTTP(S).
-if(location.protocol==='file:'){
-  setTimeout(()=>setStatus('Для Spine открой через GitHub Pages / локальный сервер','error'),500);
-}
+});

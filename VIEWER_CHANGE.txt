@@ -1,0 +1,7 @@
+Only one change was made:
+
+- The existing private-project viewer is kept exactly as before.
+- The main artwork is displayed a little larger.
+- Viewer width increased slightly.
+- Image maximum height increased slightly.
+- Arrows, thumbnails, close button, counter, and all viewer mechanics remain unchanged.

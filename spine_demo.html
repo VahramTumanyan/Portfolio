@@ -1,0 +1,960 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Spine Characters Test</title>
+  <link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@4.3.13/dist/spine-player.css">
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0b0f14;font-family:Inter,Arial,sans-serif;color:#fff}
+    body{
+      background:
+        radial-gradient(circle at 50% 35%,#1a2634 0,#0d141d 38%,#080b10 78%),
+        #080b10;
+    }
+
+    /* ===== compact top controls ===== */
+    .controls{
+      position:fixed;
+      top:10px;
+      left:50%;
+      transform:translateX(-50%);
+      z-index:100;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      padding:5px;
+      border:1px solid #3d4b5d;
+      border-radius:18px;
+      background:#121923eF;
+      box-shadow:0 12px 35px #000b, inset 0 0 0 1px #ffffff08;
+      backdrop-filter:blur(14px);
+    }
+    .master{
+      display:flex;align-items:center;gap:5px;
+      padding:0 7px 0 5px;
+      border-right:1px solid #334052;
+      height:42px;
+    }
+    .bolt{font-size:18px;filter:drop-shadow(0 0 8px #ff9d28)}
+    .card{position:relative}
+    .head{
+      height:42px;
+      min-width:118px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      padding:3px 6px;
+      border:1px solid #334052;
+      border-radius:12px;
+      background:linear-gradient(#1a2330,#101720);
+    }
+    .avatar{
+      width:34px;height:34px;border-radius:10px;
+      display:grid;place-items:center;
+      font-size:21px;
+      background:#0d151f;
+      border:2px solid #f4a73c;
+      box-shadow:0 0 14px #ff9c3133;
+    }
+    .name{font-weight:800;font-size:12px;line-height:1}
+    .sub{font-size:8px;color:#8696ab;margin-top:3px}
+    .fold{
+      width:18px;height:24px;padding:0;border:0;background:transparent;color:#b8c2d0;
+      font-size:15px;cursor:pointer;
+    }
+    .switch{position:relative;width:36px;height:20px;display:inline-block;margin-left:auto}
+    .switch input{display:none}
+    .track{
+      position:absolute;inset:0;border-radius:999px;
+      background:#8e1823;border:1px solid #ff4051;
+      box-shadow:0 0 10px #ff243b88,inset 0 0 7px #ff304166;
+      transition:.18s;
+    }
+    .knob{
+      position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;
+      background:#fff3d8;box-shadow:0 1px 4px #0008;
+      transition:.18s;
+    }
+    .switch input:checked + .track{
+      background:#087b40;border-color:#2dff86;
+      box-shadow:0 0 12px #25ff7faa,inset 0 0 8px #42ff9177;
+    }
+    .switch input:checked + .track .knob{transform:translateX(16px)}
+    .menu{
+      display:none;
+      position:absolute;
+      top:48px;left:0;
+      min-width:165px;
+      padding:7px;
+      border:1px solid #405066;
+      border-radius:12px;
+      background:#111923f7;
+      box-shadow:0 20px 40px #000c;
+    }
+    .card.open .menu{display:grid;gap:4px}
+    .anim{
+      border:1px solid #273346;
+      border-radius:8px;
+      background:#18212d;color:#dbe4ef;
+      padding:7px 9px;text-align:left;font-size:11px;cursor:pointer;
+    }
+    .anim:hover,.anim.active{border-color:#f3a63c;color:#fff;background:#2a2218}
+
+    .menu-loading{
+      padding:7px 9px;
+      color:#8290a2;
+      font-size:10px;
+      white-space:nowrap;
+    }
+
+
+    /* ===== full-screen character stage ===== */
+    #stage{position:fixed;inset:0;overflow:hidden;pointer-events:none}
+    .actor{position:absolute;opacity:0;transition:opacity .22s;pointer-events:none}
+    .actor.on{opacity:1}
+
+    .spine-host{width:100%;height:100%;background:transparent!important}
+    .spine-player-canvas{background:transparent!important}
+
+
+    /* Fly: do not crop/mask any part of the Spine character. */
+    #flyLane,
+    #flyBob,
+    #flyPlayer,
+    #flyPlayer *,
+    #flyPlayer canvas{
+      overflow:visible!important;
+      clip:auto!important;
+      clip-path:none!important;
+      mask:none!important;
+      -webkit-mask:none!important;
+      border-radius:0!important;
+    }
+
+    /* Fly: free viewport roaming. Real Spine animation stays inside. */
+    #flyLane{
+      position:absolute;
+      left:12vw;
+      top:22vh;
+      width:260px;
+      height:205px;
+      opacity:0;
+      pointer-events:none;
+      will-change:left,top,transform;
+      transition:left 1.7s ease-in-out, top 1.7s ease-in-out, transform .2s ease;
+    }
+    #flyLane.on{opacity:1}
+    #flyBob{
+      width:100%;height:100%;
+      pointer-events:auto;
+      cursor:crosshair;
+      transform-origin:center;
+      animation:flyBob 1.15s ease-in-out infinite alternate;
+    }
+    @keyframes flyBob{
+      from{transform:translateY(-22px) rotate(-2deg) scaleX(var(--flyFace,-1))}
+      to{transform:translateY(26px) rotate(2deg) scaleX(var(--flyFace,-1))}
+    }
+    .click-label{
+      position:absolute;left:50%;top:3px;transform:translateX(-50%);
+      font-size:10px;font-weight:900;letter-spacing:.08em;
+      color:#ffd27a;text-shadow:0 2px 8px #000;
+      opacity:.78;pointer-events:none;
+    }
+
+    /* Frog: larger and closer to the center-bottom. */
+    /* Frog fixed bottom-right */
+    #frogActor{
+      left:50%;
+      right:auto;
+      bottom:-4vw;
+      width:min(1180px,78vw);
+      height:min(900px,62vw);
+      transform:translateX(-50%);
+      transform-origin:50% 100%;
+    }
+
+    /* Croc moves horizontally across bottom */
+    #crocActor{
+      left:-48vw;bottom:-2.5vw;
+      width:min(760px,48vw);height:min(500px,34vw);
+      will-change:left,transform;
+    }
+    #crocActor.reverse{transform:scaleX(1)}
+    #crocActor.forward{transform:scaleX(-1)}
+    #crocActor{
+      transition:left 4.9s cubic-bezier(.22,.61,.36,1), transform .28s ease, opacity .22s ease;
+    }
+    .actor.rig-focus{
+      position:fixed!important;
+      left:50%!important;
+      top:50%!important;
+      right:auto!important;
+      bottom:auto!important;
+      width:min(1100px,82vw)!important;
+      height:min(820px,78vh)!important;
+      transform:translate(-50%,-50%)!important;
+      z-index:80!important;
+      opacity:1!important;
+      transition:none!important;
+    }
+    
+
+
+
+    .actor.manual-focus{
+      position:fixed!important;
+      left:50%!important;
+      top:50%!important;
+      right:auto!important;
+      bottom:auto!important;
+      width:min(900px,68vw)!important;
+      height:min(680px,62vh)!important;
+      transform:translate(-50%,-50%)!important;
+      z-index:75!important;
+      opacity:1!important;
+      transition:none!important;
+    }
+    .actor.manual-away{
+      opacity:.18!important;
+      transform:translateX(38vw) scale(.72)!important;
+      pointer-events:none!important;
+    }
+
+
+    .actor.preview-focus{
+      position:fixed!important;
+      left:50%!important;
+      top:50%!important;
+      right:auto!important;
+      bottom:auto!important;
+      width:min(1260px,88vw)!important;
+      height:min(920px,84vh)!important;
+      transform:translate(-50%,-50%) scale(1)!important;
+      z-index:999!important;
+      opacity:1!important;
+      visibility:visible!important;
+      display:block!important;
+      pointer-events:none!important;
+      transition:none!important;
+    }
+
+    #frogActor.frog-rig-center{
+      position:fixed!important;
+      left:50%!important;
+      top:50%!important;
+      right:auto!important;
+      bottom:auto!important;
+      width:min(1360px,92vw)!important;
+      height:min(980px,88vh)!important;
+      transform:translate(-50%,-50%)!important;
+      z-index:1000!important;
+      opacity:1!important;
+      visibility:visible!important;
+      display:block!important;
+    }
+
+    #crocActor.preview-focus{
+      left:50%!important;
+      top:52%!important;
+      bottom:auto!important;
+      width:min(1320px,90vw)!important;
+      height:min(940px,86vh)!important;
+      transform:translate(-50%,-50%)!important;
+    }
+    .actor.preview-hidden,
+    #flyLane.preview-hidden{
+      opacity:0!important;
+      pointer-events:none!important;
+    }
+
+    .hint{
+      position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
+      color:#7f8c9f;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+      pointer-events:none;
+    }
+
+    @media(max-width:850px){
+      .controls{left:8px;right:8px;transform:none;justify-content:center;gap:3px}
+      .head{min-width:88px;padding:3px}
+      .name,.sub{display:none}
+      .avatar{width:32px;height:32px}
+      #frogActor{width:125vw;height:96vw;left:50%;right:auto;bottom:-7vw;transform:translateX(-50%)}
+      #crocActor{width:110vw;height:75vw;bottom:-5vw}
+      #flyLane{width:220px;height:175px;top:30%}
+    }
+  
+    /* ===== SIMPLE PORTFOLIO MODE ===== */
+    .master,
+    .fold,
+    .menu,
+    .hint,
+    .click-label{
+      display:none !important;
+    }
+
+    .controls{
+      gap:8px;
+      padding:7px;
+    }
+
+    .head{
+      min-width:150px;
+      padding-right:9px;
+    }
+
+    .card[data-key="fly"] .switch{
+      opacity:.92;
+      cursor:default;
+    }
+
+    .card[data-key="fly"] .switch input:disabled + .track{
+      opacity:1;
+      filter:none;
+    }
+
+    @media(max-width:720px){
+      .controls{
+        left:8px;
+        right:8px;
+        transform:none;
+        justify-content:center;
+        flex-wrap:wrap;
+      }
+      .head{
+        min-width:128px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="controls">
+    <div class="master">
+      <span class="bolt">⚡</span>
+      <label class="switch" title="Все персонажи">
+        <input id="allToggle" type="checkbox">
+        <span class="track"><span class="knob"></span></span>
+      </label>
+    </div>
+
+    <div class="card" data-key="fly">
+      <div class="head">
+        <div class="avatar">🪰</div>
+        <div><div class="name">Fly</div><div class="sub">AUTO · ALWAYS ON</div></div>
+        <label class="switch">
+          <input class="toggle" type="checkbox" checked disabled>
+          <span class="track"><span class="knob"></span></span>
+        </label>
+        <button class="fold">⌄</button>
+      </div>
+      <div class="menu">
+        <div class="menu-loading">Читаю анимации из JSON…</div>
+      </div>
+    </div>
+
+    <div class="card" data-key="croc">
+      <div class="head">
+        <div class="avatar">🐊</div>
+        <div><div class="name">Crocodile</div><div class="sub">ON / OFF</div></div>
+        <label class="switch">
+          <input class="toggle" type="checkbox">
+          <span class="track"><span class="knob"></span></span>
+        </label>
+        <button class="fold">⌄</button>
+      </div>
+      <div class="menu">
+        <div class="menu-loading">Читаю анимации из JSON…</div>
+      </div>
+    </div>
+
+    <div class="card" data-key="frog">
+      <div class="head">
+        <div class="avatar">🐸</div>
+        <div><div class="name">Frog</div><div class="sub">ON / OFF</div></div>
+        <label class="switch">
+          <input class="toggle" type="checkbox">
+          <span class="track"><span class="knob"></span></span>
+        </label>
+        <button class="fold">⌄</button>
+      </div>
+      <div class="menu">
+        <div class="menu-loading">Читаю анимации из JSON…</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="stage">
+    <div id="flyLane">
+      <div id="flyBob">
+        <div id="flyPlayer" class="spine-host"></div>
+        <div class="click-label">CLICK → FIRE</div>
+      </div>
+    </div>
+
+    <div id="frogActor" class="actor">
+      <div id="frogPlayer" class="spine-host"></div>
+    </div>
+
+    <div id="crocActor" class="actor">
+      <div id="crocPlayer" class="spine-host"></div>
+    </div>
+  </div>
+
+  <div class="hint">Тест персонажей · меню автоматически читает ВСЕ animations из JSON</div>
+
+  <script src="https://unpkg.com/@esotericsoftware/spine-player@4.3.13/dist/iife/spine-player.min.js"></script>
+  <script>
+    const refs={fly:null,frog:null,croc:null};
+    const ready={fly:false,frog:false,croc:false};
+    const flyLane=document.getElementById('flyLane');
+    const flyBob=document.getElementById('flyBob');
+    const frogActor=document.getElementById('frogActor');
+    const crocActor=document.getElementById('crocActor');
+    const allToggle=document.getElementById('allToggle');
+    let flyMode='auto';
+    let crocToken=0;
+    let frogToken=0;
+    let previewOwner=null;
+    let manualPreviewToken=0;
+    let flyMoveTimer=null;
+    let flyMoveToken=0;
+
+    function createPlayer(key,id,skeleton,atlas,animation){
+      return new spine.SpinePlayer(id,{
+        skeleton,atlas,animation,
+        showControls:false,alpha:true,premultipliedAlpha:true,
+        backgroundColor:'#00000000',
+        defaultMix:0.22,
+        success(player){
+          refs[key]=player;ready[key]=true;
+          if(key==='fly'){
+            const t=cardFor('fly').querySelector('.toggle');
+            t.checked=true;
+            player.animationState.setAnimation(0,'flies',true);
+            setEnabled('fly',true);
+          }
+        },
+        error(player,reason){console.error(key,reason)}
+      });
+    }
+
+    createPlayer('fly','flyPlayer',
+      'assets/spine/fly/jeko_spine_final.json',
+      'assets/spine/fly/jeko_spine_final.atlas','flies');
+
+    createPlayer('frog','frogPlayer',
+      'assets/spine/frog/Amb+gort spine.json',
+      'assets/spine/frog/Amb+gort spine.atlas','fire');
+
+    createPlayer('croc','crocPlayer',
+      'assets/spine/croc/kroks spine fayl.json',
+      'assets/spine/croc/kroks spine fayl.atlas','running');
+
+    const cards=[...document.querySelectorAll('.card')];
+
+    function cardFor(key){return document.querySelector(`.card[data-key="${key}"]`)}
+    function enabled(key){return cardFor(key).querySelector('.toggle').checked}
+
+    const jsonPaths={
+      fly:'assets/spine/fly/jeko_spine_final.json',
+      frog:'assets/spine/frog/Amb+gort spine.json',
+      croc:'assets/spine/croc/kroks spine fayl.json'
+    };
+
+    function bindCardBase(card){
+      const key=card.dataset.key;
+      const toggle=card.querySelector('.toggle');
+
+      toggle.addEventListener('change',()=>{
+        if(key==='fly'){
+          toggle.checked=true;
+          return;
+        }
+        setEnabled(key,toggle.checked);
+      });
+    }
+
+    function bindAnimButton(card,btn){
+      const key=card.dataset.key;
+      const toggle=card.querySelector('.toggle');
+
+      btn.addEventListener('click',()=>{
+        card.querySelectorAll('.anim').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if(!toggle.checked){
+          toggle.checked=true;
+          setEnabled(key,true);
+        }
+
+        playMode(key,btn.dataset.mode);
+        syncMaster();
+      });
+    }
+
+    cards.forEach(bindCardBase);
+
+    // Portfolio defaults: Fly is always enabled; Crocodile and Frog start OFF.
+    cardFor('fly').querySelector('.toggle').checked=true;
+    cardFor('croc').querySelector('.toggle').checked=false;
+    cardFor('frog').querySelector('.toggle').checked=false;
+    flyLane.classList.add('on');
+    frogActor.classList.remove('on');
+    crocActor.classList.remove('on');
+    // Animation selection menus are intentionally disabled in portfolio mode.
+
+
+    document.addEventListener('pointerdown',e=>{
+      if(!e.target.closest('.controls')) cards.forEach(c=>c.classList.remove('open'));
+    });
+
+    });
+    function syncMaster(){}
+
+
+    function setEnabled(key,on){
+      if(key==='fly'){
+        flyLane.classList.toggle('on',on);
+        if(on) setFly('auto');
+        else{
+          flyMoveToken++;
+          clearTimeout(flyMoveTimer);
+          clearRigFocus('fly');
+          if(previewOwner==='fly') restoreEnabledCharacters();
+        }
+      }
+      if(key==='frog'){
+        frogActor.classList.toggle('on',on);
+        if(on){
+          clearRigFocus('frog');
+          clearManualFocus();
+          startFrogLoop();
+        }else{
+          frogToken++;
+          clearRigFocus('frog');
+        }
+      }
+      if(key==='croc'){
+        crocActor.classList.toggle('on',on);
+        if(on){
+          clearRigFocus('croc');
+          clearManualFocus();
+          startCroc();
+        }else{
+          crocToken++;
+          clearRigFocus('croc');
+          clearManualFocus();
+          if(previewOwner==='croc') restoreEnabledCharacters();
+        }
+      }
+    }
+
+    async function playMode(key,mode){
+      // Clicking Auto explicitly restores the normal mode immediately.
+      if((key==='fly' || key==='croc') && mode==='auto'){
+        restoreEnabledCharacters();
+        return;
+      }
+
+      const token=enterPreviewPresentation(key);
+
+      async function playSelectedTwice(player, animationName){
+        // Full exported animation #1.
+        await once(player,animationName);
+        if(token!==manualPreviewToken) return false;
+
+        // Full exported animation #2.
+        await once(player,animationName);
+        if(token!==manualPreviewToken) return false;
+
+        // Hold the real final pose for 2 seconds, then Auto.
+        await sleep(2000);
+        if(token!==manualPreviewToken) return false;
+
+        return true;
+      }
+
+      if(key==='fly' && ready.fly){
+        const ok=await playSelectedTwice(refs.fly,mode);
+        if(ok) restoreEnabledCharacters();
+        return;
+      }
+
+      if(key==='frog' && ready.frog){
+        if(mode==='Rig_View'){
+          frogActor.classList.add('frog-rig-center');
+        }else{
+          frogActor.classList.remove('frog-rig-center');
+        }
+
+        const ok=await playSelectedTwice(refs.frog,mode);
+        if(ok) restoreEnabledCharacters();
+        return;
+      }
+
+      if(key==='croc' && ready.croc){
+        crocActor.classList.add('on','preview-focus');
+        crocActor.classList.remove('reverse','forward');
+        crocActor.style.opacity='1';
+
+        const ok=await playSelectedTwice(refs.croc,mode);
+        if(ok) restoreEnabledCharacters();
+        return;
+      }
+    }
+
+    /* Fly: free random roaming across the viewport.
+       The container changes direction; the real Spine animation remains untouched. */
+    function randomFlyTarget(){
+      const w=Math.max(220,flyLane.offsetWidth||260);
+      const h=Math.max(170,flyLane.offsetHeight||205);
+      const padX=24;
+      const topPad=82;
+      const bottomPad=28;
+      return {
+        x:padX+Math.random()*Math.max(40,innerWidth-w-padX*2),
+        y:topPad+Math.random()*Math.max(40,innerHeight-h-topPad-bottomPad)
+      };
+    }
+
+    function scheduleFlyRoam(){
+      const token=++flyMoveToken;
+
+      const step=()=>{
+        if(token!==flyMoveToken || !enabled('fly') || flyMode!=='auto') return;
+
+        const currentX=parseFloat(flyLane.style.left)||flyLane.getBoundingClientRect().left;
+        const target=randomFlyTarget();
+        const goingRight=target.x>=currentX;
+
+        // Source fly faces the opposite way, so flip based on travel direction.
+        flyBob.style.transformOrigin='center';
+        flyBob.style.setProperty('--flyFace',goingRight ? '-1' : '1');
+
+        const dist=Math.hypot(target.x-currentX,target.y-(parseFloat(flyLane.style.top)||flyLane.getBoundingClientRect().top));
+        const fast=dist>innerWidth*.45 && Math.random()>.35;
+        const duration=fast ? 1.05+Math.random()*.55 : 1.55+Math.random()*1.0;
+
+        if(ready.fly){
+          refs.fly.setAnimation(fast?'flies_Run':'flies',true);
+        }
+
+        flyLane.style.transition=`left ${duration}s ease-in-out, top ${duration}s ease-in-out`;
+        flyLane.style.left=target.x+'px';
+        flyLane.style.top=target.y+'px';
+
+        flyMoveTimer=setTimeout(step,duration*1000+300+Math.random()*700);
+      };
+
+      step();
+    }
+
+    function setFly(mode){
+      flyMode=mode;
+      flyMoveToken++;
+      clearTimeout(flyMoveTimer);
+      clearRigFocus('fly');
+
+      if(!ready.fly) return;
+      flyLane.classList.add('on');
+
+      if(mode==='auto'){
+        clearPreviewPresentation();
+        refs.fly.setAnimation('flies',true);
+        scheduleFlyRoam();
+      }else if(mode==='flies'){
+        refs.fly.setAnimation('flies',true);
+      }else if(mode==='flies_Run'){
+        refs.fly.setAnimation('flies_Run',true);
+      }else if(mode==='Rig_View'){
+        refs.fly.setAnimation('Rig_View',false);
+      }else{
+        // Any other real animation found in the JSON is played exactly by its exported name.
+        refs.fly.setAnimation(mode,false);
+      }
+    }
+    // Fly click interaction disabled in simple portfolio mode.
+
+
+    function clearAllRigFocus(){
+      flyLane.classList.remove('rig-focus');
+      frogActor.classList.remove('rig-focus');
+      crocActor.classList.remove('rig-focus');
+    }
+
+    function clearRigFocus(key){
+      const el=key==='fly'?flyLane:(key==='frog'?frogActor:crocActor);
+      el.classList.remove('rig-focus');
+    }
+
+    function setRigFocus(key){
+      clearAllRigFocus();
+      const el=key==='fly'?flyLane:(key==='frog'?frogActor:crocActor);
+      // Rig View is intentionally plain: only center and enlarge the character.
+      if(key!=='fly') el.classList.add('rig-focus');
+    }
+
+    function clearManualFocus(){
+      frogActor.classList.remove('manual-focus','manual-away');
+      crocActor.classList.remove('manual-focus','manual-away');
+    }
+
+    function stopCharacterActivity(key){
+      if(key==='fly'){
+        flyMoveToken++;
+        clearTimeout(flyMoveTimer);
+      }
+      if(key==='frog') frogToken++;
+      if(key==='croc') crocToken++;
+    }
+
+    function clearPreviewPresentation(){
+      previewOwner=null;
+      flyLane.classList.remove('preview-hidden');
+      frogActor.classList.remove('preview-hidden','preview-focus','frog-rig-center');
+      crocActor.classList.remove('preview-hidden','preview-focus');
+      clearManualFocus();
+      clearAllRigFocus();
+    }
+
+    function enterPreviewPresentation(key){
+      manualPreviewToken++;
+      previewOwner=key;
+
+      // Stop every automatic sequence first.
+      flyMoveToken++;
+      clearTimeout(flyMoveTimer);
+      frogToken++;
+      crocToken++;
+
+      // Also stop any currently playing Spine tracks so nothing can overwrite
+      // the selected preview animation while it is being shown.
+      try{ if(ready.fly) refs.fly.animationState.clearTracks(); }catch(e){}
+      try{ if(ready.frog) refs.frog.animationState.clearTracks(); }catch(e){}
+      try{ if(ready.croc) refs.croc.animationState.clearTracks(); }catch(e){}
+
+      // Clear old preview classes without restarting anything.
+      flyLane.classList.remove('preview-hidden');
+      frogActor.classList.remove('preview-hidden','preview-focus','frog-rig-center');
+      crocActor.classList.remove('preview-hidden','preview-focus');
+      clearManualFocus();
+      clearAllRigFocus();
+
+      // Hide every non-selected character completely.
+      if(key!=='fly') flyLane.classList.add('preview-hidden');
+      if(key!=='frog') frogActor.classList.add('preview-hidden');
+      if(key!=='croc') crocActor.classList.add('preview-hidden');
+
+      // Force selected character visible.
+      if(key==='fly'){
+        flyLane.classList.add('on');
+      }
+
+      if(key==='frog'){
+        frogActor.classList.add('on','preview-focus');
+        frogActor.style.opacity='1';
+      }
+
+      if(key==='croc'){
+        crocActor.classList.add('on','preview-focus');
+        crocActor.classList.remove('reverse','forward');
+        crocActor.style.opacity='1';
+        crocActor.style.left='50%';
+        crocActor.style.top='52%';
+        crocActor.style.bottom='auto';
+        crocActor.style.transition='none';
+      }
+
+      return manualPreviewToken;
+    }
+
+
+    function resetCharacterPositionsToV12(){
+      // Fly: back to its normal roaming layer.
+      flyLane.classList.remove('preview-hidden','rig-focus');
+      flyLane.style.left='';
+      flyLane.style.top='';
+      flyLane.style.right='';
+      flyLane.style.bottom='';
+      flyLane.style.transform='';
+      flyLane.style.opacity='';
+
+      // Frog: back to original V12 center-bottom placement.
+      frogActor.classList.remove('preview-hidden','preview-focus','manual-focus','manual-away','rig-focus','frog-rig-center');
+      frogActor.style.left='';
+      frogActor.style.top='';
+      frogActor.style.right='';
+      frogActor.style.bottom='';
+      frogActor.style.transform='';
+      frogActor.style.opacity='';
+      frogActor.style.transition='';
+
+      // Crocodile: back to original V12 moving-bottom placement.
+      crocActor.classList.remove('preview-hidden','preview-focus','manual-focus','manual-away','rig-focus');
+      crocActor.style.left='';
+      crocActor.style.top='';
+      crocActor.style.right='';
+      crocActor.style.bottom='';
+      crocActor.style.transform='';
+      crocActor.style.opacity='';
+      crocActor.style.transition='';
+    }
+
+    function restoreEnabledCharacters(){
+      clearPreviewPresentation();
+      resetCharacterPositionsToV12();
+
+      // Visually return menu selection to Auto where that option exists.
+      cards.forEach(card=>{
+        const auto=card.querySelector('.anim[data-mode="auto"]');
+        if(auto){
+          card.querySelectorAll('.anim').forEach(b=>b.classList.remove('active'));
+          auto.classList.add('active');
+        }
+      });
+
+      // Remove preview-only inline placement from crocodile.
+      crocActor.style.top='';
+      crocActor.style.bottom='';
+      crocActor.style.left='';
+      crocActor.style.opacity='';
+      crocActor.style.transition='';
+
+      if(enabled('fly')){
+        setFly('auto');
+      }else{
+        flyLane.classList.remove('on');
+      }
+
+      if(enabled('frog')){
+        frogActor.classList.add('on');
+        startFrogLoop();
+      }else{
+        frogActor.classList.remove('on');
+      }
+
+      if(enabled('croc')){
+        crocActor.classList.add('on');
+        startCroc();
+      }else{
+        crocActor.classList.remove('on');
+      }
+    }
+
+    function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+    function once(player,name){
+      return new Promise(resolve=>{
+        const state=player.animationState;
+
+        // Manual/sequence playback must show every frame exactly as exported.
+        // Disable cross-fade while this one-shot is playing so the beginning/end
+        // cannot be visually eaten by the previous/next animation.
+        const oldMix=state.data.defaultMix;
+        state.data.defaultMix=0;
+
+        state.clearTracks();
+
+        const entry=state.setAnimation(0,name,false);
+        entry.timeScale=1;
+
+        const animationDuration =
+          (entry.animation && Number.isFinite(entry.animation.duration))
+            ? entry.animation.duration
+            : (Number.isFinite(entry.animationEnd) ? entry.animationEnd : 0);
+
+        // We intentionally wait for the REAL exported duration instead of trusting
+        // only the complete callback, because another state change/mix can make
+        // completion appear visually early.
+        const waitMs=Math.max(80, Math.ceil(animationDuration*1000)+90);
+
+        setTimeout(()=>{
+          try{
+            // Hold the real last frame before the next animation can start.
+            if(entry && animationDuration>0){
+              entry.trackTime=animationDuration;
+              state.apply(player.skeleton);
+            }
+          }catch(e){}
+
+          state.data.defaultMix=oldMix;
+          resolve();
+        },waitMs);
+      });
+    }
+
+    async function startFrogLoop(){
+      if(!ready.frog) return;
+
+      const token=++frogToken;
+      frogActor.classList.add('on');
+      clearRigFocus('frog');
+
+      while(token===frogToken && enabled('frog')){
+        // Play the real Spine fire animation to completion.
+        await once(refs.frog,'fire');
+
+        if(token!==frogToken || !enabled('frog')) break;
+
+        // Tiny pause so the loop reads naturally instead of snapping.
+        await sleep(120);
+      }
+    }
+
+    async function startCroc(){
+      if(!ready.croc) return;
+
+      const token=++crocToken;
+      crocActor.classList.add('on');
+      clearRigFocus('croc');
+
+      const width=Math.max(520,crocActor.getBoundingClientRect().width);
+      const offLeft=-width*.78;
+      const startX=Math.max(14, innerWidth*0.03);
+      const centerX=innerWidth*0.50 - width*0.52;
+      const offRight=innerWidth - width*0.18;
+
+      while(token===crocToken && enabled('croc')){
+        // 1) Initial quick entrance using the real START animation.
+        crocActor.classList.remove('reverse');
+        crocActor.classList.add('forward');
+        crocActor.style.transition='none';
+        crocActor.style.left=offLeft+'px';
+        refs.croc.setAnimation('start',false);
+        void crocActor.offsetWidth;
+
+        crocActor.style.transition='left 0.9s cubic-bezier(.15,.85,.28,1), transform .18s ease, opacity .2s ease';
+        crocActor.style.left=startX+'px';
+        await sleep(900);
+        if(token!==crocToken || !enabled('croc')) break;
+
+        // 2) Then RUNNING until the center of the screen.
+        refs.croc.setAnimation('running',true);
+        crocActor.style.transition='left 2.5s linear, transform .18s ease, opacity .2s ease';
+        crocActor.style.left=centerX+'px';
+        await sleep(2500);
+        if(token!==crocToken || !enabled('croc')) break;
+
+        // 3) In the middle always play Happy_2.
+        await once(refs.croc,'Happy_2');
+        if(token!==crocToken || !enabled('croc')) break;
+
+        // 4) Continue RUNNING and leave the screen.
+        refs.croc.setAnimation('running',true);
+        crocActor.style.transition='left 2.8s linear, transform .18s ease, opacity .2s ease';
+        crocActor.style.left=offRight+'px';
+        await sleep(2800);
+        if(token!==crocToken || !enabled('croc')) break;
+
+        // 5) When fully off screen, start the next cycle again from START.
+        crocActor.style.transition='none';
+        crocActor.style.left=offLeft+'px';
+        await sleep(180);
+      }
+    }
+  </script>
+</body>
+</html>

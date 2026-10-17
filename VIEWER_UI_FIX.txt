@@ -1,0 +1,6 @@
+Requested viewer changes:
+- removed the "PRIVATE PROJECT" text from the viewer header;
+- project name remains;
+- close X is now large, red, and cartoon/game-style;
+- bottom thumbnail strip is centered under the artwork on desktop;
+- viewer mechanics, arrows, image counter and galleries are unchanged.
