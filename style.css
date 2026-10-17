@@ -1658,3 +1658,797 @@ h1{
   color:#ff6a62 !important;
   border-color:#ff6a62 !important;
 }
+
+/* ===== FIXED INTERACTIVE FLY — replaces only the top-right BEHANCE pill ===== */
+.fly-corner-widget{
+  position:fixed;
+  top:4px;
+  right:22px;
+  width:230px;
+  height:118px;
+  z-index:220;
+  pointer-events:auto;
+  overflow:visible;
+}
+.fly-corner-widget iframe{
+  display:block;
+  width:100%;
+  height:100%;
+  border:0;
+  background:transparent;
+  overflow:visible;
+}
+@media(max-width:900px){
+  .fly-corner-widget{
+    display:block!important;
+    width:180px;
+    height:100px;
+    right:6px;
+    top:0;
+  }
+}
+@media(max-width:520px){
+  .fly-corner-widget{
+    width:145px;
+    height:86px;
+    right:0;
+    top:0;
+  }
+}
+
+
+/* =========================================================
+   LOCAL PREVIEW V1 — TOP-RIGHT FLY POWER SWITCH
+   Only the old BEHANCE-button position + fly visibility.
+   Everything else remains unchanged.
+   ========================================================= */
+
+.fly-power-toggle{
+  appearance:none;
+  -webkit-appearance:none;
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  flex:0 0 auto;
+  min-height:40px;
+  padding:8px 12px;
+  border:2px solid #e4e7eb;
+  border-radius:12px 10px 13px 11px;
+  background:
+    repeating-linear-gradient(
+      -10deg,
+      rgba(255,255,255,.035) 0 2px,
+      transparent 2px 7px
+    ),
+    #171c22;
+  color:#e9edf1;
+  font:900 11px/1 Arial,Helvetica,sans-serif;
+  letter-spacing:.08em;
+  cursor:pointer;
+  box-shadow:
+    0 5px 0 #090c0f,
+    0 8px 18px rgba(0,0,0,.26);
+  transform:rotate(-.5deg);
+  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
+  z-index:230;
+}
+
+.fly-power-toggle::before{
+  content:"";
+  position:absolute;
+  inset:-3px;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:14px 11px 15px 12px;
+  transform:rotate(1.1deg);
+  pointer-events:none;
+}
+
+.fly-power-toggle:hover{
+  transform:translateY(-1px) rotate(-.5deg);
+  border-color:#f1f3f5;
+}
+
+.fly-power-toggle:active{
+  transform:translateY(3px) rotate(-.5deg);
+  box-shadow:
+    0 2px 0 #090c0f,
+    0 4px 10px rgba(0,0,0,.22);
+}
+
+.fly-power-label{
+  color:#f0f2f4;
+}
+
+.fly-power-state{
+  min-width:21px;
+  color:#777f88;
+  font-size:9px;
+}
+
+.fly-switch-track{
+  position:relative;
+  display:block;
+  width:38px;
+  height:20px;
+  border:2px solid #5f6872;
+  border-radius:999px;
+  background:#0d1115;
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.55);
+}
+
+.fly-switch-knob{
+  position:absolute;
+  left:3px;
+  top:3px;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#737c85;
+  box-shadow:0 1px 3px rgba(0,0,0,.55);
+  transition:left .2s ease, background .2s ease, box-shadow .2s ease;
+}
+
+/* ON state uses the site's yellow accent, but kept restrained. */
+.fly-power-toggle.is-on{
+  border-color:#d8c229;
+  background:
+    repeating-linear-gradient(
+      -10deg,
+      rgba(255,255,255,.035) 0 2px,
+      transparent 2px 7px
+    ),
+    #171c22;
+}
+
+.fly-power-toggle.is-on .fly-switch-track{
+  border-color:#d8c229;
+  background:#3a3512;
+}
+
+.fly-power-toggle.is-on .fly-switch-knob{
+  left:21px;
+  background:#e4cf32;
+  box-shadow:
+    0 0 0 2px rgba(228,207,50,.12),
+    0 0 8px rgba(228,207,50,.32);
+}
+
+.fly-power-toggle.is-on .fly-power-state{
+  color:#e4cf32;
+}
+
+/* Fly stays fixed while scrolling, but sits below/right of the switch. */
+.fly-corner-widget{
+  top:48px !important;
+  right:14px !important;
+  transition:opacity .22s ease, transform .22s ease, visibility .22s ease !important;
+}
+
+.fly-corner-widget.is-off{
+  opacity:0 !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+  transform:translateY(-8px) scale(.94) !important;
+}
+
+@media(max-width:900px){
+  .fly-power-toggle{
+    display:inline-flex !important;
+    min-height:36px;
+    padding:7px 9px;
+    gap:7px;
+  }
+  .fly-corner-widget{
+    top:44px !important;
+    right:3px !important;
+  }
+}
+
+@media(max-width:520px){
+  .fly-power-toggle{
+    min-height:34px;
+    padding:6px 8px;
+  }
+  .fly-power-label{
+    display:none;
+  }
+  .fly-corner-widget{
+    top:40px !important;
+    right:0 !important;
+  }
+}
+
+
+/* =========================================================
+   CHARACTER CONTROLS TEST V2
+   Position follows the three green marks from the screenshot.
+   ========================================================= */
+
+.fly-power-toggle{display:none!important;}
+
+.character-control-dock{
+  position:fixed;
+  right:10px;
+  top:96px;
+  z-index:420;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  pointer-events:auto;
+}
+
+.character-control{
+  appearance:none;
+  -webkit-appearance:none;
+  position:relative;
+  width:52px;
+  height:42px;
+  padding:0;
+  display:grid;
+  place-items:center;
+  border:2px solid #343c44;
+  border-radius:13px 9px 14px 10px;
+  background:
+    repeating-linear-gradient(-12deg,rgba(255,255,255,.035) 0 2px,transparent 2px 7px),
+    #151a20;
+  box-shadow:0 4px 0 #080b0e,0 7px 16px rgba(0,0,0,.28);
+  cursor:pointer;
+  transform:rotate(-.7deg);
+  transition:transform .15s ease,border-color .15s ease,filter .15s ease,opacity .15s ease;
+}
+
+.character-control:nth-child(2){transform:rotate(.8deg);}
+.character-control:nth-child(3){transform:rotate(-1.2deg);}
+
+.character-control::before{
+  content:"";
+  position:absolute;
+  inset:-3px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:15px 11px 16px 12px;
+  transform:rotate(1deg);
+  pointer-events:none;
+}
+
+.character-control:hover{
+  transform:translateX(-3px) scale(1.04);
+  border-color:#6e7882;
+}
+
+.character-control:active{
+  transform:translateY(2px) scale(.98);
+  box-shadow:0 2px 0 #080b0e,0 4px 10px rgba(0,0,0,.25);
+}
+
+.character-control.is-on{
+  border-color:#ddca2e;
+  box-shadow:
+    0 4px 0 #080b0e,
+    0 0 0 1px rgba(221,202,46,.12),
+    0 8px 18px rgba(0,0,0,.30);
+}
+
+.character-control.is-placeholder{
+  opacity:.52;
+}
+
+.character-icon{
+  font-size:25px;
+  line-height:1;
+  filter:saturate(.9) contrast(1.02);
+  transform:translateY(-1px);
+}
+
+.character-state-dot{
+  position:absolute;
+  right:4px;
+  bottom:4px;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#4c555e;
+  box-shadow:0 0 0 2px #11161b;
+}
+
+.character-control.is-on .character-state-dot{
+  background:#e4cf32;
+  box-shadow:0 0 0 2px #11161b,0 0 8px rgba(228,207,50,.55);
+}
+
+/* Fly is fixed to viewport, but JS moves it around the screen. */
+.fly-corner-widget{
+  position:fixed!important;
+  top:54px!important;
+  right:auto!important;
+  left:calc(100vw - 205px)!important;
+  width:190px!important;
+  height:108px!important;
+  z-index:390!important;
+  overflow:visible!important;
+  pointer-events:auto!important;
+  opacity:1;
+  visibility:visible;
+  transform:translate3d(0,0,0);
+  transition:opacity .22s ease,visibility .22s ease!important;
+  will-change:left,top;
+}
+
+.fly-corner-widget.is-off{
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+
+.fly-corner-widget iframe{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  width:100%!important;
+  height:100%!important;
+  border:0;
+  background:transparent;
+}
+
+.fly-speech{
+  position:absolute;
+  z-index:5;
+  right:62%;
+  top:-22px;
+  width:max-content;
+  max-width:230px;
+  padding:8px 10px;
+  border:2px solid #d8c329;
+  border-radius:12px 9px 13px 10px;
+  background:#11161b;
+  color:#f2f3f4;
+  font:800 10px/1.25 Arial,Helvetica,sans-serif;
+  letter-spacing:.025em;
+  box-shadow:0 4px 0 #080b0e,0 10px 24px rgba(0,0,0,.34);
+  opacity:0;
+  transform:translateY(5px) rotate(-1deg);
+  pointer-events:none;
+  transition:opacity .18s ease,transform .18s ease;
+}
+
+.fly-speech::after{
+  content:"";
+  position:absolute;
+  right:16px;
+  bottom:-8px;
+  width:12px;
+  height:12px;
+  background:#11161b;
+  border-right:2px solid #d8c329;
+  border-bottom:2px solid #d8c329;
+  transform:rotate(45deg);
+}
+
+.fly-speech.show{
+  opacity:1;
+  transform:translateY(0) rotate(-1deg);
+}
+
+.character-test-toast{
+  position:fixed;
+  right:72px;
+  top:145px;
+  z-index:430;
+  padding:8px 11px;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:9px;
+  background:#12171c;
+  color:#d8dde2;
+  font:800 10px/1.2 Arial,sans-serif;
+  opacity:0;
+  pointer-events:none;
+  transform:translateX(6px);
+  transition:opacity .18s ease,transform .18s ease;
+}
+.character-test-toast.show{
+  opacity:1;
+  transform:translateX(0);
+}
+
+@media(max-width:900px){
+  .character-control-dock{
+    top:82px;
+    right:6px;
+    gap:7px;
+  }
+  .character-control{
+    width:44px;
+    height:37px;
+  }
+  .character-icon{font-size:21px;}
+  .fly-corner-widget{
+    width:160px!important;
+    height:96px!important;
+  }
+  .fly-speech{
+    max-width:180px;
+    font-size:9px;
+  }
+}
+
+@media(max-width:520px){
+  .character-control-dock{
+    top:72px;
+    right:4px;
+  }
+  .character-control{
+    width:40px;
+    height:34px;
+    border-radius:11px 8px 12px 9px;
+  }
+  .character-icon{font-size:19px;}
+  .fly-corner-widget{
+    width:145px!important;
+    height:88px!important;
+  }
+}
+
+
+/* ===== FLY MOVEMENT FIX V3 =====
+   JS controls position with transform: translate3d().
+   This overrides earlier fixed left/top values that prevented movement.
+*/
+#flyCornerWidget.fly-corner-widget{
+  position:fixed !important;
+  left:0 !important;
+  top:0 !important;
+  right:auto !important;
+  margin:0 !important;
+  transform:translate3d(0px,0px,0px);
+  will-change:transform;
+  transition:opacity .22s ease, visibility .22s ease !important;
+}
+
+#flyCornerWidget.fly-corner-widget.is-off{
+  opacity:0 !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+
+
+/* =========================================================
+   VAHRAM CHARACTER UI V4 — CLEAN REBUILD
+   Unique class names: no inheritance from old fly versions.
+   ========================================================= */
+
+.vt-character-rail{
+  position:fixed;
+  z-index:5000;
+  top:92px;
+  right:10px;
+  display:flex;
+  flex-direction:column;
+  gap:11px;
+  pointer-events:auto;
+}
+
+.vt-character-button{
+  appearance:none;
+  -webkit-appearance:none;
+  width:60px;
+  height:52px;
+  padding:4px 3px 3px;
+  border:2px solid #424a53;
+  border-radius:13px 10px 14px 11px;
+  background:#151a20;
+  color:#e8ecef;
+  display:grid;
+  grid-template-rows:1fr auto;
+  place-items:center;
+  position:relative;
+  cursor:pointer;
+  box-shadow:0 4px 0 #080b0e,0 8px 18px rgba(0,0,0,.28);
+  transition:transform .15s ease,border-color .15s ease,opacity .15s ease;
+}
+
+.vt-character-button:hover{
+  transform:translateX(-4px) scale(1.04);
+  border-color:#77818b;
+}
+
+.vt-character-button.is-on{
+  border-color:#dfca2f;
+}
+
+.vt-character-button.is-placeholder{
+  opacity:.52;
+}
+
+.vt-character-button-icon{
+  font-size:26px;
+  line-height:1;
+}
+
+.vt-character-button-label{
+  font:900 7px/1 Arial,sans-serif;
+  letter-spacing:.08em;
+}
+
+.vt-character-led{
+  position:absolute;
+  right:4px;
+  top:4px;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#4b545e;
+  box-shadow:0 0 0 2px #10151a;
+}
+
+.vt-character-button.is-on .vt-character-led{
+  background:#e5d039;
+  box-shadow:0 0 0 2px #10151a,0 0 8px rgba(229,208,57,.55);
+}
+
+.vt-fly-stage{
+  position:fixed;
+  z-index:4900;
+  left:0;
+  top:0;
+  width:220px;
+  height:132px;
+  pointer-events:auto;
+  transform:translate3d(0,0,0);
+  will-change:transform;
+  transition:opacity .18s ease,visibility .18s ease;
+}
+
+.vt-fly-stage.is-disabled{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+
+.vt-fly-stage iframe{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  border:0;
+  background:transparent;
+  overflow:hidden;
+}
+
+.vt-fly-speech{
+  position:absolute;
+  z-index:3;
+  left:6px;
+  bottom:103px;
+  max-width:245px;
+  width:max-content;
+  padding:8px 10px;
+  border:2px solid #d9c52e;
+  border-radius:12px 9px 13px 10px;
+  background:#10151a;
+  color:#f0f2f4;
+  box-shadow:0 4px 0 #070a0d,0 9px 22px rgba(0,0,0,.34);
+  font:900 10px/1.25 Arial,sans-serif;
+  letter-spacing:.025em;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(5px) rotate(-1deg);
+  transition:opacity .16s ease,transform .16s ease;
+}
+
+.vt-fly-speech.show{
+  opacity:1;
+  transform:translateY(0) rotate(-1deg);
+}
+
+.vt-fly-speech::after{
+  content:"";
+  position:absolute;
+  right:18px;
+  bottom:-7px;
+  width:11px;
+  height:11px;
+  background:#10151a;
+  border-right:2px solid #d9c52e;
+  border-bottom:2px solid #d9c52e;
+  transform:rotate(45deg);
+}
+
+.vt-character-toast{
+  position:fixed;
+  z-index:5100;
+  right:82px;
+  top:140px;
+  padding:8px 11px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:9px;
+  background:#11161b;
+  color:#dfe3e7;
+  font:900 10px/1.2 Arial,sans-serif;
+  opacity:0;
+  transform:translateX(8px);
+  pointer-events:none;
+  transition:opacity .16s ease,transform .16s ease;
+}
+
+.vt-character-toast.show{
+  opacity:1;
+  transform:translateX(0);
+}
+
+@media(max-width:900px){
+  .vt-character-rail{top:78px;right:5px;gap:7px}
+  .vt-character-button{width:48px;height:43px}
+  .vt-character-button-icon{font-size:22px}
+  .vt-fly-stage{width:180px;height:110px}
+  .vt-fly-speech{bottom:87px;max-width:190px;font-size:9px}
+}
+
+@media(max-width:520px){
+  .vt-character-rail{top:68px;right:4px}
+  .vt-character-button{width:43px;height:39px}
+  .vt-character-button-icon{font-size:19px}
+  .vt-character-button-label{display:none}
+  .vt-fly-stage{width:155px;height:96px}
+  .vt-fly-speech{bottom:76px;max-width:160px}
+}
+
+
+
+/* =========================================================
+   V7 — TOP NAV CENTER + SLIGHTLY LARGER
+   Keeps existing active yellow ink and PRIVATE ARCHIVE styling.
+   ========================================================= */
+.topbar{
+  position:sticky;
+  display:grid !important;
+  grid-template-columns:minmax(160px,1fr) auto minmax(160px,1fr);
+  align-items:center;
+  column-gap:24px;
+}
+
+.topbar .brand{
+  justify-self:start;
+}
+
+.topbar nav{
+  justify-self:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:24px !important;
+}
+
+.topbar nav .nav-link{
+  font-size:14px !important;
+  min-height:38px !important;
+  padding:0 5px !important;
+  letter-spacing:.035em;
+}
+
+@media(max-width:900px){
+  .topbar{
+    display:flex !important;
+    justify-content:space-between;
+  }
+}
+
+
+/* V8 — allow the Spine character to flip left/right cleanly */
+#vtFlyFrame{
+  transform-origin:50% 50%;
+  transition:transform .10s linear;
+  will-change:transform;
+}
+
+
+/* =========================================================
+   V9 — CLEAN FULL SPINE DISPLAY
+   No cropping, clipping, mask or hidden overflow on the fly.
+   ========================================================= */
+.vt-fly-stage{
+  width:320px !important;
+  height:180px !important;
+  overflow:visible !important;
+  clip-path:none !important;
+  mask:none !important;
+  -webkit-mask:none !important;
+}
+
+.vt-fly-stage iframe{
+  width:100% !important;
+  height:100% !important;
+  overflow:visible !important;
+  clip-path:none !important;
+  mask:none !important;
+  -webkit-mask:none !important;
+}
+
+/* White speech bubble, cleaner and easier to read. */
+.vt-fly-speech{
+  left:12px !important;
+  bottom:150px !important;
+  max-width:270px !important;
+  background:#ffffff !important;
+  color:#101318 !important;
+  border:2px solid #ffffff !important;
+  box-shadow:0 4px 0 rgba(0,0,0,.38),0 10px 24px rgba(0,0,0,.30) !important;
+  font-size:11px !important;
+}
+
+.vt-fly-speech::after{
+  background:#ffffff !important;
+  border-right:2px solid #ffffff !important;
+  border-bottom:2px solid #ffffff !important;
+}
+
+@media(max-width:900px){
+  .vt-fly-stage{
+    width:260px !important;
+    height:150px !important;
+  }
+  .vt-fly-speech{
+    bottom:124px !important;
+    max-width:220px !important;
+  }
+}
+
+@media(max-width:520px){
+  .vt-fly-stage{
+    width:220px !important;
+    height:130px !important;
+  }
+  .vt-fly-speech{
+    bottom:106px !important;
+    max-width:185px !important;
+    font-size:9px !important;
+  }
+}
+
+
+/* =========================================================
+   V10 — BIG FLY
+   Keep full unclipped Spine animation, just make it clearly larger.
+   ========================================================= */
+.vt-fly-stage{
+  width:480px !important;
+  height:270px !important;
+}
+
+.vt-fly-speech{
+  bottom:228px !important;
+  max-width:320px !important;
+  font-size:12px !important;
+}
+
+@media(max-width:1200px){
+  .vt-fly-stage{
+    width:420px !important;
+    height:236px !important;
+  }
+  .vt-fly-speech{
+    bottom:198px !important;
+  }
+}
+
+@media(max-width:900px){
+  .vt-fly-stage{
+    width:340px !important;
+    height:192px !important;
+  }
+  .vt-fly-speech{
+    bottom:160px !important;
+    max-width:240px !important;
+  }
+}
+
+@media(max-width:520px){
+  .vt-fly-stage{
+    width:280px !important;
+    height:158px !important;
+  }
+  .vt-fly-speech{
+    bottom:130px !important;
+    max-width:200px !important;
+    font-size:10px !important;
+  }
+}

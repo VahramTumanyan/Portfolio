@@ -1,0 +1,13 @@
+WINDOWS PREVIEW — NO PYTHON NEEDED
+
+1) Right-click the ZIP file.
+2) Choose Extract All...
+3) Open the extracted folder.
+4) Double-click OPEN_SITE_WINDOWS.cmd
+5) Your browser will open automatically.
+
+IMPORTANT:
+Do not run the CMD while you are still looking inside the ZIP archive.
+You must extract the whole folder first.
+
+This version uses Windows PowerShell, so Python is not required.

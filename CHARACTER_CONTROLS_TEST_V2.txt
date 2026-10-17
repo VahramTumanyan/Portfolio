@@ -1,0 +1,19 @@
+CHARACTER CONTROLS TEST V2
+
+What changed:
+- Everything else on the portfolio is kept as before.
+- The old small FLY switch in the top bar is removed.
+- Three LARGE character buttons are placed vertically on the right side,
+  matching the green marks in the screenshot.
+- Fly button works: ON/OFF.
+- Crocodile and Frog buttons are visual placeholders for the next steps.
+- The Spine fly now patrols around the visible browser window.
+- While moving it uses flies_Run; while stopped it uses flies.
+- Clicking the fly uses fire.
+- The fly periodically shows short speech bubbles about Vahram and the portfolio.
+- The fly remains fixed to the viewport while the page scrolls.
+
+Preview:
+1. Extract ZIP.
+2. Double-click OPEN_SITE_LOCAL.bat.
+3. Keep the black Python window open while testing.

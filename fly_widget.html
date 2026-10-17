@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Vahram Fly</title>
+  <style>
+    html,body{
+      margin:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      background:transparent;
+    }
+    #flyHit{
+      position:absolute;
+      inset:0;
+      cursor:pointer;
+      background:transparent;
+      z-index:2;
+    }
+    #flyPlayer{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index:1;
+      opacity:1;
+      visibility:visible;
+      overflow:visible!important;
+      clip-path:none!important;
+      mask:none!important;
+      -webkit-mask:none!important;
+    }
+    #flyPlayer canvas{
+      background:transparent!important;
+    }
+  </style>
+  <script src="https://unpkg.com/@esotericsoftware/spine-player@4.3.*/dist/iife/spine-player.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@4.3.*/dist/spine-player.css">
+</head>
+<body>
+  <div id="flyPlayer"></div>
+  <div id="flyHit" aria-label="Interactive fly"></div>
+
+  <script>
+    let playerRef = null;
+    let ready = false;
+    let firing = false;
+
+    function parentMessage(type){
+      try{
+        parent.postMessage({source:'vahram-fly-v4',type}, '*');
+      }catch(_){}
+    }
+
+    function playLoop(name){
+      if(!ready || firing) return;
+      try{
+        playerRef.animationState.setAnimation(0, name, true);
+      }catch(_){}
+    }
+
+    function fire(){
+      if(!ready || firing) return;
+      firing = true;
+      try{
+        playerRef.animationState.setAnimation(0, 'fire', false);
+        playerRef.animationState.addAnimation(0, 'flies', true, 0);
+      }catch(_){}
+      parentMessage('fire');
+      setTimeout(()=>{ firing = false; }, 1350);
+    }
+
+    new spine.SpinePlayer('flyPlayer',{
+      skeleton:'assets/spine/fly-new/jeko_spine_final.json',
+      atlas:'assets/spine/fly-new/jeko_spine_final.atlas',
+      animation:'flies',
+      showControls:false,
+      alpha:true,
+      premultipliedAlpha:true,
+      backgroundColor:'#00000000',
+      defaultMix:0.15,
+      viewport:{
+        x:-1887.077,
+        y:-377.485,
+        width:2587.1494,
+        height:1235.0067,
+        padLeft:0,
+        padRight:0,
+        padTop:0,
+        padBottom:0
+      },
+      success(player){
+        playerRef = player;
+        ready = true;
+        try{
+          player.animationState.setAnimation(0,'flies',true);
+        }catch(_){}
+        parentMessage('ready');
+      },
+      error(player, reason){
+        console.error('Spine fly error:', reason);
+      }
+    });
+
+    window.addEventListener('message', (event)=>{
+      const data = event.data || {};
+      if(data.source !== 'vahram-site-v4') return;
+
+      if(data.type === 'run') playLoop('flies_Run');
+      if(data.type === 'idle') playLoop('flies');
+      if(data.type === 'fire') fire();
+    });
+
+    const hit = document.getElementById('flyHit');
+    hit.addEventListener('pointerenter', ()=> playLoop('flies_Run'));
+    hit.addEventListener('pointerleave', ()=> playLoop('flies'));
+    hit.addEventListener('pointerdown', (e)=>{
+      e.preventDefault();
+      fire();
+    });
+  </script>
+</body>
+</html>

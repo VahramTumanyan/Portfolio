@@ -499,3 +499,262 @@ window.addEventListener('keydown',e=>{
     updateActiveNavAnimated();
   }, 80);
 })();
+
+
+/* =========================================================
+   VAHRAM FLY V8 — TURN + TWO SPEED MODES
+   flies     = slow cruise
+   flies_Run = fast dash
+   Character flips horizontally to face movement direction.
+   ========================================================= */
+(() => {
+  const flyStage = document.getElementById('vtFlyStage');
+  const flyFrame = document.getElementById('vtFlyFrame');
+  const flySpeech = document.getElementById('vtFlySpeech');
+  const flyToggle = document.getElementById('vtFlyToggle');
+  const crocToggle = document.getElementById('vtCrocToggle');
+  const frogToggle = document.getElementById('vtFrogToggle');
+  const toast = document.getElementById('vtCharacterToast');
+
+  if (!flyStage || !flyFrame || !flyToggle) return;
+
+  let enabled = true;
+  let moving = true;
+
+  let x = Math.max(30, window.innerWidth - 270);
+  let y = 62;
+  let targetX = 90;
+  let targetY = Math.min(260, window.innerHeight * 0.34);
+
+  let lastTime = performance.now();
+  let waitUntil = 0;
+  let nextSpeechTimer = 0;
+  let nextMoveTimer = 0;
+
+  // Two deliberately different speeds.
+  const SLOW_SPEED = 72;   // flies
+  const FAST_SPEED = 430;  // flies_Run
+
+  let moveMode = 'slow';   // 'slow' | 'fast'
+  let lastFacing = 'left';
+
+  const phrases = [
+    "VAHRAM TUMANYAN — 2D ARTIST & ANIMATOR",
+    "CHARACTER DESIGN · CONCEPT ART · SPINE 2D",
+    "I'M VAHRAM'S INTERACTIVE PORTFOLIO FLY.",
+    "CLICK ME — I CAN FIRE.",
+    "KEEP SCROLLING. I'LL FOLLOW THE SCREEN.",
+    "CHECK THE ANIMATION PROJECTS BELOW.",
+    "VAHRAM BUILDS CHARACTERS THAT MOVE."
+  ];
+
+  function sendToFly(type) {
+    try {
+      flyFrame.contentWindow.postMessage(
+        { source: 'vahram-site-v4', type },
+        '*'
+      );
+    } catch (_) {}
+  }
+
+  function render() {
+    flyStage.style.transform =
+      `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;
+  }
+
+  function faceDirection(dx) {
+    if (Math.abs(dx) < 1) return;
+
+    const facing = dx > 0 ? 'right' : 'left';
+    if (facing === lastFacing) return;
+    lastFacing = facing;
+
+    // Mirror only the Spine iframe, never the speech bubble.
+    // Default art faces LEFT. Moving right => mirror.
+    flyFrame.style.transformOrigin = '50% 50%';
+    flyFrame.style.transform = facing === 'right' ? 'scaleX(-1)' : 'scaleX(1)';
+  }
+
+  function stageSize() {
+    return {
+      w: flyStage.offsetWidth || 480,
+      h: flyStage.offsetHeight || 270
+    };
+  }
+
+  function bounds() {
+    const { w, h } = stageSize();
+    return {
+      minX: 18,
+      maxX: Math.max(18, window.innerWidth - w - 78),
+      minY: 58,
+      maxY: Math.max(90, window.innerHeight - h - 18)
+    };
+  }
+
+  function chooseFarTarget(forceMode = null) {
+    if (!enabled) return;
+
+    const b = bounds();
+    let nx = b.minX;
+    let ny = b.minY;
+    let d = 0;
+
+    for (let i = 0; i < 30; i++) {
+      nx = b.minX + Math.random() * Math.max(1, b.maxX - b.minX);
+      ny = b.minY + Math.random() * Math.max(1, b.maxY - b.minY);
+      d = Math.hypot(nx - x, ny - y);
+      if (d > Math.min(320, window.innerWidth * 0.28)) break;
+    }
+
+    targetX = nx;
+    targetY = ny;
+
+    // Alternate slow flight and fast dash so the difference is very visible.
+    if (forceMode) {
+      moveMode = forceMode;
+    } else {
+      moveMode = moveMode === 'slow' ? 'fast' : 'slow';
+    }
+
+    moving = true;
+    faceDirection(targetX - x);
+
+    if (moveMode === 'fast') {
+      sendToFly('run');   // flies_Run
+    } else {
+      sendToFly('idle');  // flies
+    }
+  }
+
+  function scheduleMove(delay = 800) {
+    clearTimeout(nextMoveTimer);
+    nextMoveTimer = setTimeout(() => {
+      if (enabled) chooseFarTarget();
+    }, delay);
+  }
+
+  function showSpeech(text, ms = 2500) {
+    if (!enabled) return;
+    flySpeech.textContent = text;
+    flySpeech.classList.add('show');
+
+    clearTimeout(flySpeech._hideTimer);
+    flySpeech._hideTimer = setTimeout(() => {
+      flySpeech.classList.remove('show');
+    }, ms);
+  }
+
+  function scheduleSpeech(delay = 3800) {
+    clearTimeout(nextSpeechTimer);
+    nextSpeechTimer = setTimeout(() => {
+      if (!enabled) return;
+      showSpeech(phrases[Math.floor(Math.random() * phrases.length)]);
+      scheduleSpeech(6200 + Math.random() * 3000);
+    }, delay);
+  }
+
+  function showToast(text) {
+    if (!toast) return;
+    toast.textContent = text;
+    toast.classList.add('show');
+    clearTimeout(toast._hideTimer);
+    toast._hideTimer = setTimeout(() => toast.classList.remove('show'), 1600);
+  }
+
+  function setEnabled(value) {
+    enabled = value;
+    flyStage.classList.toggle('is-disabled', !enabled);
+    flyToggle.classList.toggle('is-on', enabled);
+    flyToggle.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+
+    if (enabled) {
+      moving = true;
+      waitUntil = 0;
+      showSpeech('FLY ONLINE', 900);
+      chooseFarTarget('slow');
+      scheduleSpeech(1800);
+    } else {
+      moving = false;
+      clearTimeout(nextMoveTimer);
+      clearTimeout(nextSpeechTimer);
+      flySpeech.classList.remove('show');
+      sendToFly('idle');
+    }
+  }
+
+  function animate(now) {
+    const dt = Math.min(0.04, Math.max(0, (now - lastTime) / 1000));
+    lastTime = now;
+
+    if (enabled && moving && now >= waitUntil) {
+      const dx = targetX - x;
+      const dy = targetY - y;
+      const distance = Math.hypot(dx, dy);
+
+      faceDirection(dx);
+
+      if (distance <= 4) {
+        x = targetX;
+        y = targetY;
+        render();
+
+        moving = false;
+        sendToFly('idle');
+
+        // Fast runs pause less, slow flights pause a little longer.
+        const pause = moveMode === 'fast'
+          ? 250 + Math.random() * 350
+          : 800 + Math.random() * 900;
+
+        waitUntil = now + pause;
+        scheduleMove(pause);
+      } else {
+        const speed = moveMode === 'fast' ? FAST_SPEED : SLOW_SPEED;
+        const step = Math.min(distance, speed * dt);
+        x += (dx / distance) * step;
+        y += (dy / distance) * step;
+        render();
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  flyToggle.addEventListener('click', () => setEnabled(!enabled));
+
+  crocToggle?.addEventListener('click', () => {
+    showToast('CROCODILE — NEXT CHARACTER');
+  });
+
+  frogToggle?.addEventListener('click', () => {
+    showToast('FROG — NEXT CHARACTER');
+  });
+
+  window.addEventListener('message', (event) => {
+    const data = event.data || {};
+    if (data.source !== 'vahram-fly-v4') return;
+
+    if (data.type === 'ready') {
+      showSpeech("HI. I'M VAHRAM'S FLY.", 1800);
+      chooseFarTarget('slow');
+      scheduleSpeech(3200);
+    }
+
+    if (data.type === 'fire') {
+      showSpeech('BOOM — SPINE 2D!', 1600);
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    const b = bounds();
+    x = Math.max(b.minX, Math.min(x, b.maxX));
+    y = Math.max(b.minY, Math.min(y, b.maxY));
+    render();
+    chooseFarTarget();
+  });
+
+  render();
+  chooseFarTarget('slow');
+  requestAnimationFrame(animate);
+})();

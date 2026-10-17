@@ -1,0 +1,9 @@
+V8 — FLY TURN + TWO SPEEDS
+
+- The fly now turns to face its travel direction.
+- Only the Spine iframe is mirrored, so speech bubbles stay normal.
+- "flies" is used for slow cruise at about 72 px/s.
+- "flies_Run" is used for fast dashes at about 430 px/s.
+- Slow and fast movement alternate so the difference is obvious.
+- Click-to-fire remains enabled.
+- The rest of the site is unchanged.

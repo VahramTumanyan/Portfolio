@@ -1,0 +1,7 @@
+V10 — BIG FLY
+
+- Fly is much larger now.
+- Full Spine animation remains visible and unclipped.
+- No masks/cropping reintroduced.
+- Movement, turning, slow flies, fast flies_Run, firing, and speech remain.
+- No other site sections changed.

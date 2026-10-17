@@ -23,8 +23,36 @@
       <a href="#about" class="nav-link">ABOUT</a>
       <a href="#contact" class="nav-link">CONTACT</a>
     </nav>
-    <a class="pill small" href="https://www.behance.net/vahramtumanyan?locale=ru_RU" target="_blank" rel="noreferrer">BEHANCE ↗</a>
-  </header>
+</header>
+
+  <!-- NEW CHARACTER UI V4: body-level, independent from sticky header -->
+  <aside class="vt-character-rail" id="vtCharacterRail" aria-label="Character controls">
+    <button class="vt-character-button is-on" id="vtFlyToggle" type="button" aria-pressed="true" title="Fly on/off">
+      <span class="vt-character-button-icon" aria-hidden="true">🪰</span>
+      <span class="vt-character-button-label">FLY</span>
+      <span class="vt-character-led" aria-hidden="true"></span>
+    </button>
+
+    <button class="vt-character-button is-placeholder" id="vtCrocToggle" type="button" aria-pressed="false" title="Crocodile — next step">
+      <span class="vt-character-button-icon" aria-hidden="true">🐊</span>
+      <span class="vt-character-button-label">CROC</span>
+      <span class="vt-character-led" aria-hidden="true"></span>
+    </button>
+
+    <button class="vt-character-button is-placeholder" id="vtFrogToggle" type="button" aria-pressed="false" title="Frog — next step">
+      <span class="vt-character-button-icon" aria-hidden="true">🐸</span>
+      <span class="vt-character-button-label">FROG</span>
+      <span class="vt-character-led" aria-hidden="true"></span>
+    </button>
+  </aside>
+
+  <div class="vt-fly-stage" id="vtFlyStage" aria-label="Interactive Spine fly">
+    <div class="vt-fly-speech" id="vtFlySpeech" aria-live="polite"></div>
+    <iframe id="vtFlyFrame" src="fly_widget.html" title="Interactive Spine fly" scrolling="no"></iframe>
+  </div>
+
+  <div class="vt-character-toast" id="vtCharacterToast" aria-live="polite"></div>
+
 
   <main id="top">
     <section class="hero section-pad">

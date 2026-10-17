@@ -1,0 +1,14 @@
+V7 CHANGES
+
+1. Fixed invisible Spine character:
+   - The supplied skeleton was exported from Spine 4.3.26.
+   - The previous preview loaded Spine Player 4.2, which can fail to render a 4.3 skeleton.
+   - V7 loads Spine Player 4.3 to match the export.
+   - Fly player visibility/z-index is explicitly set.
+
+2. Top navigation:
+   - ANIMATION / WORK / PRIVATE ARCHIVE / ABOUT / CONTACT moved to the visual center.
+   - Text is slightly larger.
+   - Existing yellow active ink and PRIVATE ARCHIVE behavior remain unchanged.
+
+3. Everything else stays as before.

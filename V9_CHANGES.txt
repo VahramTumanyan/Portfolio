@@ -1,0 +1,9 @@
+V9 — FULL UNCLIPPED FLY
+
+- Removed the tight Spine viewport that was cutting part of the character/effects.
+- The viewport now uses the full exported skeleton bounds from the Spine file.
+- Removed clip-path/mask/hidden-overflow behavior from the fly container.
+- Increased the fly stage size so the whole Spine animation can be shown cleanly.
+- Speech bubble is now white with dark text.
+- Movement, turning, flies / flies_Run speed difference, and click-to-fire remain.
+- No other portfolio sections were changed.

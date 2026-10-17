@@ -1,0 +1,16 @@
+FLY MOVEMENT FIX V3
+
+Fixed:
+- The fly was visible but stayed in one place because earlier CSS fixed its top/right position with !important.
+- Now JavaScript moves the entire fly widget using transform: translate3d().
+- The fly chooses distant targets around the visible browser window and clearly flies between them.
+- While moving: flies_Run.
+- When stopped: flies.
+- Click the fly: fire.
+- Fly remains on screen during page scrolling.
+- Right-side character buttons stay where marked in the screenshot.
+
+Preview:
+1. Extract ZIP.
+2. Double-click OPEN_SITE_LOCAL.bat.
+3. Keep the black Python window open.
