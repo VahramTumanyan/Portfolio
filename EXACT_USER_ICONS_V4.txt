@@ -1,0 +1,2 @@
+This build uses the exact 8 PNG icons uploaded by the user, with new filenames to avoid browser cache.
+No other site behavior was changed in this correction.

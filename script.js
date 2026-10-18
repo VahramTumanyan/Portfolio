@@ -502,10 +502,10 @@ window.addEventListener('keydown',e=>{
 
 
 /* =========================================================
-   VAHRAM FLY V8 — TURN + TWO SPEED MODES
-   flies     = slow cruise
-   flies_Run = fast dash
-   Character flips horizontally to face movement direction.
+   VAHRAM FLY V11 — STRICT MODE SYNC
+   slow movement  -> flies
+   fast movement  -> flies_Run
+   Fast dash happens only occasionally.
    ========================================================= */
 (() => {
   const flyStage = document.getElementById('vtFlyStage');
@@ -519,11 +519,12 @@ window.addEventListener('keydown',e=>{
   if (!flyStage || !flyFrame || !flyToggle) return;
 
   let enabled = true;
+  let sectionSuppressed = false;
   let moving = true;
 
-  let x = Math.max(30, window.innerWidth - 270);
+  let x = Math.max(30, window.innerWidth - 300);
   let y = 62;
-  let targetX = 90;
+  let targetX = 100;
   let targetY = Math.min(260, window.innerHeight * 0.34);
 
   let lastTime = performance.now();
@@ -531,14 +532,13 @@ window.addEventListener('keydown',e=>{
   let nextSpeechTimer = 0;
   let nextMoveTimer = 0;
 
-  // Two deliberately different speeds.
-  const SLOW_SPEED = 72;   // flies
-  const FAST_SPEED = 430;  // flies_Run
+  const SLOW_SPEED = 62;
+  const FAST_SPEED = 470;
 
-  let moveMode = 'slow';   // 'slow' | 'fast'
+  let moveMode = 'slow';
   let lastFacing = 'left';
 
-  const phrases = [
+  const normalPhrases = [
     "VAHRAM TUMANYAN — 2D ARTIST & ANIMATOR",
     "CHARACTER DESIGN · CONCEPT ART · SPINE 2D",
     "I'M VAHRAM'S INTERACTIVE PORTFOLIO FLY.",
@@ -557,6 +557,15 @@ window.addEventListener('keydown',e=>{
     } catch (_) {}
   }
 
+  function syncAnimationToMode() {
+    if (!enabled || sectionSuppressed) return;
+
+    // Exact animation mapping:
+    // slow movement = flies
+    // fast movement = flies_Run
+    sendToFly(moveMode === 'fast' ? 'flies_Run' : 'flies');
+  }
+
   function render() {
     flyStage.style.transform =
       `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;
@@ -564,36 +573,32 @@ window.addEventListener('keydown',e=>{
 
   function faceDirection(dx) {
     if (Math.abs(dx) < 1) return;
-
     const facing = dx > 0 ? 'right' : 'left';
     if (facing === lastFacing) return;
     lastFacing = facing;
-
-    // Mirror only the Spine iframe, never the speech bubble.
-    // Default art faces LEFT. Moving right => mirror.
     flyFrame.style.transformOrigin = '50% 50%';
     flyFrame.style.transform = facing === 'right' ? 'scaleX(-1)' : 'scaleX(1)';
   }
 
   function stageSize() {
     return {
-      w: flyStage.offsetWidth || 480,
-      h: flyStage.offsetHeight || 270
+      w: flyStage.offsetWidth || 640,
+      h: flyStage.offsetHeight || 360
     };
   }
 
   function bounds() {
     const { w, h } = stageSize();
     return {
-      minX: 18,
-      maxX: Math.max(18, window.innerWidth - w - 78),
-      minY: 58,
-      maxY: Math.max(90, window.innerHeight - h - 18)
+      minX: 16,
+      maxX: Math.max(16, window.innerWidth - w - 74),
+      minY: 52,
+      maxY: Math.max(82, window.innerHeight - h - 16)
     };
   }
 
   function chooseFarTarget(forceMode = null) {
-    if (!enabled) return;
+    if (!enabled || sectionSuppressed) return;
 
     const b = bounds();
     let nx = b.minX;
@@ -604,38 +609,35 @@ window.addEventListener('keydown',e=>{
       nx = b.minX + Math.random() * Math.max(1, b.maxX - b.minX);
       ny = b.minY + Math.random() * Math.max(1, b.maxY - b.minY);
       d = Math.hypot(nx - x, ny - y);
-      if (d > Math.min(320, window.innerWidth * 0.28)) break;
+      if (d > Math.min(330, window.innerWidth * 0.30)) break;
     }
 
     targetX = nx;
     targetY = ny;
 
-    // Alternate slow flight and fast dash so the difference is very visible.
     if (forceMode) {
       moveMode = forceMode;
     } else {
-      moveMode = moveMode === 'slow' ? 'fast' : 'slow';
+      // Calm flight is the normal state. Fast dash is only occasional.
+      moveMode = Math.random() < 0.22 ? 'fast' : 'slow';
     }
 
     moving = true;
     faceDirection(targetX - x);
 
-    if (moveMode === 'fast') {
-      sendToFly('run');   // flies_Run
-    } else {
-      sendToFly('idle');  // flies
-    }
+    // IMPORTANT: movement speed and Spine animation are always synchronized.
+    syncAnimationToMode();
   }
 
-  function scheduleMove(delay = 800) {
+  function scheduleMove(delay = 700) {
     clearTimeout(nextMoveTimer);
     nextMoveTimer = setTimeout(() => {
       if (enabled) chooseFarTarget();
     }, delay);
   }
 
-  function showSpeech(text, ms = 2500) {
-    if (!enabled) return;
+  function showSpeech(text, ms = 2400) {
+    if (!enabled || sectionSuppressed) return;
     flySpeech.textContent = text;
     flySpeech.classList.add('show');
 
@@ -645,12 +647,18 @@ window.addEventListener('keydown',e=>{
     }, ms);
   }
 
-  function scheduleSpeech(delay = 3800) {
+  function scheduleSpeech(delay = 4200) {
     clearTimeout(nextSpeechTimer);
     nextSpeechTimer = setTimeout(() => {
-      if (!enabled) return;
-      showSpeech(phrases[Math.floor(Math.random() * phrases.length)]);
-      scheduleSpeech(6200 + Math.random() * 3000);
+      if (!enabled || sectionSuppressed) return;
+
+      if (Math.random() < 0.30) {
+        showSpeech('bzbzbzbzbzbbzbz', 1800);
+      } else {
+        showSpeech(normalPhrases[Math.floor(Math.random() * normalPhrases.length)]);
+      }
+
+      scheduleSpeech(5600 + Math.random() * 3200);
     }, delay);
   }
 
@@ -662,13 +670,54 @@ window.addEventListener('keydown',e=>{
     toast._hideTimer = setTimeout(() => toast.classList.remove('show'), 1600);
   }
 
+  function applySectionSuppression(value) {
+    if (sectionSuppressed === value) return;
+    sectionSuppressed = value;
+
+    // IMPORTANT:
+    // This automatic rule affects ONLY the fly.
+    // The animation/character controls remain available for future demos.
+    if (sectionSuppressed) {
+      moving = false;
+      clearTimeout(nextMoveTimer);
+      clearTimeout(nextSpeechTimer);
+      flySpeech.classList.remove('show');
+      flyStage.classList.add('is-disabled');
+      sendToFly('flies');
+    } else {
+      flyStage.classList.toggle('is-disabled', !enabled || sectionSuppressed);
+      if (enabled) {
+        moving = true;
+        waitUntil = 0;
+        chooseFarTarget('slow');
+        scheduleSpeech(1500);
+      }
+    }
+  }
+
+  function updateFlyForScrollSection() {
+    const aboutSection = document.getElementById('about');
+    const contactSection = document.getElementById('contact');
+
+    if (!aboutSection && !contactSection) return;
+
+    // Fly is visible in the upper portfolio/work area.
+    // As soon as ABOUT or anything below it reaches the viewport,
+    // the fly is automatically hidden.
+    const firstRestrictedSection = aboutSection || contactSection;
+    const threshold = window.innerHeight * 0.72;
+    const shouldSuppress = firstRestrictedSection.getBoundingClientRect().top <= threshold;
+
+    applySectionSuppression(shouldSuppress);
+  }
+
   function setEnabled(value) {
     enabled = value;
     flyStage.classList.toggle('is-disabled', !enabled);
     flyToggle.classList.toggle('is-on', enabled);
     flyToggle.setAttribute('aria-pressed', enabled ? 'true' : 'false');
 
-    if (enabled) {
+    if (enabled && !sectionSuppressed) {
       moving = true;
       waitUntil = 0;
       showSpeech('FLY ONLINE', 900);
@@ -679,7 +728,8 @@ window.addEventListener('keydown',e=>{
       clearTimeout(nextMoveTimer);
       clearTimeout(nextSpeechTimer);
       flySpeech.classList.remove('show');
-      sendToFly('idle');
+      moveMode = 'slow';
+      sendToFly('flies');
     }
   }
 
@@ -687,7 +737,7 @@ window.addEventListener('keydown',e=>{
     const dt = Math.min(0.04, Math.max(0, (now - lastTime) / 1000));
     lastTime = now;
 
-    if (enabled && moving && now >= waitUntil) {
+    if (enabled && !sectionSuppressed && moving && now >= waitUntil) {
       const dx = targetX - x;
       const dy = targetY - y;
       const distance = Math.hypot(dx, dy);
@@ -700,13 +750,12 @@ window.addEventListener('keydown',e=>{
         render();
 
         moving = false;
-        sendToFly('idle');
 
-        // Fast runs pause less, slow flights pause a little longer.
-        const pause = moveMode === 'fast'
-          ? 250 + Math.random() * 350
-          : 800 + Math.random() * 900;
+        // When stopped, always return to calm flies.
+        moveMode = 'slow';
+        sendToFly('flies');
 
+        const pause = 700 + Math.random() * 1100;
         waitUntil = now + pause;
         scheduleMove(pause);
       } else {
@@ -723,13 +772,20 @@ window.addEventListener('keydown',e=>{
 
   flyToggle.addEventListener('click', () => setEnabled(!enabled));
 
-  crocToggle?.addEventListener('click', () => {
-    showToast('CROCODILE — NEXT CHARACTER');
-  });
-
-  frogToggle?.addEventListener('click', () => {
-    showToast('FROG — NEXT CHARACTER');
-  });
+  // Automatic fly visibility:
+  // WORK / upper page = fly can run
+  // ABOUT + CONTACT = fly disappears
+  // Scrolling back above ABOUT = fly returns if the user left it enabled
+  let scrollTicking = false;
+  window.addEventListener('scroll', () => {
+    if (scrollTicking) return;
+    scrollTicking = true;
+    requestAnimationFrame(() => {
+      updateFlyForScrollSection();
+      scrollTicking = false;
+    });
+  }, { passive: true });
+// Frog click is handled by the dedicated one-shot FIRE controller below.
 
   window.addEventListener('message', (event) => {
     const data = event.data || {};
@@ -742,19 +798,731 @@ window.addEventListener('keydown',e=>{
     }
 
     if (data.type === 'fire') {
-      showSpeech('BOOM — SPINE 2D!', 1600);
+      showSpeech('BOOM — SPINE 2D!', 1500);
     }
   });
 
+  updateFlyForScrollSection();
+
   window.addEventListener('resize', () => {
+    updateFlyForScrollSection();
     const b = bounds();
     x = Math.max(b.minX, Math.min(x, b.maxX));
     y = Math.max(b.minY, Math.min(y, b.maxY));
     render();
-    chooseFarTarget();
+    chooseFarTarget('slow');
   });
 
   render();
   chooseFarTarget('slow');
   requestAnimationFrame(animate);
+})();
+
+
+
+/* =========================================================
+   CROC V19 — ONE-SHOT
+   Exact sequence:
+   start -> running -> Happy_1 -> running -> fade out -> OFF
+   ========================================================= */
+(() => {
+  const stage = document.getElementById('vtCrocStage');
+  const frame = document.getElementById('vtCrocFrame');
+  const button = document.getElementById('vtCrocToggle');
+
+  if (!stage || !frame || !button) return;
+
+  let playing = false;
+  let ready = false;
+  let runId = 0;
+  const completed = [];
+
+  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+  function send(type, extra = {}) {
+    try {
+      frame.contentWindow.postMessage(
+        { source:'vahram-site-croc-v18', type, ...extra },
+        '*'
+      );
+    } catch (_) {}
+  }
+
+  function play(name, loop = false) {
+    send('play', { name, loop });
+  }
+
+  function setButton(on) {
+    button.classList.toggle('is-on', on);
+    button.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+
+  function showStage() {
+    stage.classList.remove('is-disabled', 'is-fading');
+    stage.classList.add('is-on');
+    stage.setAttribute('aria-hidden', 'false');
+    stage.style.opacity = '1';
+  }
+
+  function hideStageImmediate() {
+    stage.classList.remove('is-on', 'is-fading');
+    stage.classList.add('is-disabled');
+    stage.setAttribute('aria-hidden', 'true');
+    stage.style.opacity = '0';
+  }
+
+  async function fadeAndFinish(id) {
+    if (id !== runId) return;
+
+    playing = false;
+    setButton(false);
+
+    stage.classList.add('is-fading');
+    stage.style.transition = 'opacity 1.0s ease, transform 1.0s ease';
+    stage.style.opacity = '0';
+
+    await sleep(1050);
+
+    if (id !== runId) return;
+    send('stop');
+    hideStageImmediate();
+  }
+
+  function waitForComplete(name, timeout = 5000) {
+    return new Promise(resolve => {
+      const watcher = { name, done:false };
+      completed.push(watcher);
+
+      const timer = setTimeout(() => {
+        if (watcher.done) return;
+        watcher.done = true;
+        resolve();
+      }, timeout);
+
+      watcher.resolve = () => {
+        if (watcher.done) return;
+        watcher.done = true;
+        clearTimeout(timer);
+        resolve();
+      };
+    });
+  }
+
+  function resolveComplete(name) {
+    const watcher = completed.find(x => !x.done && x.name === name);
+    if (watcher && watcher.resolve) watcher.resolve();
+  }
+
+  function stageWidth() {
+    return Math.max(420, stage.getBoundingClientRect().width || 640);
+  }
+
+  async function runSequence(id) {
+    const w = stageWidth();
+    const leftStart = Math.max(12, Math.round(window.innerWidth * 0.025));
+    const middle = Math.max(leftStart + 150, Math.round(window.innerWidth * 0.48 - w * 0.46));
+    const right = Math.max(middle + 190, Math.round(window.innerWidth - w * 0.78));
+
+    stage.classList.remove('face-left');
+    stage.classList.add('face-right');
+
+    /* Enter from the left */
+    stage.style.transition = 'none';
+    stage.style.left = (-w * 0.84) + 'px';
+    showStage();
+    void stage.offsetWidth;
+
+    /* 1. start */
+    play('start', false);
+    stage.style.transition = 'left 1.0s cubic-bezier(.18,.78,.28,1)';
+    stage.style.left = leftStart + 'px';
+    await waitForComplete('start', 2600);
+    if (!playing || id !== runId) return;
+
+    /* 2. running */
+    play('running', true);
+    stage.style.transition = 'left 2.8s linear';
+    stage.style.left = middle + 'px';
+    await sleep(2800);
+    if (!playing || id !== runId) return;
+
+    /* 3. Happy_1 */
+    play('Happy_1', false);
+    await waitForComplete('Happy_1', 5200);
+    if (!playing || id !== runId) return;
+
+    /* 4. running — this is now the LAST animation */
+    play('running', true);
+    stage.style.transition = 'left 2.8s linear';
+    stage.style.left = right + 'px';
+    await sleep(2800);
+    if (!playing || id !== runId) return;
+
+    /* Finished: smoothly disappear and switch button OFF automatically */
+    await fadeAndFinish(id);
+  }
+
+  function startOneShot() {
+    if (!ready || playing) return;
+
+    playing = true;
+    runId++;
+    setButton(true);
+    runSequence(runId);
+  }
+
+  function stopNow() {
+    if (!playing) return;
+
+    playing = false;
+    runId++;
+    setButton(false);
+    send('stop');
+    hideStageImmediate();
+  }
+
+  button.addEventListener('click', () => {
+    if (playing) {
+      stopNow();
+    } else {
+      startOneShot();
+    }
+  });
+
+  window.addEventListener('message', (event) => {
+    const d = event.data || {};
+    if (d.source !== 'vahram-croc-v18') return;
+
+    if (d.type === 'ready') {
+      ready = true;
+      hideStageImmediate();
+    }
+
+    if (d.type === 'complete' && d.name) {
+      resolveComplete(d.name);
+    }
+
+    if (d.type === 'error') {
+      console.error('CROC widget:', d.reason);
+    }
+  });
+
+  hideStageImmediate();
+  setButton(false);
+})();
+
+
+/* =========================================================
+   HERO ROTATING ART SETS V1
+   Sequential card swap with inertia.
+   ========================================================= */
+(() => {
+  const stack = document.getElementById('heroRotatingStack');
+  const cards = stack ? [...stack.querySelectorAll('.hero-rot-card')] : [];
+  const imgs = [document.getElementById('heroImg0'),document.getElementById('heroImg1'),document.getElementById('heroImg2')];
+  const title = document.getElementById('heroStackTitle');
+  const label = document.getElementById('heroStackLabel');
+  const note = document.getElementById('heroHandNote');
+  if(!stack || cards.length !== 3 || imgs.some(i=>!i)) return;
+
+  const sets = [
+    {
+      title:'CASINO GAME ART',
+      note:'Casino Game Art',
+      images:[
+        'assets/hero-sets/casino_01.png',
+        'assets/hero-sets/casino_02.png',
+        'assets/hero-sets/casino_03.png'
+      ]
+    },
+    {
+      title:'CARTOON / ANIMATION',
+      note:'Cartoon Covers',
+      images:[
+        'assets/hero-sets/cartoon_01.png',
+        'assets/hero-sets/cartoon_02.png',
+        'assets/hero-sets/cartoon_03.png'
+      ]
+    },
+    {
+      title:'SPINE 2D / ANIMATED GAME CHARACTERS',
+      note:'Game Characters · Spine 2D',
+      images:[
+        'assets/hero-sets/spine_frog.png',
+        'assets/hero-sets/spine_crocodile.png',
+        'assets/hero-sets/spine_fly.png'
+      ]
+    },
+    {
+      title:'CHARACTER CONCEPT ART',
+      note:'Concept Art',
+      images:[
+        'assets/hero-sets/concept_01.png',
+        'assets/hero-sets/concept_02.png',
+        'assets/hero-sets/concept_03.png'
+      ]
+    },
+    {
+      title:'ENVIRONMENTS',
+      note:'Game Environment Concept Art',
+      images:[
+        'assets/hero-sets/environment_01.png',
+        'assets/hero-sets/environment_02.png',
+        'assets/hero-sets/environment_03.png'
+      ]
+    },
+    {
+      title:'CHARACTER DESIGN',
+      note:'Character Design',
+      images:[
+        'assets/hero-sets/character_design_01.png',
+        'assets/hero-sets/character_design_02.png',
+        'assets/hero-sets/character_design_03.png'
+      ]
+    }
+  ];
+
+  let current = 0;
+  let busy = false;
+  const HOLD_MS = 3400;
+
+  function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+
+  async function swapSet(){
+    if(busy) return;
+    busy = true;
+    const next = (current + 1) % sets.length;
+
+    // Disappear one card after another: rear -> middle -> front.
+    for(const card of cards){
+      card.classList.remove('is-entering');
+      card.classList.add('is-leaving');
+      await wait(115);
+    }
+    await wait(300);
+
+    const nextSet = sets[next];
+    label?.classList.add('is-changing');
+    note?.classList.add('is-changing');
+
+    // Preload new sources before revealing.
+    await Promise.all(nextSet.images.map(src => new Promise(resolve => {
+      const im = new Image();
+      im.onload = im.onerror = resolve;
+      im.src = src;
+    })));
+
+    imgs.forEach((img,i)=>{ img.src = nextSet.images[i]; img.alt = nextSet.title; });
+    if(title) title.textContent = nextSet.title;
+    if(note) note.textContent = nextSet.note;
+
+    cards.forEach(c=>c.classList.remove('is-leaving'));
+    void stack.offsetWidth;
+    cards.forEach(c=>c.classList.add('is-entering'));
+    await wait(760);
+    cards.forEach(c=>c.classList.remove('is-entering'));
+    label?.classList.remove('is-changing');
+    note?.classList.remove('is-changing');
+
+    current = next;
+    busy = false;
+  }
+
+  // Keep the first set visible briefly, then rotate quickly through all sets.
+  setInterval(swapSet,HOLD_MS);
+})();
+
+
+// =========================================================
+// CONTACT COPY — email + phone only, inline feedback
+// =========================================================
+(() => {
+  const triggers = document.querySelectorAll('#contact .contact-copy-trigger');
+
+  async function copyText(value) {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(value);
+      return;
+    }
+
+    const temp = document.createElement('textarea');
+    temp.value = value;
+    temp.setAttribute('readonly', '');
+    temp.style.position = 'fixed';
+    temp.style.opacity = '0';
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand('copy');
+    temp.remove();
+  }
+
+  function showInlineState(el, text) {
+    const state = el.querySelector('.inline-copy-state');
+    if (!state) return;
+    state.textContent = text;
+    state.classList.add('show');
+    clearTimeout(state._hideTimer);
+    state._hideTimer = setTimeout(() => state.classList.remove('show'), 1500);
+  }
+
+  function selectionInside(el) {
+    const sel = window.getSelection?.();
+    if (!sel || sel.isCollapsed || sel.rangeCount === 0) return false;
+    const range = sel.getRangeAt(0);
+    return el.contains(range.commonAncestorContainer);
+  }
+
+  triggers.forEach((el) => {
+    const runCopy = async () => {
+      // If the visitor is selecting the phone/email text with the mouse,
+      // do not interfere with manual Ctrl+C.
+      if (selectionInside(el)) return;
+
+      const value = el.dataset.copy || '';
+      const label = el.dataset.copyLabel || 'CONTACT';
+
+      try {
+        await copyText(value);
+        showInlineState(el, `${label} COPIED`);
+      } catch (err) {
+        showInlineState(el, 'COPY FAILED');
+      }
+    };
+
+    el.addEventListener('click', runCopy);
+
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        runCopy();
+      }
+    });
+  });
+})();
+
+
+// =========================================================
+// TRUE HERO NAME MORPH — V11 HARD FIX
+// The SAME element is physically moved out of the HERO into <body>
+// so no HERO stacking/containing block can keep it down.
+// =========================================================
+(() => {
+  const name = document.getElementById('heroNameMorph');
+  const slot = document.getElementById('heroNameSlot');
+  const avatar = document.querySelector('.brand-avatar-wrap');
+  const hero = document.querySelector('.hero');
+
+  if (!name || !slot || !avatar || !hero) return;
+
+  let start = null;
+  let target = null;
+  let naturalWidth = 1;
+  let ticking = false;
+
+  function clamp(v, min, max) {
+    return Math.max(min, Math.min(max, v));
+  }
+
+  // IMPORTANT:
+  // Detach the SAME name element from the hero.
+  // It becomes a true viewport overlay, so it can sit above the sticky header.
+  document.body.appendChild(name);
+
+  function measure() {
+    const slotRect = slot.getBoundingClientRect();
+    const avatarRect = avatar.getBoundingClientRect();
+
+    start = {
+      x: slotRect.left,
+      y: slotRect.top
+    };
+
+    // Final position: absolute top, immediately beside avatar.
+    target = {
+      x: avatarRect.right + 10,
+      y: Math.max(4, avatarRect.top + 1)
+    };
+
+    name.style.transform = 'scale(1)';
+    naturalWidth = name.getBoundingClientRect().width || 1;
+
+    render();
+  }
+
+  function render() {
+    if (!start || !target) return;
+
+    const heroRect = hero.getBoundingClientRect();
+
+    // Complete the movement by the time the visitor reaches section 2.
+    const totalTravel = Math.max(260, hero.offsetHeight * 0.68);
+    const scrolledThroughHero = Math.max(0, -heroRect.top + 40);
+    const p = clamp(scrolledThroughHero / totalTravel, 0, 1);
+
+    // Smooth Photoshop-like transform.
+    const eased = p < 0.5
+      ? 4 * p * p * p
+      : 1 - Math.pow(-2 * p + 2, 3) / 2;
+
+    const desiredFinalWidth = clamp(window.innerWidth * 0.125, 155, 205);
+    const finalScale = clamp(desiredFinalWidth / naturalWidth, 0.15, 0.30);
+    const scale = 1 + (finalScale - 1) * eased;
+
+    const x = start.x + (target.x - start.x) * eased;
+    const y = start.y + (target.y - start.y) * eased;
+
+    name.style.left = `${x}px`;
+    name.style.top = `${y}px`;
+    name.style.transform = `scale(${scale})`;
+    name.style.opacity = '1';
+    name.style.visibility = 'visible';
+    name.style.zIndex = '2147483646';
+  }
+
+  function queueRender() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      render();
+      ticking = false;
+    });
+  }
+
+  window.addEventListener('scroll', queueRender, { passive: true });
+  window.addEventListener('resize', measure);
+  window.addEventListener('load', measure);
+
+  requestAnimationFrame(() => requestAnimationFrame(measure));
+})();
+
+
+// =========================================================
+// V13 STAGED HINTS
+// ON  -> explain that the fly can be turned off.
+// OFF -> invite visitor to view demo animations.
+// =========================================================
+(() => {
+  const hint = document.getElementById('flyDisableHint');
+  const hintText = document.getElementById('flyHintText');
+  const flyButton = document.getElementById('vtFlyToggle');
+  const crocButton = document.getElementById('vtCrocToggle');
+  const frogButton = document.getElementById('vtFrogToggle');
+
+  if (!hint || !hintText || !flyButton) return;
+
+  let hideTimer = null;
+
+  function flyIsOn() {
+    return flyButton.getAttribute('aria-pressed') === 'true';
+  }
+
+  function setHintForState() {
+    const on = flyIsOn();
+
+    if (on) {
+      hintText.textContent = 'YOU CAN TURN OFF THE FLY';
+      hint.classList.remove('is-demo-hint');
+    } else {
+      hintText.textContent = 'CLICK TO VIEW MY DEMO ANIMATIONS';
+      hint.classList.add('is-demo-hint');
+    }
+  }
+
+  function showHint(ms = 3600) {
+    setHintForState();
+    hint.classList.add('show');
+
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => {
+      hint.classList.remove('show');
+    }, ms);
+  }
+
+  function hideHint() {
+    hint.classList.remove('show');
+  }
+
+  // First onboarding hint.
+  window.addEventListener('load', () => {
+    setTimeout(() => showHint(4300), 900);
+  });
+
+  // After toggling the fly, show the NEXT useful instruction.
+  flyButton.addEventListener('click', () => {
+    setTimeout(() => showHint(3200), 40);
+  });
+
+  flyButton.addEventListener('mouseenter', () => showHint(1800));
+  flyButton.addEventListener('mouseleave', hideHint);
+
+  // Hovering the other demo controls can also remind visitors that demos are available.
+  [crocButton, frogButton].filter(Boolean).forEach((button) => {
+    button.addEventListener('mouseenter', () => {
+      if (!flyIsOn()) showHint(1800);
+    });
+    button.addEventListener('mouseleave', hideHint);
+  });
+})();
+
+
+/* =========================================================
+   FROG ONE-SHOT FIRE CONTROLLER V20
+   Reliability fix:
+   - cancels old fade timer before replay
+   - removes is-fading before replay
+   - queues a click if iframe is not ready yet
+   - allows replay immediately after the previous shot finishes
+   ========================================================= */
+(() => {
+  const button = document.getElementById('vtFrogToggle');
+  const stage = document.getElementById('vtFrogStage');
+  const frame = document.getElementById('vtFrogFrame');
+  if(!button || !stage || !frame) return;
+
+  let ready = false;
+  let playing = false;
+  let pendingPlay = false;
+  let hideTimer = null;
+  let runId = 0;
+
+  function setButton(on){
+    button.classList.toggle('is-on', on);
+    button.classList.toggle('is-playing', on);
+    button.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+
+  function hide(immediate = false, id = runId){
+    if(id !== runId) return;
+
+    playing = false;
+    setButton(false);
+
+    clearTimeout(hideTimer);
+    hideTimer = null;
+
+    if(immediate){
+      stage.classList.remove('is-fading');
+      stage.classList.add('is-disabled');
+      stage.setAttribute('aria-hidden','true');
+      return;
+    }
+
+    stage.classList.add('is-fading');
+    stage.setAttribute('aria-hidden','true');
+
+    hideTimer = setTimeout(()=>{
+      if(id !== runId) return;
+      stage.classList.remove('is-fading');
+      stage.classList.add('is-disabled');
+      hideTimer = null;
+    }, 1100);
+  }
+
+  function play(){
+    if(playing) return;
+
+    if(!ready){
+      pendingPlay = true;
+      return;
+    }
+
+    runId++;
+    const id = runId;
+
+    clearTimeout(hideTimer);
+    hideTimer = null;
+
+    playing = true;
+    pendingPlay = false;
+    setButton(true);
+
+    /* Critical fix: remove BOTH classes before starting again. */
+    stage.classList.remove('is-disabled', 'is-fading');
+    stage.setAttribute('aria-hidden','false');
+
+    /* Force browser to apply visible state before the Spine play message. */
+    void stage.offsetWidth;
+
+    try{
+      frame.contentWindow.postMessage({
+        source:'vahram-site-frog-v1',
+        type:'play',
+        runId:id
+      },'*');
+    }catch(_){
+      hide(true, id);
+    }
+  }
+
+  button.addEventListener('click', play);
+
+  window.addEventListener('message',(event)=>{
+    const d = event.data || {};
+    if(d.source !== 'vahram-frog-v1') return;
+
+    if(d.type === 'ready'){
+      ready = true;
+      hide(true);
+
+      if(pendingPlay){
+        requestAnimationFrame(play);
+      }
+    }
+
+    if(d.type === 'done'){
+      hide(false, runId);
+    }
+  });
+
+  setButton(false);
+  stage.classList.add('is-disabled');
+})();
+
+
+/* =========================================================
+   PRIVATE ARCHIVE V18 — browser zoom compensation
+   Cards stay visually almost the same size under Ctrl +/-.
+   ========================================================= */
+(() => {
+  const BASE_WIDTH = 420;
+  const RATIO = 450 / 794;
+  const initialDpr = window.devicePixelRatio || 1;
+  let raf = 0;
+
+  function applyArchiveCardSize() {
+    const currentDpr = window.devicePixelRatio || initialDpr;
+
+    /* Counter-scale browser zoom relative to the zoom level at page load. */
+    let factor = initialDpr / currentDpr;
+
+    /* Prevent absurd sizes on extreme zoom / monitor transitions. */
+    factor = Math.max(0.55, Math.min(1.55, factor));
+
+    const width = Math.round(BASE_WIDTH * factor);
+    const height = Math.round(width * RATIO);
+
+    document.documentElement.style.setProperty('--private-card-w', width + 'px');
+    document.documentElement.style.setProperty('--private-card-h', height + 'px');
+  }
+
+  function schedule() {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(applyArchiveCardSize);
+  }
+
+  applyArchiveCardSize();
+  window.addEventListener('resize', schedule, { passive:true });
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', schedule, { passive:true });
+  }
+
+  /* devicePixelRatio can change on Ctrl +/- without a dedicated event. */
+  setInterval(() => {
+    const dpr = window.devicePixelRatio || initialDpr;
+    if (Math.abs(dpr - (applyArchiveCardSize._lastDpr || initialDpr)) > 0.001) {
+      applyArchiveCardSize._lastDpr = dpr;
+      schedule();
+    }
+  }, 250);
 })();

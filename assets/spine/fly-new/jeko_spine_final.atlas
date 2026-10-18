@@ -1,0 +1,216 @@
+jeko_spine_final.png
+size:661,520
+filter:Linear,Linear
+pma:true
+scale:0.5
+Eye_bib_l
+bounds:492,313,8,9
+Eye_blik_l
+bounds:117,268,44,54
+Eye_klir_l
+bounds:2,26,44,54
+Eye_tak
+bounds:561,248,36,25
+Eye_tak_L
+bounds:2,2,37,22
+Eye_verev
+bounds:242,10,39,35
+Eye_verev_L
+bounds:198,8,39,21
+offsets:1,0,40,21
+Eye_verev_bib_r
+bounds:492,324,9,9
+Eye_verev_blik_r
+bounds:147,212,44,54
+Eye_verev_klir_r
+bounds:147,156,44,54
+VFX_qitiki
+bounds:138,66,58,83
+VFX_snaryad
+bounds:393,245,97,88
+beran_tak
+bounds:138,17,58,47
+bodi
+bounds:198,335,304,183
+bodi_tak
+bounds:588,31,66,86
+chanch_L
+bounds:49,19,87,130
+chanch_L_poqr
+bounds:578,429,79,89
+chanch_R
+bounds:504,370,72,148
+chanch_R_poqr
+bounds:49,151,96,95
+filtr_L
+bounds:330,8,42,42
+filtr_R
+bounds:330,52,43,45
+glusitel_L
+bounds:588,181,71,60
+glusitel_R
+bounds:588,119,71,60
+kanistr
+bounds:242,47,86,91
+klapn
+bounds:633,371,21,31
+klapn_stver
+bounds:283,12,23,33
+mator
+bounds:2,248,113,74
+offsets:0,2,113,76
+mator_mas
+bounds:330,99,59,39
+mator_mas_klor
+bounds:633,404,26,23
+remen
+bounds:2,82,45,164
+rotr_val0
+bounds:117,248,24,18
+rotr_val1
+bounds:163,286,23,36
+rotr_val2
+bounds:374,13,23,33
+rotr_val3
+bounds:536,247,23,26
+slang
+bounds:198,31,42,107
+slang_stver
+bounds:620,243,37,126
+snaryad
+bounds:578,371,53,56
+tush
+bounds:504,275,114,93
+vfx_rotr1
+bounds:198,140,193,193
+vfx_rotr2
+bounds:2,324,194,194
+vfx_rotr3
+bounds:393,48,193,193
+zamok
+bounds:492,243,42,30
+
+jeko_spine_final_2.png
+size:1578,671
+filter:Linear,Linear
+pma:true
+scale:0.5
+vfiks krak/smoke_10_fill0000
+bounds:2,448,392,221
+vfiks krak/smoke_10_fill0001
+bounds:396,448,392,221
+vfiks krak/smoke_10_fill0002
+bounds:790,448,392,221
+vfiks krak/smoke_10_fill0003
+bounds:1184,448,392,221
+vfiks krak/smoke_10_fill0004
+bounds:2,225,392,221
+vfiks krak/smoke_10_fill0005
+bounds:396,225,392,221
+vfiks krak/smoke_10_fill0006
+bounds:790,225,392,221
+vfiks krak/smoke_10_fill0007
+bounds:1184,225,392,221
+vfiks krak/smoke_10_fill0008
+bounds:2,2,392,221
+vfiks krak/smoke_10_fill0009
+bounds:396,2,392,221
+vfiks krak/smoke_10_fill0010
+bounds:790,2,392,221
+vfiks krak/smoke_10_fill0011
+bounds:1184,2,392,221
+
+jeko_spine_final_3.png
+size:1930,586
+filter:Linear,Linear
+pma:true
+scale:0.5
+vfiks krak/air_vfx/Air_11_fill0000
+bounds:2,294,480,290
+vfiks krak/air_vfx/Air_11_fill0001
+bounds:484,294,480,290
+vfiks krak/air_vfx/Air_11_fill0002
+bounds:966,294,480,290
+vfiks krak/air_vfx/Air_11_fill0003
+bounds:1448,294,480,290
+vfiks krak/air_vfx/Air_11_fill0004
+bounds:2,2,480,290
+vfiks krak/air_vfx/Air_11_fill0005
+bounds:484,2,480,290
+vfiks krak/air_vfx/Air_11_fill0006
+bounds:966,2,480,290
+
+jeko_spine_final_4.png
+size:1061,516
+filter:Linear,Linear
+pma:true
+scale:0.5
+vfiks krak/enegia_vfx/energy_20_fill0000
+bounds:2,2,59,54
+offsets:389,110,460,259
+vfiks krak/enegia_vfx/energy_20_fill0001
+bounds:946,45,84,92
+offsets:366,94,460,259
+vfiks krak/enegia_vfx/energy_20_fill0002
+bounds:838,36,106,101
+offsets:340,84,460,259
+vfiks krak/enegia_vfx/energy_20_fill0003
+bounds:671,16,165,121
+offsets:278,74,460,259
+vfiks krak/enegia_vfx/energy_20_fill0004
+bounds:479,5,190,132
+offsets:252,62,460,259
+vfiks krak/enegia_vfx/energy_20_fill0005
+bounds:281,58,196,148
+offsets:244,62,460,259
+vfiks krak/enegia_vfx/energy_20_fill0006
+bounds:2,58,277,148
+offsets:160,59,460,259
+vfiks krak/enegia_vfx/energy_20_fill0007
+bounds:2,208,279,152
+offsets:144,54,460,259
+vfiks krak/enegia_vfx/energy_20_fill0008
+bounds:2,362,348,152
+offsets:74,54,460,259
+vfiks krak/enegia_vfx/energy_20_fill0009
+bounds:283,219,344,141
+offsets:53,53,460,259
+vfiks krak/enegia_vfx/energy_20_fill0010
+bounds:352,375,352,139
+offsets:42,50,460,259
+vfiks krak/enegia_vfx/energy_20_fill0011
+bounds:629,139,361,132
+offsets:33,49,460,259
+vfiks krak/enegia_vfx/energy_20_fill0012
+bounds:706,273,352,128
+offsets:40,49,460,259
+vfiks krak/enegia_vfx/energy_20_fill0013
+bounds:706,403,353,111
+offsets:34,50,460,259
+vfiks krak/enegia_vfx/energy_20_fill0014
+bounds:63,25,318,31
+offsets:34,86,460,259
+
+jeko_spine_final_5.png
+size:1526,863
+filter:Linear,Linear
+pma:true
+scale:0.5
+vfiks krak/fier_vfx/fire_24_fill0000
+bounds:2,576,506,285
+vfiks krak/fier_vfx/fire_24_fill0001
+bounds:510,576,506,285
+vfiks krak/fier_vfx/fire_24_fill0002
+bounds:1018,576,506,285
+vfiks krak/fier_vfx/fire_24_fill0003
+bounds:2,289,506,285
+vfiks krak/fier_vfx/fire_24_fill0004
+bounds:510,289,506,285
+vfiks krak/fier_vfx/fire_24_fill0005
+bounds:1018,289,506,285
+vfiks krak/fier_vfx/fire_24_fill0006
+bounds:2,2,506,285
+vfiks krak/fier_vfx/fire_24_fill0007
+bounds:510,2,506,285
+vfiks krak/fier_vfx/fire_24_fill0008
+bounds:1018,2,506,285

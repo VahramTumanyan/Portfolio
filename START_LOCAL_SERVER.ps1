@@ -12,7 +12,7 @@ if (-not (Test-Path (Join-Path $root "index.html"))) {
     exit
 }
 
-$port = 8070
+$port = 8178
 $prefix = "http://localhost:$port/"
 
 $listener = New-Object System.Net.HttpListener
@@ -21,14 +21,14 @@ $listener.Prefixes.Add($prefix)
 try {
     $listener.Start()
 } catch {
-    $port = 8071
+    $port = 8179
     $prefix = "http://localhost:$port/"
     $listener = New-Object System.Net.HttpListener
     $listener.Prefixes.Add($prefix)
     $listener.Start()
 }
 
-Start-Process "$prefix`index.html?v=10"
+Start-Process "$prefix`index.html?v=frog-reliable-v20"
 
 Write-Host ""
 Write-Host "VAHRAM PORTFOLIO LOCAL PREVIEW"

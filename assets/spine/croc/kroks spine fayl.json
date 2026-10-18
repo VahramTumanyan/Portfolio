@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "wf+hWGgQj2A",
+	"hash": "xUw0uhOqA88",
 	"spine": "4.3.26",
 	"x": -1012.6289,
 	"y": -1440.6956,
@@ -683,7 +683,6 @@
 ],
 "slots": [
 	{ "name": "root", "bone": "root" },
-	{ "name": "Группа 1", "bone": "root", "dark": "000000" },
 	{ "name": "FX_qami-Smoke 057 Impact Ray Explosion Up00", "bone": "FX_qami/Smoke 057 Impact Ray Explosion Up00", "color": "ffffff2e" },
 	{ "name": "FX_1-Electricity 008 Impact Up00", "bone": "FX_1/Electricity 008 Impact Up00", "attachment": "FX_1/Electricity 008 Impact Up00" },
 	{ "name": "FX_S-Energy 036 Ray Right2", "bone": "FX_S/Energy 036 Ray Right2", "color": "ffffff3c", "attachment": "FX_S/Energy 036 Ray Right0" },
@@ -3121,9 +3120,6 @@
 					"width": 51.0,
 					"height": 1084.0
 				}
-			},
-			"Группа 1": {
-				"Группа 1": { "x": -78.97782, "y": -277.5599, "scaleX": 1.0557784, "scaleY": 1.123167, "width": 3254, "height": 2791 }
 			}
 		}
 	}
@@ -3182,7 +3178,8 @@
 					{ "time": 0.23333333, "name": "FX_1/Electricity 008 Impact Up11" },
 					{ "time": 0.2666667, "name": "FX_1/Electricity 008 Impact Up13" },
 					{ "time": 0.3, "name": "FX_1/Electricity 008 Impact Up15" },
-					{ "time": 0.3333333 }
+					{ "time": 0.3333333 },
+					{ "time": 0.6666667 }
 				]
 			},
 			"FX_2FAYR-Sparks 016 Impact Explosion Radial1": {
@@ -3231,15 +3228,16 @@
 					{ "time": 0.5333333 },
 					{ "time": 0.5666666, "name": "FX_2FAYR/Sparks 016 Impact Explosion Radial1" },
 					{ "time": 0.6, "name": "FX_2FAYR/Sparks 016 Impact Explosion Radial3" },
-					{ "time": 0.6333333, "name": "FX_2FAYR/Sparks 016 Impact Explosion Radial4" }
+					{ "time": 0.6333333, "name": "FX_2FAYR/Sparks 016 Impact Explosion Radial4" },
+					{ "time": 0.6666667, "name": "FX_2FAYR/Sparks 016 Impact Explosion Radial5" }
 				]
 			},
 			"FX_3-Smoke 030 Shot Impact Explosion Up0": {
 				"rgba": [
 					{ "color": "ffffffff" },
 					{ "time": 0.4, "color": "ffffff01" },
-					{ "time": 0.5, "color": "ffffff00", "curve": "stepped" },
-					{ "time": 0.6666667, "color": "ffffff00" }
+					{ "time": 0.5, "color": "ffffff00" },
+					{ "time": 0.6666667, "color": "ffffffff" }
 				],
 				"attachment": [
 					{},
@@ -3258,15 +3256,16 @@
 					{ "time": 0.4333333, "name": "FX_3/Smoke 030 Shot Impact Explosion Up12" },
 					{ "time": 0.4666667, "name": "FX_3/Smoke 030 Shot Impact Explosion Up13" },
 					{ "time": 0.5, "name": "FX_3/Smoke 030 Shot Impact Explosion Up14" },
-					{ "time": 0.5333333 }
+					{ "time": 0.5333333 },
+					{ "time": 0.6666667 }
 				]
 			},
 			"FX_3-Smoke 030 Shot Impact Explosion Up00": {
 				"rgba": [
 					{ "color": "ffffffac" },
 					{ "time": 0.4, "color": "ffffff01" },
-					{ "time": 0.5, "color": "ffffff00", "curve": "stepped" },
-					{ "time": 0.6666667, "color": "ffffff00" }
+					{ "time": 0.5, "color": "ffffff00" },
+					{ "time": 0.6666667, "color": "ffffffac" }
 				],
 				"attachment": [
 					{},
@@ -3311,7 +3310,7 @@
 					{ "time": 0.5666666, "name": "FX_qami/Smoke 057 Impact Ray Explosion Up17" },
 					{ "time": 0.6, "name": "FX_qami/Smoke 057 Impact Ray Explosion Up18" },
 					{ "time": 0.6333333, "name": "FX_qami/Smoke 057 Impact Ray Explosion Up19" },
-					{ "time": 0.6666667, "name": "FX_qami/Smoke 057 Impact Ray Explosion Up20" }
+					{ "time": 0.6666667, "name": "FX_qami/Smoke 057 Impact Ray Explosion Up00" }
 				]
 			},
 			"FX_S-Energy 036 Ray Right0": {
@@ -3327,7 +3326,8 @@
 					{ "time": 0.2666667, "name": "FX_S/Energy 036 Ray Right7" },
 					{ "time": 0.3, "name": "FX_S/Energy 036 Ray Right8" },
 					{ "time": 0.3333333, "name": "FX_S/Energy 036 Ray Right9" },
-					{ "time": 0.3666667 }
+					{ "time": 0.3666667 },
+					{ "time": 0.6666667 }
 				]
 			},
 			"FX_S-Energy 036 Ray Right1": {
@@ -3359,7 +3359,8 @@
 					{ "time": 0.2666667, "name": "FX_S/Energy 036 Ray Right7" },
 					{ "time": 0.3, "name": "FX_S/Energy 036 Ray Right8" },
 					{ "time": 0.3333333, "name": "FX_S/Energy 036 Ray Right9" },
-					{ "time": 0.3666667 }
+					{ "time": 0.3666667 },
+					{ "time": 0.6666667 }
 				]
 			},
 			"FX_S-Energy 036 Ray Right3": {
@@ -3386,7 +3387,8 @@
 					{ "time": 0.16666667, "color": "ffffffff" },
 					{ "time": 0.2666667, "color": "ffffff00" },
 					{ "time": 0.3, "color": "ffffff6c" },
-					{ "time": 0.3333333, "color": "ffffff00" }
+					{ "time": 0.3333333, "color": "ffffff00", "curve": "stepped" },
+					{ "time": 0.6666667, "color": "ffffff00" }
 				]
 			},
 			"porshin_R2": {
@@ -3397,7 +3399,8 @@
 					{ "time": 0.16666667, "color": "ffffffff" },
 					{ "time": 0.2666667, "color": "ffffff00" },
 					{ "time": 0.3, "color": "ffffff6c" },
-					{ "time": 0.3333333, "color": "ffffff00" }
+					{ "time": 0.3333333, "color": "ffffff00", "curve": "stepped" },
+					{ "time": 0.6666667, "color": "ffffff00" }
 				]
 			},
 			"Smoke-Smoke1": {
@@ -3422,7 +3425,7 @@
 					{ "time": 0.5666666, "name": "Smoke/Smoke17" },
 					{ "time": 0.6, "name": "Smoke/Smoke18" },
 					{ "time": 0.6333333, "name": "Smoke/Smoke19" },
-					{ "time": 0.6666667, "name": "Smoke/Smoke20" }
+					{ "time": 0.6666667 }
 				]
 			},
 			"tart1": {
@@ -3431,8 +3434,8 @@
 					{ "time": 0.13333334, "color": "ffffff00" },
 					{ "time": 0.2666667, "color": "ffffffff", "curve": "stepped" },
 					{ "time": 0.5, "color": "ffffffff", "curve": "stepped" },
-					{ "time": 0.5666666, "color": "ffffffff", "curve": "stepped" },
-					{ "time": 0.6666667, "color": "ffffffff" }
+					{ "time": 0.5666666, "color": "ffffffff" },
+					{ "time": 0.6666667, "color": "ffffff00" }
 				]
 			},
 			"tart2": {
@@ -3441,8 +3444,8 @@
 					{ "time": 0.13333334, "color": "ffffff00" },
 					{ "time": 0.2666667, "color": "ffffffff", "curve": "stepped" },
 					{ "time": 0.5, "color": "ffffffff", "curve": "stepped" },
-					{ "time": 0.5666666, "color": "ffffffff", "curve": "stepped" },
-					{ "time": 0.6666667, "color": "ffffffff" }
+					{ "time": 0.5666666, "color": "ffffffff" },
+					{ "time": 0.6666667, "color": "ffffff00" }
 				]
 			}
 		},
@@ -3471,8 +3474,8 @@
 			"ajz_bib1": {
 				"scale": [
 					{},
-					{ "time": 0.4, "x": 1.5570352, "y": 1.6165277, "curve": "stepped" },
-					{ "time": 0.6666667, "x": 1.5570352, "y": 1.6165277 }
+					{ "time": 0.4, "x": 1.5570352, "y": 1.6165277 },
+					{ "time": 0.6666667 }
 				]
 			},
 			"ajz_bib2": {
@@ -3483,8 +3486,8 @@
 				],
 				"scale": [
 					{},
-					{ "time": 0.4, "x": 1.5570352, "y": 1.6165277, "curve": "stepped" },
-					{ "time": 0.6666667, "x": 1.5570352, "y": 1.6165277 }
+					{ "time": 0.4, "x": 1.5570352, "y": 1.6165277 },
+					{ "time": 0.6666667 }
 				]
 			},
 			"atam": {
@@ -3756,7 +3759,8 @@
 			},
 			"dzer_krok_5": {
 				"rotate": [
-					{ "value": 1.199707 }
+					{ "value": 1.199707, "curve": "stepped" },
+					{ "time": 0.6666667, "value": 1.199707 }
 				],
 				"translate": [
 					{},
@@ -3768,13 +3772,15 @@
 				"scale": [
 					{},
 					{ "time": 0.2, "x": 0.413446, "y": 0.413446 },
-					{ "time": 0.3666667 }
+					{ "time": 0.3666667, "curve": "stepped" },
+					{ "time": 0.6666667 }
 				]
 			},
 			"FX_2FAYR/Sparks 016 Impact Explosion Radial1": {
 				"rotate": [
 					{},
-					{ "time": 0.2, "value": -13.056412 }
+					{ "time": 0.2, "value": -13.056412 },
+					{ "time": 0.6666667 }
 				],
 				"translate": [
 					{ "x": 73.16803, "y": 2.152008 },
@@ -3787,16 +3793,18 @@
 					{ "time": 0.5333333, "x": 120.014, "y": -39.49559 },
 					{ "time": 0.5666666, "x": 19.643913, "y": -1.981491 },
 					{ "time": 0.6, "x": 5.010052, "y": 5.083374 },
-					{ "time": 0.6666667 }
+					{ "time": 0.6666667, "x": 73.16803, "y": 2.152008 }
 				],
 				"scale": [
-					{}
+					{ "curve": "stepped" },
+					{ "time": 0.6666667 }
 				]
 			},
 			"FX_2FAYR/Sparks 016 Impact Explosion Radial2": {
 				"rotate": [
 					{},
-					{ "time": 0.2, "value": -13.056412 }
+					{ "time": 0.2, "value": -13.056412 },
+					{ "time": 0.6666667 }
 				],
 				"translate": [
 					{ "x": 73.16803, "y": 2.152008 },
@@ -3809,10 +3817,11 @@
 					{ "time": 0.5333333, "x": 120.014, "y": -39.49559 },
 					{ "time": 0.5666666, "x": 19.643913, "y": -1.981491 },
 					{ "time": 0.6, "x": 5.010052, "y": 5.083374 },
-					{ "time": 0.6666667 }
+					{ "time": 0.6666667, "x": 73.16803, "y": 2.152008 }
 				],
 				"scale": [
-					{}
+					{ "curve": "stepped" },
+					{ "time": 0.6666667 }
 				]
 			},
 			"FX_3/Smoke 030 Shot Impact Explosion Up0": {
@@ -3925,7 +3934,7 @@
 				"rotate": [
 					{ "value": 20.630905 },
 					{ "time": 0.3333333, "value": -9.797836 },
-					{ "time": 0.6666667, "value": 17.606613 }
+					{ "time": 0.6666667, "value": 20.630905 }
 				],
 				"translate": [
 					{ "x": -72.86462, "y": 19.88727 },
@@ -4090,7 +4099,7 @@
 				"rotate": [
 					{ "value": 20.630905 },
 					{ "time": 0.3333333, "value": -9.79782 },
-					{ "time": 0.6666667, "value": 3.2355804 }
+					{ "time": 0.6666667, "value": 20.630905 }
 				]
 			},
 			"krok_Vot_R3": {
@@ -4485,16 +4494,16 @@
 				"translate": [
 					{ "x": 41.53546, "y": 47.23056 },
 					{ "time": 0.2666667, "curve": "stepped" },
-					{ "time": 0.5, "curve": "stepped" },
-					{ "time": 0.6666667 }
+					{ "time": 0.5 },
+					{ "time": 0.6666667, "x": 41.53546, "y": 47.23056 }
 				]
 			},
 			"tart5": {
 				"translate": [
 					{ "x": 28.067703, "y": 44.41675 },
 					{ "time": 0.2666667, "curve": "stepped" },
-					{ "time": 0.5, "curve": "stepped" },
-					{ "time": 0.6666667 }
+					{ "time": 0.5 },
+					{ "time": 0.6666667, "x": 28.067703, "y": 44.41675 }
 				]
 			},
 			"val_1": {
@@ -4574,6 +4583,11 @@
 					"FX_qami/Smoke 057 Impact Ray Explosion Up00": {
 						"deform": [
 							{
+								"vertices": [ 4.654922, 6.691406, 4.654922, 6.691406, 4.654922, 6.691406, 4.654922, 6.691406 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.6666667,
 								"vertices": [ 4.654922, 6.691406, 4.654922, 6.691406, 4.654922, 6.691406, 4.654922, 6.691406 ]
 							}
 						]
@@ -4644,7 +4658,8 @@
 					{ "time": 0.23333333, "name": "FX_1/Electricity 008 Impact Up11" },
 					{ "time": 0.2666667, "name": "FX_1/Electricity 008 Impact Up13" },
 					{ "time": 0.3, "name": "FX_1/Electricity 008 Impact Up15" },
-					{ "time": 0.3333333 }
+					{ "time": 0.3333333 },
+					{ "time": 0.6666667 }
 				]
 			},
 			"FX_2FAYR-Sparks 016 Impact Explosion Radial1": {
@@ -4693,15 +4708,16 @@
 					{ "time": 0.5333333 },
 					{ "time": 0.5666666, "name": "FX_2FAYR/Sparks 016 Impact Explosion Radial1" },
 					{ "time": 0.6, "name": "FX_2FAYR/Sparks 016 Impact Explosion Radial3" },
-					{ "time": 0.6333333, "name": "FX_2FAYR/Sparks 016 Impact Explosion Radial4" }
+					{ "time": 0.6333333, "name": "FX_2FAYR/Sparks 016 Impact Explosion Radial4" },
+					{ "time": 0.6666667, "name": "FX_2FAYR/Sparks 016 Impact Explosion Radial5" }
 				]
 			},
 			"FX_3-Smoke 030 Shot Impact Explosion Up0": {
 				"rgba": [
 					{ "color": "ffffffff" },
 					{ "time": 0.4, "color": "ffffff01" },
-					{ "time": 0.5, "color": "ffffff00", "curve": "stepped" },
-					{ "time": 0.6666667, "color": "ffffff00" }
+					{ "time": 0.5, "color": "ffffff00" },
+					{ "time": 0.6666667, "color": "ffffffff" }
 				],
 				"attachment": [
 					{},
@@ -4720,15 +4736,16 @@
 					{ "time": 0.4333333, "name": "FX_3/Smoke 030 Shot Impact Explosion Up12" },
 					{ "time": 0.4666667, "name": "FX_3/Smoke 030 Shot Impact Explosion Up13" },
 					{ "time": 0.5, "name": "FX_3/Smoke 030 Shot Impact Explosion Up14" },
-					{ "time": 0.5333333 }
+					{ "time": 0.5333333 },
+					{ "time": 0.6666667 }
 				]
 			},
 			"FX_3-Smoke 030 Shot Impact Explosion Up00": {
 				"rgba": [
 					{ "color": "ffffffac" },
 					{ "time": 0.4, "color": "ffffff01" },
-					{ "time": 0.5, "color": "ffffff00", "curve": "stepped" },
-					{ "time": 0.6666667, "color": "ffffff00" }
+					{ "time": 0.5, "color": "ffffff00" },
+					{ "time": 0.6666667, "color": "ffffffac" }
 				],
 				"attachment": [
 					{},
@@ -4773,7 +4790,7 @@
 					{ "time": 0.5666666, "name": "FX_qami/Smoke 057 Impact Ray Explosion Up17" },
 					{ "time": 0.6, "name": "FX_qami/Smoke 057 Impact Ray Explosion Up18" },
 					{ "time": 0.6333333, "name": "FX_qami/Smoke 057 Impact Ray Explosion Up19" },
-					{ "time": 0.6666667, "name": "FX_qami/Smoke 057 Impact Ray Explosion Up20" }
+					{ "time": 0.6666667, "name": "FX_qami/Smoke 057 Impact Ray Explosion Up00" }
 				]
 			},
 			"FX_S-Energy 036 Ray Right0": {
@@ -4789,7 +4806,8 @@
 					{ "time": 0.2666667, "name": "FX_S/Energy 036 Ray Right7" },
 					{ "time": 0.3, "name": "FX_S/Energy 036 Ray Right8" },
 					{ "time": 0.3333333, "name": "FX_S/Energy 036 Ray Right9" },
-					{ "time": 0.3666667 }
+					{ "time": 0.3666667 },
+					{ "time": 0.6666667 }
 				]
 			},
 			"FX_S-Energy 036 Ray Right1": {
@@ -4810,7 +4828,8 @@
 			},
 			"FX_S-Energy 036 Ray Right2": {
 				"rgba": [
-					{ "color": "ffffff2c" }
+					{ "color": "ffffff2c", "curve": "stepped" },
+					{ "time": 0.6666667, "color": "ffffff2c" }
 				],
 				"attachment": [
 					{},
@@ -4824,12 +4843,14 @@
 					{ "time": 0.2666667, "name": "FX_S/Energy 036 Ray Right7" },
 					{ "time": 0.3, "name": "FX_S/Energy 036 Ray Right8" },
 					{ "time": 0.3333333, "name": "FX_S/Energy 036 Ray Right9" },
-					{ "time": 0.3666667 }
+					{ "time": 0.3666667 },
+					{ "time": 0.6666667 }
 				]
 			},
 			"FX_S-Energy 036 Ray Right3": {
 				"rgba": [
-					{ "color": "ffffff2c" }
+					{ "color": "ffffff2c", "curve": "stepped" },
+					{ "time": 0.6666667, "color": "ffffff2c" }
 				],
 				"attachment": [
 					{ "time": 0.06666667 },
@@ -4848,7 +4869,8 @@
 			},
 			"jxayn_unq": {
 				"attachment": [
-					{}
+					{},
+					{ "time": 0.6666667 }
 				]
 			},
 			"porshin_L2": {
@@ -4859,7 +4881,8 @@
 					{ "time": 0.16666667, "color": "ffffffff" },
 					{ "time": 0.2666667, "color": "ffffff00" },
 					{ "time": 0.3, "color": "ffffff6c" },
-					{ "time": 0.3333333, "color": "ffffff00" }
+					{ "time": 0.3333333, "color": "ffffff00", "curve": "stepped" },
+					{ "time": 0.6666667, "color": "ffffff00" }
 				]
 			},
 			"porshin_R2": {
@@ -4870,7 +4893,8 @@
 					{ "time": 0.16666667, "color": "ffffffff" },
 					{ "time": 0.2666667, "color": "ffffff00" },
 					{ "time": 0.3, "color": "ffffff6c" },
-					{ "time": 0.3333333, "color": "ffffff00" }
+					{ "time": 0.3333333, "color": "ffffff00", "curve": "stepped" },
+					{ "time": 0.6666667, "color": "ffffff00" }
 				]
 			},
 			"Smoke-Smoke1": {
@@ -4895,7 +4919,7 @@
 					{ "time": 0.5666666, "name": "Smoke/Smoke17" },
 					{ "time": 0.6, "name": "Smoke/Smoke18" },
 					{ "time": 0.6333333, "name": "Smoke/Smoke19" },
-					{ "time": 0.6666667, "name": "Smoke/Smoke20" }
+					{ "time": 0.6666667 }
 				]
 			},
 			"tart1": {
@@ -4904,8 +4928,8 @@
 					{ "time": 0.13333334, "color": "ffffff00" },
 					{ "time": 0.2666667, "color": "ffffffff", "curve": "stepped" },
 					{ "time": 0.5, "color": "ffffffff", "curve": "stepped" },
-					{ "time": 0.5666666, "color": "ffffffff", "curve": "stepped" },
-					{ "time": 0.6666667, "color": "ffffffff" }
+					{ "time": 0.5666666, "color": "ffffffff" },
+					{ "time": 0.6666667, "color": "ffffff00" }
 				]
 			},
 			"tart2": {
@@ -4914,8 +4938,8 @@
 					{ "time": 0.13333334, "color": "ffffff00" },
 					{ "time": 0.2666667, "color": "ffffffff", "curve": "stepped" },
 					{ "time": 0.5, "color": "ffffffff", "curve": "stepped" },
-					{ "time": 0.5666666, "color": "ffffffff", "curve": "stepped" },
-					{ "time": 0.6666667, "color": "ffffffff" }
+					{ "time": 0.5666666, "color": "ffffffff" },
+					{ "time": 0.6666667, "color": "ffffff00" }
 				]
 			}
 		},
@@ -4944,8 +4968,8 @@
 			"ajz_bib1": {
 				"scale": [
 					{},
-					{ "time": 0.4, "x": 1.5570352, "y": 1.6165277, "curve": "stepped" },
-					{ "time": 0.6666667, "x": 1.5570352, "y": 1.6165277 }
+					{ "time": 0.4, "x": 1.5570352, "y": 1.6165277 },
+					{ "time": 0.6666667 }
 				]
 			},
 			"ajz_bib2": {
@@ -4956,8 +4980,8 @@
 				],
 				"scale": [
 					{},
-					{ "time": 0.4, "x": 1.5570352, "y": 1.6165277, "curve": "stepped" },
-					{ "time": 0.6666667, "x": 1.5570352, "y": 1.6165277 }
+					{ "time": 0.4, "x": 1.5570352, "y": 1.6165277 },
+					{ "time": 0.6666667 }
 				]
 			},
 			"atam": {
@@ -5057,7 +5081,7 @@
 					{
 						"time": 0.3,
 						"value": 84.21346,
-						"curve": [ 0.5545851, 57.18425, 0.433297, 25.92598 ]
+						"curve": [ 0.5545851, 57.18425, 0.5444444, 7.058218 ]
 					},
 					{ "time": 0.6666667 }
 				],
@@ -5065,7 +5089,8 @@
 					{},
 					{ "time": 0.23333333, "x": -38.88293, "curve": "stepped" },
 					{ "time": 0.4, "x": -38.88293 },
-					{ "time": 0.5, "x": 12.752502 }
+					{ "time": 0.5, "x": 12.752502 },
+					{ "time": 0.6666667 }
 				],
 				"scale": [
 					{
@@ -5093,7 +5118,7 @@
 						"time": 0.4,
 						"x": 0.13259174,
 						"y": 0.6048842,
-						"curve": [ 0.5851528, 0.4109957, 0.4969432, 0.7329594, 0.5851528, 0.7317008, 0.4969432, 0.8783595 ]
+						"curve": [ 0.5851528, 0.4109957, 0.5777778, 1.311321, 0.5851528, 0.7317008, 0.5777778, 0.9964289 ]
 					},
 					{ "time": 0.6666667 }
 				],
@@ -5105,7 +5130,7 @@
 						"time": 0.23333333,
 						"x": 81.485,
 						"y": -95.9705,
-						"curve": [ 0.5342066, 55.33151, 0.3908661, 25.08599, 0.5342066, -65.16773, 0.3908661, -29.5455 ]
+						"curve": [ 0.5342066, 55.33151, 0.5222222, -23.318035, 0.5342066, -65.16773, 0.5222222, 27.46326 ]
 					},
 					{ "time": 0.6666667 }
 				]
@@ -5164,7 +5189,7 @@
 					{
 						"time": 0.3,
 						"value": 84.21346,
-						"curve": [ 0.5178386, 43.27985, 0.433297, 25.92598 ]
+						"curve": [ 0.5178386, 43.27985, 0.5444444, 12.492249 ]
 					},
 					{ "time": 0.6666667 }
 				],
@@ -5194,7 +5219,7 @@
 						"time": 0.4,
 						"x": 0.13259174,
 						"y": 0.6048842,
-						"curve": [ 0.558428, 0.5542126, 0.4969432, 0.7329594, 0.558428, 0.796938, 0.4969432, 0.8783595 ]
+						"curve": [ 0.558428, 0.5542126, 0.5777778, 1.5510023, 0.558428, 0.796938, 0.5777778, 0.9936797 ]
 					},
 					{ "time": 0.6666667 }
 				],
@@ -5206,7 +5231,7 @@
 						"time": 0.23333333,
 						"x": 81.485,
 						"y": -95.9705,
-						"curve": [ 0.4907789, 41.8776, 0.3908661, 25.08599, 0.4907789, -49.32214, 0.3908661, -29.5455 ]
+						"curve": [ 0.4907789, 41.8776, 0.5222222, -41.27023, 0.4907789, -49.32214, 0.5222222, 48.60679 ]
 					},
 					{ "time": 0.6666667 }
 				]
@@ -5229,7 +5254,7 @@
 					{
 						"time": 0.3,
 						"value": -27.70062,
-						"curve": [ 0.5178386, -14.23619, 0.575, 0 ]
+						"curve": [ 0.5178386, -14.23619, 0.5444444, -22.384605 ]
 					},
 					{ "time": 0.6666667 }
 				]
@@ -5252,7 +5277,7 @@
 					{
 						"time": 0.3,
 						"value": -23.576145,
-						"curve": [ 0.5178386, -12.116495, 0.575, 0 ]
+						"curve": [ 0.5178386, -12.116495, 0.5484848, -23.576145 ]
 					},
 					{ "time": 0.6666667 }
 				]
@@ -5275,7 +5300,7 @@
 					{
 						"time": 0.3,
 						"value": -5.215561,
-						"curve": [ 0.5178386, -2.680435, 0.575, 0 ]
+						"curve": [ 0.5178386, -2.680435, 0.6515564, -5.215561 ]
 					},
 					{ "time": 0.6666667 }
 				]
@@ -5288,7 +5313,7 @@
 					{
 						"time": 0.23333333,
 						"value": -16.965973,
-						"curve": [ 0.4907789, -8.719327, 0.5583333, 0 ]
+						"curve": [ 0.4907789, -8.719327, 0.5222222, 8.592866 ]
 					},
 					{ "time": 0.6666667 }
 				]
@@ -5390,7 +5415,8 @@
 			},
 			"dzer_krok_5": {
 				"rotate": [
-					{ "value": 1.199707 }
+					{ "value": 1.199707, "curve": "stepped" },
+					{ "time": 0.6666667, "value": 1.199707 }
 				],
 				"translate": [
 					{},
@@ -5411,13 +5437,15 @@
 				"scale": [
 					{},
 					{ "time": 0.2, "x": 0.413446, "y": 0.413446 },
-					{ "time": 0.3666667 }
+					{ "time": 0.3666667, "curve": "stepped" },
+					{ "time": 0.6666667 }
 				]
 			},
 			"FX_2FAYR/Sparks 016 Impact Explosion Radial1": {
 				"rotate": [
 					{},
-					{ "time": 0.2, "value": -13.056412 }
+					{ "time": 0.2, "value": -13.056412 },
+					{ "time": 0.6666667 }
 				],
 				"translate": [
 					{ "x": 73.16803, "y": 2.152008 },
@@ -5430,16 +5458,18 @@
 					{ "time": 0.5333333, "x": 120.014, "y": -39.49559 },
 					{ "time": 0.5666666, "x": 19.643913, "y": -1.981491 },
 					{ "time": 0.6, "x": 5.010052, "y": 5.083374 },
-					{ "time": 0.6666667 }
+					{ "time": 0.6666667, "x": 73.16803, "y": 2.152008 }
 				],
 				"scale": [
-					{}
+					{ "curve": "stepped" },
+					{ "time": 0.6666667 }
 				]
 			},
 			"FX_2FAYR/Sparks 016 Impact Explosion Radial2": {
 				"rotate": [
 					{},
-					{ "time": 0.2, "value": -13.056412 }
+					{ "time": 0.2, "value": -13.056412 },
+					{ "time": 0.6666667 }
 				],
 				"translate": [
 					{ "x": 73.16803, "y": 2.152008 },
@@ -5452,10 +5482,11 @@
 					{ "time": 0.5333333, "x": 120.014, "y": -39.49559 },
 					{ "time": 0.5666666, "x": 19.643913, "y": -1.981491 },
 					{ "time": 0.6, "x": 5.010052, "y": 5.083374 },
-					{ "time": 0.6666667 }
+					{ "time": 0.6666667, "x": 73.16803, "y": 2.152008 }
 				],
 				"scale": [
-					{}
+					{ "curve": "stepped" },
+					{ "time": 0.6666667 }
 				]
 			},
 			"FX_3/Smoke 030 Shot Impact Explosion Up0": {
@@ -5479,7 +5510,8 @@
 					{ "curve": "stepped" },
 					{ "time": 0.16666667 },
 					{ "time": 0.23333333, "y": 1.116581 },
-					{ "time": 0.4, "y": 0.8996286 }
+					{ "time": 0.4, "y": 0.8996286 },
+					{ "time": 0.6666667 }
 				]
 			},
 			"FX_S/Energy 036 Ray Right1": {
@@ -5487,31 +5519,36 @@
 					{ "curve": "stepped" },
 					{ "time": 0.16666667 },
 					{ "time": 0.23333333, "y": 1.116581 },
-					{ "time": 0.4, "y": 0.8996286 }
+					{ "time": 0.4, "y": 0.8996286 },
+					{ "time": 0.6666667 }
 				]
 			},
 			"FX_S/Energy 036 Ray Right2": {
 				"translate": [
 					{},
-					{ "time": 0.16666667, "x": -5.911865, "y": -70.9441 }
+					{ "time": 0.16666667, "x": -5.911865, "y": -70.9441 },
+					{ "time": 0.6666667 }
 				],
 				"scale": [
 					{},
 					{ "time": 0.16666667, "y": 1.2360343 },
 					{ "time": 0.23333333, "y": 1.116581 },
-					{ "time": 0.4, "y": 0.8996286 }
+					{ "time": 0.4, "y": 0.8996286 },
+					{ "time": 0.6666667 }
 				]
 			},
 			"FX_S/Energy 036 Ray Right3": {
 				"translate": [
 					{},
-					{ "time": 0.16666667, "x": -5.911865, "y": -70.9441 }
+					{ "time": 0.16666667, "x": -5.911865, "y": -70.9441 },
+					{ "time": 0.6666667 }
 				],
 				"scale": [
 					{},
 					{ "time": 0.16666667, "y": 1.2360343 },
 					{ "time": 0.23333333, "y": 1.116581 },
-					{ "time": 0.4, "y": 0.8996286 }
+					{ "time": 0.4, "y": 0.8996286 },
+					{ "time": 0.6666667 }
 				]
 			},
 			"glusitel_L2": {
@@ -5615,7 +5652,7 @@
 				"rotate": [
 					{ "value": 20.630905 },
 					{ "time": 0.3333333, "value": -9.797836 },
-					{ "time": 0.6666667, "value": 17.606613 }
+					{ "time": 0.6666667, "value": 20.630905 }
 				],
 				"translate": [
 					{ "x": -72.86462, "y": 19.88727 },
@@ -5627,7 +5664,7 @@
 				"translate": [
 					{},
 					{ "time": 0.2666667, "x": -25.763977, "y": -15.746338 },
-					{ "time": 0.6666667, "x": 6.198303, "y": -4.43982 }
+					{ "time": 0.6666667 }
 				]
 			},
 			"krok_dzer_R3": {
@@ -5802,7 +5839,7 @@
 				"rotate": [
 					{ "value": 20.630905 },
 					{ "time": 0.3333333, "value": -9.79782 },
-					{ "time": 0.6666667, "value": 3.2355804 }
+					{ "time": 0.6666667, "value": 20.630905 }
 				]
 			},
 			"krok_Vot_R3": {
@@ -5923,7 +5960,8 @@
 					{ "time": 0.6666667, "value": -13.843216 }
 				],
 				"translate": [
-					{ "x": -4.000255 }
+					{ "x": -4.000255, "curve": "stepped" },
+					{ "time": 0.6666667, "x": -4.000255 }
 				]
 			},
 			"mator3": {
@@ -5939,7 +5977,7 @@
 					{ "time": 0.5666666, "x": -5.759674, "y": 0.20221806 },
 					{ "time": 0.6, "x": 16.07408, "y": -0.2800217 },
 					{ "time": 0.6333333, "x": 35.3573, "y": 7.455238 },
-					{ "time": 0.6666667, "x": 54.81766, "y": 8.19834 }
+					{ "time": 0.6666667, "x": 52.33337, "y": 1.1556778 }
 				]
 			},
 			"mator4": {
@@ -6222,16 +6260,16 @@
 				"translate": [
 					{ "x": 41.53546, "y": 47.23056 },
 					{ "time": 0.2666667, "curve": "stepped" },
-					{ "time": 0.5, "curve": "stepped" },
-					{ "time": 0.6666667 }
+					{ "time": 0.5 },
+					{ "time": 0.6666667, "x": 41.53546, "y": 47.23056 }
 				]
 			},
 			"tart5": {
 				"translate": [
 					{ "x": 28.067703, "y": 44.41675 },
 					{ "time": 0.2666667, "curve": "stepped" },
-					{ "time": 0.5, "curve": "stepped" },
-					{ "time": 0.6666667 }
+					{ "time": 0.5 },
+					{ "time": 0.6666667, "x": 28.067703, "y": 44.41675 }
 				]
 			},
 			"val_1": {
@@ -6332,6 +6370,11 @@
 					"FX_qami/Smoke 057 Impact Ray Explosion Up00": {
 						"deform": [
 							{
+								"vertices": [ 4.654922, 6.691406, 4.654922, 6.691406, 4.654922, 6.691406, 4.654922, 6.691406 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.6666667,
 								"vertices": [ 4.654922, 6.691406, 4.654922, 6.691406, 4.654922, 6.691406, 4.654922, 6.691406 ]
 							}
 						]

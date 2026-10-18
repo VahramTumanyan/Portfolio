@@ -1,0 +1,11 @@
+V11 — MOVEMENT / ANIMATION SYNC FIX
+
+- Slow movement ALWAYS uses flies.
+- Fast movement ALWAYS uses flies_Run.
+- Most movement is slow and calm.
+- Fast dashes happen only occasionally (~22% of trips).
+- When the fly stops, it returns to flies.
+- Added occasional speech: bzbzbzbzbzbbzbz
+- Fly is slightly larger than V10.
+- Turning and click-to-fire remain.
+- No other site sections changed.

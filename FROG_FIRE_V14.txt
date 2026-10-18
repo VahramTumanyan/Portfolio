@@ -1,0 +1,10 @@
+FROG FIRE V14
+
+Based on V13_STAGED_WHITE_HINTS.
+- Old frog Spine asset folder deleted and replaced with the new uploaded export.
+- Rig_View is not used.
+- FROG button is OFF by default.
+- Click FROG: frog appears large at bottom-right, plays FIRE once, then disappears automatically.
+- Button automatically returns to OFF after animation completes.
+- Re-click plays it again.
+- Frog is intentionally much larger than the fly and lifted above the bottom edge.

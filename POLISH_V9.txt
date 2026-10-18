@@ -1,0 +1,13 @@
+POLISH V9
+
+Updates from V8:
+- PORTFOLIO is much larger, close to the scale of the previous name.
+- VAHRAM TUMANYAN is slightly smaller.
+- Letter spacing in VAHRAM TUMANYAN is increased slightly.
+- The moving name stays above the header/avatar and remains visible.
+- PORTFOLIO stays fixed in its original hero position and is not animated.
+- Green paint stroke behind SENIOR 2D ARTIST is shorter/cleaner; text size is unchanged.
+- CONTACT ME button removed.
+- Email and phone still copy on click.
+- Email and phone text can also be selected manually and copied with Ctrl+C.
+- Copy confirmation now appears inline next to the email/phone field, not elsewhere.

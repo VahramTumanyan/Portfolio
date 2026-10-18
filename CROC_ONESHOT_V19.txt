@@ -1,0 +1,15 @@
+CROC V19
+
+Sequence:
+start -> running -> Happy_1 -> running
+
+Changes:
+- final 'start' removed
+- final animation is now 'running'
+- crocodile is one-shot, like Frog
+- after the sequence ends, crocodile fades out smoothly
+- CROC button automatically switches OFF
+- to watch again, visitor clicks CROC again
+- clicking CROC while it is playing stops it immediately
+
+Everything else from V18 stays unchanged, including fixed Private Archive card behavior.

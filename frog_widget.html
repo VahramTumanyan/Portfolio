@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Frog Demo</title>
+<link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@4.3.*/dist/spine-player.css">
+<script src="https://unpkg.com/@esotericsoftware/spine-player@4.3.*/dist/iife/spine-player.js"></script>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:visible;background:transparent}
+#frogPlayer{position:absolute;inset:0;background:transparent!important;overflow:visible!important}
+#frogPlayer canvas{background:transparent!important}
+</style>
+</head>
+<body>
+<div id="frogPlayer"></div>
+<script>
+let playerRef=null;
+let ready=false;
+let playing=false;
+function tell(type){ try{ parent.postMessage({source:'vahram-frog-v1',type},'*'); }catch(_){} }
+function playFire(){
+  if(!ready) return;
+
+  /* If a replay arrives after the previous animation completed,
+     always reset the track cleanly before starting FIRE again. */
+  playing=true;
+
+  try{
+    playerRef.animationState.clearTrack(0);
+    playerRef.animationState.setAnimation(0,'fire',false);
+  }catch(e){
+    console.error(e);
+    playing=false;
+    tell('done');
+  }
+}
+new spine.SpinePlayer('frogPlayer',{
+  skeleton:'assets/spine/frog/Amb+gort spine.json',
+  atlas:'assets/spine/frog/Amb+gort spine.atlas',
+  animation:'fire',
+  showControls:false,
+  alpha:true,
+  premultipliedAlpha:true,
+  backgroundColor:'#00000000',
+  defaultMix:0.08,
+  viewport:{
+    x:-1139.2693,
+    y:-425.2873,
+    width:1855.246,
+    height:1341.873,
+    padLeft:0,padRight:0,padTop:0,padBottom:0
+  },
+  success(player){
+    playerRef=player;
+    ready=true;
+    try{
+      player.animationState.clearTracks();
+      player.animationState.addListener({
+        complete(entry){
+          if(entry?.animation?.name==='fire'){
+            playing=false;
+            tell('done');
+          }
+        }
+      });
+    }catch(e){ console.error(e); }
+    tell('ready');
+  },
+  error(player,reason){ console.error('Frog Spine error:',reason); }
+});
+window.addEventListener('message',(event)=>{
+  const d=event.data||{};
+  if(d.source!=='vahram-site-frog-v1') return;
+  if(d.type==='play') playFire();
+});
+</script>
+</body>
+</html>

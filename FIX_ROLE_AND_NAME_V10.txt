@@ -1,0 +1,5 @@
+V10:
+- VAHRAM TUMANYAN moves to the very top, immediately beside the avatar.
+- Name stays above the header and never hides behind it.
+- Green role background is taller so both role lines are fully readable.
+- Text size in the role badge is unchanged.

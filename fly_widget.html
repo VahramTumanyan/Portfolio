@@ -37,7 +37,23 @@
   </style>
   <script src="https://unpkg.com/@esotericsoftware/spine-player@4.3.*/dist/iife/spine-player.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@4.3.*/dist/spine-player.css">
-</head>
+
+    <style>
+      /* V13 Shadow patch:
+         soft shadow behind the fly, not too dark, more transparent, smooth edges */
+      html, body {
+        overflow: visible !important;
+      }
+      #flyPlayer,
+      canvas {
+        filter:
+          drop-shadow(16px 18px 18px rgba(0,0,0,0.16))
+          drop-shadow(7px 8px 10px rgba(0,0,0,0.10))
+          drop-shadow(2px 3px 4px rgba(0,0,0,0.06));
+      }
+    </style>
+
+  </head>
 <body>
   <div id="flyPlayer"></div>
   <div id="flyHit" aria-label="Interactive fly"></div>
@@ -47,28 +63,49 @@
     let ready = false;
     let firing = false;
 
+    // Remember the exact animation requested by the page.
+    let requestedLoop = 'flies';
+
     function parentMessage(type){
       try{
         parent.postMessage({source:'vahram-fly-v4',type}, '*');
       }catch(_){}
     }
 
-    function playLoop(name){
+    function applyRequestedLoop(){
       if(!ready || firing) return;
       try{
-        playerRef.animationState.setAnimation(0, name, true);
-      }catch(_){}
+        playerRef.animationState.setAnimation(0, requestedLoop, true);
+      }catch(e){
+        console.error('Unable to play Spine animation:', requestedLoop, e);
+      }
+    }
+
+    function requestLoop(name){
+      if(name !== 'flies' && name !== 'flies_Run') return;
+      requestedLoop = name;
+      applyRequestedLoop();
     }
 
     function fire(){
       if(!ready || firing) return;
+
       firing = true;
       try{
         playerRef.animationState.setAnimation(0, 'fire', false);
-        playerRef.animationState.addAnimation(0, 'flies', true, 0);
-      }catch(_){}
+
+        // After fire, return to whatever movement mode is currently active.
+        playerRef.animationState.addAnimation(0, requestedLoop, true, 0);
+      }catch(e){
+        console.error('Unable to play fire animation:', e);
+      }
+
       parentMessage('fire');
-      setTimeout(()=>{ firing = false; }, 1350);
+
+      setTimeout(()=>{
+        firing = false;
+        applyRequestedLoop();
+      },1350);
     }
 
     new spine.SpinePlayer('flyPlayer',{
@@ -79,7 +116,7 @@
       alpha:true,
       premultipliedAlpha:true,
       backgroundColor:'#00000000',
-      defaultMix:0.15,
+      defaultMix:0.10,
       viewport:{
         x:-1887.077,
         y:-377.485,
@@ -93,9 +130,7 @@
       success(player){
         playerRef = player;
         ready = true;
-        try{
-          player.animationState.setAnimation(0,'flies',true);
-        }catch(_){}
+        applyRequestedLoop();
         parentMessage('ready');
       },
       error(player, reason){
@@ -107,14 +142,21 @@
       const data = event.data || {};
       if(data.source !== 'vahram-site-v4') return;
 
-      if(data.type === 'run') playLoop('flies_Run');
-      if(data.type === 'idle') playLoop('flies');
+      // NEW: exact animation names from parent.
+      if(data.type === 'flies') requestLoop('flies');
+      if(data.type === 'flies_Run') requestLoop('flies_Run');
+
+      // Backward compatibility with older page commands.
+      if(data.type === 'idle') requestLoop('flies');
+      if(data.type === 'run') requestLoop('flies_Run');
+
       if(data.type === 'fire') fire();
     });
 
     const hit = document.getElementById('flyHit');
-    hit.addEventListener('pointerenter', ()=> playLoop('flies_Run'));
-    hit.addEventListener('pointerleave', ()=> playLoop('flies'));
+
+    // Hover no longer changes the movement animation.
+    // The animation is controlled ONLY by slow/fast movement state.
     hit.addEventListener('pointerdown', (e)=>{
       e.preventDefault();
       fire();

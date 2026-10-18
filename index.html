@@ -12,9 +12,8 @@
   <div class="paper-noise" aria-hidden="true"></div>
 
   <header class="topbar">
-    <a class="brand" href="#top" aria-label="Vahram Tumanyan home">
-      <span class="brand-splat">VT</span>
-      <span>VAHRAM<br><b>TUMANYAN</b></span>
+    <a class="brand brand-avatar-only" href="#top" aria-label="Vahram Tumanyan home">
+      <span class="brand-avatar-wrap"><img src="assets/avatar/vahram-avatar.png" alt="Vahram Tumanyan"></span>
     </a>
     <nav>
       <a href="#animations" class="nav-link active">ANIMATION</a>
@@ -27,20 +26,27 @@
 
   <!-- NEW CHARACTER UI V4: body-level, independent from sticky header -->
   <aside class="vt-character-rail" id="vtCharacterRail" aria-label="Character controls">
+    <div class="fly-disable-hint" id="flyDisableHint" aria-hidden="true">
+      <span class="fly-disable-hint-bubble">
+        <span class="fly-disable-hint-hand">☝</span>
+        <span class="fly-disable-hint-copy" id="flyHintText">YOU CAN TURN OFF THE FLY</span>
+      </span>
+      <span class="fly-disable-hint-arrow">➜</span>
+    </div>
     <button class="vt-character-button is-on" id="vtFlyToggle" type="button" aria-pressed="true" title="Fly on/off">
-      <span class="vt-character-button-icon" aria-hidden="true">🪰</span>
+      <span class="vt-character-button-icon user-icon" aria-hidden="true"><img src="assets/character-icons/fly.png" alt=""></span>
       <span class="vt-character-button-label">FLY</span>
       <span class="vt-character-led" aria-hidden="true"></span>
     </button>
 
-    <button class="vt-character-button is-placeholder" id="vtCrocToggle" type="button" aria-pressed="false" title="Crocodile — next step">
-      <span class="vt-character-button-icon" aria-hidden="true">🐊</span>
+    <button class="vt-character-button" id="vtCrocToggle" type="button" aria-pressed="false" title="Crocodile on/off">
+      <span class="vt-character-button-icon user-icon" aria-hidden="true"><img src="assets/character-icons/croc.png" alt=""></span>
       <span class="vt-character-button-label">CROC</span>
       <span class="vt-character-led" aria-hidden="true"></span>
     </button>
 
     <button class="vt-character-button is-placeholder" id="vtFrogToggle" type="button" aria-pressed="false" title="Frog — next step">
-      <span class="vt-character-button-icon" aria-hidden="true">🐸</span>
+      <span class="vt-character-button-icon user-icon" aria-hidden="true"><img src="assets/character-icons/frog.png" alt=""></span>
       <span class="vt-character-button-label">FROG</span>
       <span class="vt-character-led" aria-hidden="true"></span>
     </button>
@@ -51,33 +57,63 @@
     <iframe id="vtFlyFrame" src="fly_widget.html" title="Interactive Spine fly" scrolling="no"></iframe>
   </div>
 
+  <div class="vt-croc-stage is-disabled" id="vtCrocStage" aria-hidden="true">
+    <iframe id="vtCrocFrame" src="croc_widget.html" title="Interactive crocodile Spine demo" scrolling="no"></iframe>
+  </div>
+
   <div class="vt-character-toast" id="vtCharacterToast" aria-live="polite"></div>
 
 
   <main id="top">
     <section class="hero section-pad">
       <div class="hero-copy">
-        <div class="eyebrow sticker">SENIOR 2D ARTIST · CHARACTER DESIGN · CONCEPT ART</div>
-        <h1>
-          VAHRAM<br>
-          <span class="scribble">TUMANYAN</span>
-        </h1>
-        <p class="lead">2D Artist, Concept Artist and Spine Animator. Selected animation, game-art and private portfolio work.</p>
-        <div class="hero-actions">
-          <a class="pill primary" href="#work">VIEW PORTFOLIO ↓</a>
-          <a class="pill ghost" href="https://www.behance.net/vahramtumanyan?locale=ru_RU" target="_blank" rel="noreferrer">FULL BEHANCE ↗</a>
+        <div class="eyebrow sticker portfolio-label">PORTFOLIO</div>
+        <div class="hero-name-slot" id="heroNameSlot">
+          <h1 class="hero-name-morph" id="heroNameMorph">
+            <span class="hero-name-first">VAHRAM</span>
+            <span class="hero-name-last">TUMANYAN</span>
+          </h1>
         </div>
-        <div class="skill-strip" aria-label="skills">
-          <span>CHARACTERS</span><span>ENVIRONMENTS</span><span>ILLUSTRATION</span><span>SPINE 2D</span><span>GAME ART</span>
+        <div class="artist-role-badge" aria-label="Senior 2D Artist, Middle Animator, Spine">
+          <div class="role-brush" aria-hidden="true"></div>
+          <div class="role-text">
+            <strong>SENIOR 2D ARTIST</strong>
+            <span>MIDDLE ANIMATOR | SPINE</span>
+          </div>
         </div>
+  <div id="vtFrogStage" class="vt-frog-stage is-disabled" aria-hidden="true">
+    <iframe id="vtFrogFrame" src="frog_widget.html" title="Frog Spine demo" scrolling="no"></iframe>
+  </div>
+
+        <p class="lead hero-portfolio-copy">Explore my animation demos, artwork, character designs and selected projects I’ve worked on.</p>
       </div>
 
-      <div class="hero-art" aria-hidden="true">
-        <div class="blob blob-a"></div>
-        <div class="blob blob-b"></div>
-        <div class="hero-card rotate-a"><img src="https://mir-s3-cdn-cf.behance.net/projects/404/62f576218300215.Y3JvcCwxMTY5LDkxNCw2MywyMjI.png" alt=""></div>
-        <div class="hero-card rotate-b"><img src="https://mir-s3-cdn-cf.behance.net/projects/404/eaf5ab138330639.Y3JvcCwzODIxLDI5ODgsMzc4LDEzMg.jpg" alt=""></div>
-        <div class="burst">HEY!<br>LOOK HERE</div>
+      <div class="hero-showcase" id="heroShowcase" aria-label="Featured artwork showcase">
+        <div class="hero-sketch-bg" aria-hidden="true"></div>
+        <div class="hero-gold-stroke hero-gold-stroke-a" aria-hidden="true"></div>
+        <div class="hero-gold-stroke hero-gold-stroke-b" aria-hidden="true"></div>
+
+        <div class="hero-stack-label" id="heroStackLabel">
+          <span class="hero-stack-kicker">SELECTED WORK</span>
+          <strong id="heroStackTitle">CASINO GAME ART</strong>
+        </div>
+
+        <div class="hero-rotating-stack" id="heroRotatingStack">
+          <figure class="hero-rot-card card-back" data-slot="0">
+            <span class="hero-card-tape"></span>
+            <img id="heroImg0" src="assets/hero-sets/casino_01.png" alt="Casino Game Art">
+          </figure>
+          <figure class="hero-rot-card card-mid" data-slot="1">
+            <span class="hero-card-tape"></span>
+            <img id="heroImg1" src="assets/hero-sets/casino_02.png" alt="Casino Game Art">
+          </figure>
+          <figure class="hero-rot-card card-front" data-slot="2">
+            <span class="hero-card-tape"></span>
+            <img id="heroImg2" src="assets/hero-sets/casino_03.png" alt="Casino Game Art">
+          </figure>
+        </div>
+
+        <div class="hero-hand-note" id="heroHandNote">Casino Game Art</div>
       </div>
     </section>
 <section class="top-characters section-pad" id="animations">
@@ -434,11 +470,85 @@
       <div>CHARACTER DESIGN ✦ GAME ART ✦ CONCEPT ART ✦ ILLUSTRATION ✦ SPINE 2D ✦ CHARACTER DESIGN ✦ GAME ART ✦</div>
     </section>
 
-    <section id="contact" class="contact section-pad">
-      <p class="kicker">LET'S MAKE SOMETHING STRANGE & BEAUTIFUL</p>
-      <h2>Need a character<br>with a pulse?</h2>
-      <a class="pill primary giant" href="https://www.behance.net/vahramtumanyan?locale=ru_RU" target="_blank" rel="noreferrer">VIEW BEHANCE ↗</a>
-      <p class="micro">Portfolio concept prototype · built for GitHub Pages</p>
+    <section id="contact" class="contact section-pad contact-reference">
+      <div class="contact-brush contact-brush-a" aria-hidden="true"></div>
+      <div class="contact-brush contact-brush-b" aria-hidden="true"></div>
+
+      <div class="contact-inner">
+        <div class="contact-heading">
+          <h2><span>MY</span> <em>CONTACTS</em></h2>
+          <p>Portfolio, social links and direct contact details.</p>
+        </div>
+
+        <button class="contact-email-top contact-copy-trigger" type="button" data-copy="tumanyanvahram@gmail.com" data-copy-label="EMAIL">
+          <span class="contact-email-symbol">✉</span>
+          <span>
+            <small>EMAIL</small>
+            <strong class="selectable-contact-text">tumanyanvahram@gmail.com</strong>
+            <span class="inline-copy-state" aria-live="polite"></span>
+          </span>
+        </button>
+
+        <div class="contact-all-links" aria-label="Portfolio and social links">
+          <a class="contact-social" href="https://www.behance.net/vahramtumanyan" target="_blank" rel="noopener noreferrer" aria-label="Behance">
+            <img src="assets/contact-icons/user_behance_v4.png?v=4" alt="">
+            <span>BEHANCE</span>
+          </a>
+          <a class="contact-social" href="https://www.artstation.com/vahramtumanyan" target="_blank" rel="noopener noreferrer" aria-label="ArtStation">
+            <img src="assets/contact-icons/user_artstation_v4.png?v=4" alt="">
+            <span>ARTSTATION</span>
+          </a>
+          <a class="contact-social" href="https://www.instagram.com/vahram_tumanyan/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <img src="assets/contact-icons/user_instagram_v4.png?v=4" alt="">
+            <span>INSTAGRAM</span>
+          </a>
+          <a class="contact-social" href="https://www.youtube.com/@vahramtumanyan9471" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+            <img src="assets/contact-icons/user_youtube_v4.png?v=4" alt="">
+            <span>YOUTUBE</span>
+          </a>
+          <a class="contact-social" href="https://t.me/VAHRAMTUMANYAN" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+            <img src="assets/contact-icons/user_telegram_v4.png?v=4" alt="">
+            <span>TELEGRAM</span>
+          </a>
+          <a class="contact-social" href="https://www.linkedin.com/in/vahram-tumanyan-a5398b197/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <img src="assets/contact-icons/user_linkedin_v4.png?v=4" alt="">
+            <span>LINKEDIN</span>
+          </a>
+          <a class="contact-social" href="https://www.facebook.com/vahram.tumanyan.39/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <img src="assets/contact-icons/user_facebook_v4.png?v=4" alt="">
+            <span>FACEBOOK</span>
+          </a>
+          <a class="contact-social" href="https://x.com/VahramTumanyan" target="_blank" rel="noopener noreferrer" aria-label="X">
+            <img src="assets/contact-icons/user_x_v4.png?v=4" alt="">
+            <span>X / TWITTER</span>
+          </a>
+        </div>
+
+        <div class="contact-details">
+          <div class="contact-detail-row contact-phone-copy contact-copy-trigger" role="button" tabindex="0" data-copy="+374 94 82 82 57" data-copy-label="PHONE">
+            <div class="contact-detail-icon" aria-hidden="true">☎</div>
+            <div class="contact-detail-copy">
+              <small>Phone</small>
+              <strong class="selectable-contact-text">094 82 82 57</strong>
+              <span class="inline-copy-state" aria-live="polite"></span>
+            </div>
+          </div>
+
+          <div class="contact-detail-row">
+            <div class="contact-detail-icon" aria-hidden="true">●</div>
+            <div class="contact-detail-copy">
+              <small>Location</small>
+              <strong>Yerevan, Armenia</strong>
+            </div>
+          </div>
+        </div>
+<div class="contact-actions">
+          <a class="contact-cv-button" href="assets/cv/Vahram_Tumanyan_CV.pdf" download="Vahram_Tumanyan_CV.pdf">
+            <span class="contact-download-icon">↓</span>
+            <strong>DOWNLOAD CV (PDF)</strong>
+          </a>
+        </div>
+      </div>
     </section>
   </main>
 <script src="script.js"></script>

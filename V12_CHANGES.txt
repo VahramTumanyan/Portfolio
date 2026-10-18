@@ -1,0 +1,8 @@
+V12 — EXACT ANIMATION MAPPING
+
+- Slow flight sends the exact Spine animation name: flies
+- Fast flight sends the exact Spine animation name: flies_Run
+- Hover no longer changes animations, so it cannot accidentally switch to flies_Run.
+- After firing, the fly returns to the correct current movement animation.
+- The latest requested movement animation is remembered even if Spine is still loading.
+- Everything else remains as in V11.

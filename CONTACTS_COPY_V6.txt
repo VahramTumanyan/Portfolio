@@ -1,0 +1,9 @@
+CONTACTS COPY V6
+
+Changes only in CONTACT:
+- Contact composition moved slightly further left.
+- Clicking email copies tumanyanvahram@gmail.com.
+- Clicking phone copies +374 94 82 82 57.
+- Small COPY hint and copied feedback added.
+- Behance, ArtStation, Instagram, YouTube, Telegram, LinkedIn, Facebook and X still open their links normally.
+- Fly auto-hide behavior from V5 remains unchanged.

@@ -1,0 +1,16 @@
+HOW TO REPLACE YOUR CV LATER
+
+1. Open this folder:
+   assets/cv/
+
+2. Delete or overwrite:
+   Vahram_Tumanyan_CV.pdf
+
+3. Put your new PDF in this same folder.
+
+4. IMPORTANT:
+   Keep the exact filename:
+   Vahram_Tumanyan_CV.pdf
+
+You do NOT need to edit index.html, CSS, or JavaScript.
+The DOWNLOAD CV button will automatically download the new PDF.
