@@ -1,0 +1,23 @@
+V54 — BASED ON V53
+
+Added one new PRIVATE ARCHIVE project card.
+
+NEW PROJECT FOLDER
+assets/private/project-08/
+
+CARD COVER
+assets/private/project-08/cover/banner.jpg
+Exact placeholder size: 794 × 450 px
+Replace this file later with your real banner using the same filename.
+
+VIEWER
+assets/private/project-08/01.jpg is a placeholder.
+The viewer is already prepared for 01.jpg through 20.jpg.
+Missing numbers are ignored automatically.
+
+VISIBLE TEMPORARY CARD DATA
+Category: GAME ART
+Title: New Project
+These can be renamed when the real project files/details are provided.
+
+Everything else remains V53.

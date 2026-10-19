@@ -1,0 +1,29 @@
+V53 — MOBILE ADAPTATION, BASED ON V52
+
+SAFE BASE
+- V52 remains the untouched pre-mobile version.
+- Desktop rules are preserved; V53 mobile changes apply only at <= 760px.
+
+MOBILE CHANGES
+- full-width phone layout; prevents the narrow left-column / empty-right-space problem
+- compact sticky header with horizontally swipeable navigation
+- ART / PRIVATE ARCHIVE / SPEED PAINT / ABOUT / CONTACT remain accessible
+- active hand-drawn navigation ring remains green
+- HERO becomes vertical: text/name first, artwork stack below
+- HERO name no longer docks into the compact phone header; it scrolls naturally with HERO
+- animation carousel is phone-sized with compact green arrows + finger swipe
+- ART carousel is phone-sized with compact green arrows + finger swipe
+- PRIVATE ARCHIVE cards become one-column phone cards
+- PRIVATE viewer controls fit the phone while preserving V50 6x zoom + fixed pan behavior
+- Speed Paint remains a 3-row horizontal finger-swipable strip
+- ABOUT stacks into a single-column CV layout
+- CONTACT becomes full-width with responsive social grid
+- character rail and back-to-top button are reduced/repositioned for phone screens
+- desktop/tablet design above 760px is unchanged
+
+PRESERVED
+- V50 zoom/pan navigation logic
+- Fly layering below PRIVATE viewer
+- V52 ART navigation label
+- Selected art. heading
+- optimized assets

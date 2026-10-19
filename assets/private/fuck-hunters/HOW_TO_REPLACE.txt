@@ -1,0 +1,17 @@
+FUCK-HUNTERS — CURRENT FILE STRUCTURE
+
+CARD BANNER — SEPARATE
+assets/private/fuck-hunters/banner.jpg
+
+This changes ONLY the PRIVATE ARCHIVE card cover.
+
+VIEWER IMAGES — CURRENT REAL PROJECT IMAGES
+assets/private/fuck-hunters/01.jpg
+assets/private/fuck-hunters/02.jpg
+assets/private/fuck-hunters/03.jpg
+assets/private/fuck-hunters/04.jpg
+assets/private/fuck-hunters/05.jpg
+
+These five files are the images shown inside the viewer.
+
+The old generic "New Project" / project-08 placeholder project has been removed.

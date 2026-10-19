@@ -164,6 +164,17 @@ const privateProjects = {
       'assets/private/gta-armenya/05.jpg',
       'assets/private/gta-armenya/06.jpg'
     ]
+  },
+  'fuck-hunters': {
+    title: 'fuck-hunters',
+    subtitle: 'Game Art',
+    images: [
+      'assets/private/fuck-hunters/01.jpg',
+      'assets/private/fuck-hunters/02.jpg',
+      'assets/private/fuck-hunters/03.jpg',
+      'assets/private/fuck-hunters/04.jpg',
+      'assets/private/fuck-hunters/05.jpg'
+    ]
   }
 };
 
@@ -187,10 +198,12 @@ let privateDragStartX = 0;
 let privateDragStartY = 0;
 let privatePanStartX = 0;
 let privatePanStartY = 0;
+let privateMouseDidDrag = false;
+let privateSuppressClickUntil = 0;
 
 const PRIVATE_ZOOM_MIN = 1;
-const PRIVATE_ZOOM_MAX = 2.6;
-const PRIVATE_ZOOM_STEP = 0.14;
+const PRIVATE_ZOOM_MAX = 6;
+const PRIVATE_ZOOM_STEP = 0.22;
 
 function clampPrivatePan(){
   if(privateZoom <= 1){
@@ -278,6 +291,7 @@ async function openPrivateViewer(projectKey){
   renderPrivateViewer();
   privateViewer.classList.add('open');
   privateViewer.setAttribute('aria-hidden','false');
+  document.body.classList.add('private-viewer-open');
   document.body.style.overflow = 'hidden';
 }
 
@@ -285,6 +299,7 @@ function closePrivateViewer(){
   resetPrivateZoom();
   privateViewer.classList.remove('open');
   privateViewer.setAttribute('aria-hidden','true');
+  document.body.classList.remove('private-viewer-open');
   document.body.style.overflow = '';
 }
 
@@ -323,6 +338,7 @@ privateViewerImageWrap?.addEventListener('mousedown', e=>{
   if(privateZoom <= 1.001 || e.button !== 0) return;
   e.preventDefault();
   privateDragging = true;
+  privateMouseDidDrag = false;
   privateDragStartX = e.clientX;
   privateDragStartY = e.clientY;
   privatePanStartX = privatePanX;
@@ -332,12 +348,24 @@ privateViewerImageWrap?.addEventListener('mousedown', e=>{
 
 window.addEventListener('mousemove', e=>{
   if(!privateDragging) return;
-  privatePanX = privatePanStartX + (e.clientX - privateDragStartX);
-  privatePanY = privatePanStartY + (e.clientY - privateDragStartY);
+
+  const dx = e.clientX - privateDragStartX;
+  const dy = e.clientY - privateDragStartY;
+
+  if(Math.hypot(dx,dy) > 4) privateMouseDidDrag = true;
+
+  privatePanX = privatePanStartX + dx;
+  privatePanY = privatePanStartY + dy;
   applyPrivateZoom();
 });
 
 window.addEventListener('mouseup', ()=>{
+  if(privateDragging && privateMouseDidDrag){
+    // Browser fires a click after mouseup; block that click so the
+    // image stays exactly where the user dragged it.
+    privateSuppressClickUntil = performance.now() + 320;
+  }
+
   privateDragging = false;
   privateViewerImageWrap?.classList.remove('is-dragging');
 });
@@ -351,25 +379,30 @@ privateViewerImageWrap?.addEventListener('dblclick', e=>{
 
 
 
-// Single click / tap: quick zoom toggle, matching the simple viewer interaction.
+// Single click: quick zoom toggle.
+// A click generated after dragging is ignored so the panned position stays fixed.
 privateViewerImageWrap?.addEventListener('click', e=>{
   if(!privateViewer?.classList.contains('open')) return;
+  if(performance.now() < privateSuppressClickUntil) return;
+  if(privateDragging || privateMouseDidDrag) return;
 
-  // Ignore click after a drag.
-  if(privateDragging) return;
-
-  // Mouse click toggles zoom.
-  if(e.pointerType === 'touch') return;
   if(privateZoom > 1.001) resetPrivateZoom();
-  else setPrivateZoom(1.65);
+  else setPrivateZoom(2.15);
 });
 
-// Single tap toggles zoom on touch devices.
+// Touch gesture state: distinguish tap, pan and pinch.
 let privateTapStartX = 0;
 let privateTapStartY = 0;
 let privateTapMoved = false;
+let privateTouchWasPinch = false;
 
 privateViewerImageWrap?.addEventListener('touchstart', e=>{
+  if(e.touches.length === 2){
+    privateTouchWasPinch = true;
+    privateTapMoved = true;
+    return;
+  }
+
   if(e.touches.length === 1){
     privateTapStartX = e.touches[0].clientX;
     privateTapStartY = e.touches[0].clientY;
@@ -378,17 +411,36 @@ privateViewerImageWrap?.addEventListener('touchstart', e=>{
 }, { passive:true });
 
 privateViewerImageWrap?.addEventListener('touchmove', e=>{
+  if(e.touches.length === 2){
+    privateTouchWasPinch = true;
+    privateTapMoved = true;
+    return;
+  }
+
   if(e.touches.length === 1){
     const dx = e.touches[0].clientX - privateTapStartX;
     const dy = e.touches[0].clientY - privateTapStartY;
-    if(Math.hypot(dx,dy) > 10) privateTapMoved = true;
+    if(Math.hypot(dx,dy) > 8) privateTapMoved = true;
   }
 }, { passive:true });
 
 privateViewerImageWrap?.addEventListener('touchend', e=>{
-  if(privateTapMoved) return;
+  // Do not toggle zoom after pinch or pan.
+  if(privateTouchWasPinch){
+    if(e.touches.length === 0) privateTouchWasPinch = false;
+    privateSuppressClickUntil = performance.now() + 450;
+    return;
+  }
+
+  if(privateTapMoved){
+    privateSuppressClickUntil = performance.now() + 450;
+    return;
+  }
+
+  // Genuine single tap only.
+  privateSuppressClickUntil = performance.now() + 450;
   if(privateZoom > 1.001) resetPrivateZoom();
-  else setPrivateZoom(1.65);
+  else setPrivateZoom(2.15);
 });
 
 // Touch: pinch to zoom and one-finger pan while zoomed.
@@ -434,9 +486,15 @@ privateViewerImageWrap?.addEventListener('touchmove', e=>{
   }
 }, { passive:false });
 
-privateViewerImageWrap?.addEventListener('touchend', ()=>{
-  privateTouchStartDistance = 0;
-  privateViewerImageWrap?.classList.remove('is-dragging');
+privateViewerImageWrap?.addEventListener('touchend', e=>{
+  if(e.touches.length < 2) privateTouchStartDistance = 0;
+
+  // Important: do NOT reset privatePanX/privatePanY here.
+  // The image remains exactly where the user left it.
+  if(e.touches.length === 0){
+    privateViewerImageWrap?.classList.remove('is-dragging');
+    privateSuppressClickUntil = performance.now() + 450;
+  }
 });
 
 window.addEventListener('keydown',e=>{
@@ -1263,6 +1321,7 @@ window.addEventListener('keydown',e=>{
   let home = null;
   let target = null;
   let naturalWidth = 1;
+  let homeScale = 1;
   let ticking = false;
 
   function clamp(v, min, max) {
@@ -1304,6 +1363,17 @@ window.addEventListener('keydown',e=>{
     name.style.top = `${home.y}px`;
     naturalWidth = name.getBoundingClientRect().width || 1;
 
+    /*
+      Responsive fit:
+      on a narrower desktop the detached fixed name must stay inside
+      the left HERO text column and must never cover the artwork.
+      On wide desktop we preserve the original full-size look.
+    */
+    const safeHomeWidth = Math.max(260, slotRect.width - 8);
+    homeScale = window.innerWidth < 1450
+      ? clamp(safeHomeWidth / naturalWidth, 0.44, 1)
+      : 1;
+
     name.style.transform = oldTransform;
     name.style.left = oldLeft;
     name.style.top = oldTop;
@@ -1313,6 +1383,26 @@ window.addEventListener('keydown',e=>{
 
   function render() {
     if (!home || !target) return;
+
+    /*
+      V53 MOBILE:
+      Keep the real name visually inside the HERO on phones.
+      It scrolls with the page instead of docking into the compact header.
+      Desktop/tablet keeps the original morph animation.
+    */
+    if (window.innerWidth <= 760) {
+      const mobileY = home.y - window.scrollY;
+      const mobileHidden = mobileY < -120;
+
+      name.style.left = `${home.x}px`;
+      name.style.top = `${mobileY}px`;
+      name.style.transformOrigin = 'top left';
+      name.style.transform = `scale(${homeScale})`;
+      name.style.opacity = mobileHidden ? '0' : '1';
+      name.style.visibility = mobileHidden ? 'hidden' : 'visible';
+      name.style.zIndex = '2147482500';
+      return;
+    }
 
     const heroRect = hero.getBoundingClientRect();
 
@@ -1326,7 +1416,7 @@ window.addEventListener('keydown',e=>{
 
     const desiredFinalWidth = clamp(window.innerWidth * 0.125, 155, 205);
     const finalScale = clamp(desiredFinalWidth / naturalWidth, 0.15, 0.30);
-    const scale = 1 + (finalScale - 1) * eased;
+    const scale = homeScale + (finalScale - homeScale) * eased;
 
     // At the very top, return to the exact original hero position.
     const x = home.x + (target.x - home.x) * eased;

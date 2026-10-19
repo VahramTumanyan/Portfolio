@@ -28,7 +28,7 @@ try {
     $listener.Start()
 }
 
-Start-Process "$prefix`index.html?v=v48-optimized"
+Start-Process "$prefix`index.html?v=v58-all-private-banners"
 
 Write-Host ""
 Write-Host "VAHRAM PORTFOLIO LOCAL PREVIEW"
