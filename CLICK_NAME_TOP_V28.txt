@@ -1,0 +1,8 @@
+V28 — CLICK HEADER NAME / AVATAR TO TOP
+
+- Avatar keeps its existing link to #top.
+- The SAME moving VAHRAM TUMANYAN name is now clickable.
+- Clicking the name smoothly scrolls to the very top.
+- Enter / Space also works when the name is focused.
+- Existing white up-arrow remains available as the second method.
+- V27 classified cards and all character animations are unchanged.

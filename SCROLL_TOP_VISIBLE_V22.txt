@@ -1,0 +1,9 @@
+V22 — ALWAYS-VISIBLE BACK TO TOP
+
+Changes from V21:
+- back-to-top button is now always visible
+- fixed at bottom-right
+- maximum z-index so it cannot hide behind other site elements
+- arrow is drawn with CSS, not a text symbol/font
+- click smoothly scrolls to the top
+- all other site behavior remains unchanged

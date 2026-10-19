@@ -1,0 +1,16 @@
+V27 — PRIVATE ARCHIVE CLASSIFIED DOSSIER DESIGN
+
+Changed ONLY the Private Archive card presentation:
+- TOP SECRET / CLASSIFIED / RESTRICTED ACCESS stamps
+- red clearance labels (EYES ONLY / CONFIDENTIAL / TOP SECRET)
+- old-file/tape corner treatment
+- paperclip detail
+- fingerprint-like CSS mark
+- faux VT intelligence seal
+- file / project IDs
+- darker dossier-style border and lower information strip
+
+All effects are drawn with HTML/CSS. No extra image assets are required.
+Existing card click/viewer behavior is unchanged.
+V26 arrow fix and V25 name-return fix are preserved.
+FLY, FROG, CROC, viewer data and other site sections are untouched.

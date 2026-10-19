@@ -1128,8 +1128,26 @@ window.addEventListener('keydown',e=>{
     busy = false;
   }
 
-  // Keep the first set visible briefly, then rotate quickly through all sets.
+  // Keep the first set visible briefly, then rotate automatically.
   setInterval(swapSet,HOLD_MS);
+
+  // Manual full-set advance: one click = one complete next set.
+  const showcase = document.getElementById('heroShowcase');
+  if(showcase){
+    const manualNext = () => swapSet();
+
+    showcase.addEventListener('click', (e) => {
+      if(e.target.closest('a,button')) return;
+      manualNext();
+    });
+
+    showcase.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        manualNext();
+      }
+    });
+  }
 })();
 
 
@@ -1202,9 +1220,9 @@ window.addEventListener('keydown',e=>{
 
 
 // =========================================================
-// TRUE HERO NAME MORPH — V11 HARD FIX
-// The SAME element is physically moved out of the HERO into <body>
-// so no HERO stacking/containing block can keep it down.
+// TRUE HERO NAME MORPH — V25 RETURN-TO-HERO FIX
+// SAME name element. It docks beside the avatar on scroll down
+// and returns exactly to its original HERO slot on scroll up.
 // =========================================================
 (() => {
   const name = document.getElementById('heroNameMorph');
@@ -1214,7 +1232,7 @@ window.addEventListener('keydown',e=>{
 
   if (!name || !slot || !avatar || !hero) return;
 
-  let start = null;
+  let home = null;
   let target = null;
   let naturalWidth = 1;
   let ticking = false;
@@ -1223,43 +1241,57 @@ window.addEventListener('keydown',e=>{
     return Math.max(min, Math.min(max, v));
   }
 
-  // IMPORTANT:
-  // Detach the SAME name element from the hero.
-  // It becomes a true viewport overlay, so it can sit above the sticky header.
+  // Keep using the SAME element as the fixed overlay.
   document.body.appendChild(name);
 
   function measure() {
     const slotRect = slot.getBoundingClientRect();
     const avatarRect = avatar.getBoundingClientRect();
 
-    start = {
-      x: slotRect.left,
-      y: slotRect.top
+    /*
+      Critical fix:
+      getBoundingClientRect() is viewport-relative.
+      If the browser restores the page at a scrolled position, or a resize occurs
+      while scrolled, using slotRect.top directly corrupts the "home" position.
+
+      Convert it to the canonical position the slot would have at scrollY = 0.
+    */
+    home = {
+      x: slotRect.left + window.scrollX,
+      y: slotRect.top + window.scrollY
     };
 
-    // Final position: absolute top, immediately beside avatar.
     target = {
       x: avatarRect.right + 10,
       y: Math.max(4, avatarRect.top + 1)
     };
 
+    // Measure the unscaled name without leaving stale transforms behind.
+    const oldTransform = name.style.transform;
+    const oldLeft = name.style.left;
+    const oldTop = name.style.top;
+
     name.style.transform = 'scale(1)';
+    name.style.left = `${home.x}px`;
+    name.style.top = `${home.y}px`;
     naturalWidth = name.getBoundingClientRect().width || 1;
+
+    name.style.transform = oldTransform;
+    name.style.left = oldLeft;
+    name.style.top = oldTop;
 
     render();
   }
 
   function render() {
-    if (!start || !target) return;
+    if (!home || !target) return;
 
     const heroRect = hero.getBoundingClientRect();
 
-    // Complete the movement by the time the visitor reaches section 2.
     const totalTravel = Math.max(260, hero.offsetHeight * 0.68);
     const scrolledThroughHero = Math.max(0, -heroRect.top + 40);
     const p = clamp(scrolledThroughHero / totalTravel, 0, 1);
 
-    // Smooth Photoshop-like transform.
     const eased = p < 0.5
       ? 4 * p * p * p
       : 1 - Math.pow(-2 * p + 2, 3) / 2;
@@ -1268,11 +1300,13 @@ window.addEventListener('keydown',e=>{
     const finalScale = clamp(desiredFinalWidth / naturalWidth, 0.15, 0.30);
     const scale = 1 + (finalScale - 1) * eased;
 
-    const x = start.x + (target.x - start.x) * eased;
-    const y = start.y + (target.y - start.y) * eased;
+    // At the very top, return to the exact original hero position.
+    const x = home.x + (target.x - home.x) * eased;
+    const y = home.y + (target.y - home.y) * eased;
 
     name.style.left = `${x}px`;
     name.style.top = `${y}px`;
+    name.style.transformOrigin = 'top left';
     name.style.transform = `scale(${scale})`;
     name.style.opacity = '1';
     name.style.visibility = 'visible';
@@ -1289,9 +1323,17 @@ window.addEventListener('keydown',e=>{
   }
 
   window.addEventListener('scroll', queueRender, { passive: true });
-  window.addEventListener('resize', measure);
-  window.addEventListener('load', measure);
 
+  // Re-measure safely on resize at any scroll position.
+  window.addEventListener('resize', () => {
+    requestAnimationFrame(measure);
+  });
+
+  window.addEventListener('load', () => {
+    requestAnimationFrame(() => requestAnimationFrame(measure));
+  });
+
+  // Initial measure.
   requestAnimationFrame(() => requestAnimationFrame(measure));
 })();
 
@@ -1525,4 +1567,208 @@ window.addEventListener('keydown',e=>{
       schedule();
     }
   }, 250);
+})();
+
+
+
+/* =========================================================
+   V23 — BACK TO TOP (robust DOM-ready binding)
+   ========================================================= */
+(() => {
+  function initScrollTop() {
+    const button = document.getElementById('vtScrollTop');
+    if (!button || button.dataset.bound === '1') return;
+
+    button.dataset.bound = '1';
+
+    button.addEventListener('click', () => {
+      const root = document.scrollingElement || document.documentElement;
+
+      try {
+        root.scrollTo({ top:0, left:0, behavior:'smooth' });
+      } catch (_) {
+        root.scrollTop = 0;
+        document.body.scrollTop = 0;
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScrollTop, { once:true });
+  } else {
+    initScrollTop();
+  }
+})();
+
+
+/* =========================================================
+   V28 — HEADER NAME BACK TO TOP
+   Avatar already links to #top; this adds the same action to
+   the moving VAHRAM TUMANYAN name.
+   ========================================================= */
+(() => {
+  function goTop() {
+    const root = document.scrollingElement || document.documentElement;
+    try {
+      root.scrollTo({ top:0, left:0, behavior:'smooth' });
+    } catch (_) {
+      root.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
+  }
+
+  function init() {
+    const name = document.getElementById('heroNameMorph');
+    if (!name || name.dataset.topBound === '1') return;
+
+    name.dataset.topBound = '1';
+    name.addEventListener('click', goTop);
+
+    name.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        goTop();
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once:true });
+  } else {
+    init();
+  }
+})();
+
+
+/* =========================================================
+   V30 — RELIABLE CLICK ON MOVING NAME -> TOP
+   ========================================================= */
+(() => {
+  function goTop(){
+    const root = document.scrollingElement || document.documentElement;
+    try{
+      root.scrollTo({top:0,left:0,behavior:'smooth'});
+    }catch(_){
+      root.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
+  }
+
+  function bind(){
+    const name = document.getElementById('heroNameMorph');
+    if(!name || name.dataset.v30TopBound === '1') return;
+
+    name.dataset.v30TopBound = '1';
+    name.style.pointerEvents = 'auto';
+    name.style.cursor = 'pointer';
+
+    name.addEventListener('click', goTop);
+    name.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        goTop();
+      }
+    });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', bind, {once:true});
+  }else{
+    bind();
+  }
+})();
+
+
+/* =========================================================
+   V37 — ABOUT BADGE INERTIAL SWING ON SCROLL
+   The badge reacts briefly to scroll momentum and settles.
+   ========================================================= */
+(() => {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const badge = document.querySelector('#about .about-v34-badge');
+  const about = document.getElementById('about');
+  if (!badge || !about) return;
+
+  let lastY = window.scrollY || 0;
+  let angle = 0;
+  let angleV = 0;
+  let lift = 0;
+  let liftV = 0;
+  let raf = 0;
+  let lastT = performance.now();
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+
+  function visibleEnough(){
+    const r = about.getBoundingClientRect();
+    return r.bottom > -120 && r.top < window.innerHeight + 120;
+  }
+
+  function render(){
+    const now = performance.now();
+    const dt = clamp((now - lastT) / 16.67, 0.5, 2.0);
+    lastT = now;
+
+    // Small spring + damping, so the badge naturally returns to rest.
+    angleV += (-angle * 0.075) * dt;
+    angleV *= Math.pow(0.84, dt);
+    angle += angleV * dt;
+
+    liftV += (-lift * 0.11) * dt;
+    liftV *= Math.pow(0.78, dt);
+    lift += liftV * dt;
+
+    angle = clamp(angle, -2.35, 2.35);
+    lift = clamp(lift, -3.0, 3.0);
+
+    badge.style.setProperty('--badge-swing', `${angle.toFixed(3)}deg`);
+    badge.style.setProperty('--badge-lift', `${lift.toFixed(3)}px`);
+
+    const stillMoving =
+      Math.abs(angle) > 0.015 ||
+      Math.abs(angleV) > 0.015 ||
+      Math.abs(lift) > 0.03 ||
+      Math.abs(liftV) > 0.03;
+
+    if (stillMoving) {
+      raf = requestAnimationFrame(render);
+    } else {
+      angle = angleV = lift = liftV = 0;
+      badge.style.setProperty('--badge-swing', '0deg');
+      badge.style.setProperty('--badge-lift', '0px');
+      raf = 0;
+    }
+  }
+
+  function wake(){
+    if (!raf) {
+      lastT = performance.now();
+      raf = requestAnimationFrame(render);
+    }
+  }
+
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY || 0;
+    const delta = clamp(y - lastY, -90, 90);
+    lastY = y;
+
+    if (!visibleEnough()) return;
+
+    // Very small impulse: enough to feel suspended, never distracting.
+    angleV += delta * 0.0042;
+    liftV += delta * 0.012;
+
+    angleV = clamp(angleV, -0.62, 0.62);
+    liftV = clamp(liftV, -1.25, 1.25);
+
+    wake();
+  }, { passive:true });
+
+  // Settle cleanly after resize / browser restoration.
+  window.addEventListener('resize', () => {
+    angle = angleV = lift = liftV = 0;
+    badge.style.setProperty('--badge-swing', '0deg');
+    badge.style.setProperty('--badge-lift', '0px');
+  });
 })();
