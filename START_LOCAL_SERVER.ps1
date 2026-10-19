@@ -28,7 +28,7 @@ try {
     $listener.Start()
 }
 
-Start-Process "$prefix`index.html?v=badge-inertia-v37"
+Start-Process "$prefix`index.html?v=v42-scroll-arrows-headings"
 
 Write-Host ""
 Write-Host "VAHRAM PORTFOLIO LOCAL PREVIEW"

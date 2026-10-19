@@ -27,13 +27,6 @@ if(workCarousel && workPrev && workNext){
   workPrev.addEventListener('click',()=>workCarousel.scrollBy({left:-pageStep(),behavior:'smooth'}));
   workNext.addEventListener('click',()=>workCarousel.scrollBy({left:pageStep(),behavior:'smooth'}));
 
-  workCarousel.addEventListener('wheel',(e)=>{
-    if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){
-      e.preventDefault();
-      workCarousel.scrollBy({left:e.deltaY * 1.2,behavior:'auto'});
-    }
-  },{passive:false});
-
   workCarousel.addEventListener('keydown',(e)=>{
     if(e.key==='ArrowRight'){e.preventDefault();workCarousel.scrollBy({left:pageStep()/2,behavior:'smooth'})}
     if(e.key==='ArrowLeft'){e.preventDefault();workCarousel.scrollBy({left:-pageStep()/2,behavior:'smooth'})}
@@ -61,13 +54,6 @@ if(topCharactersScroll && topCharactersPrev && topCharactersNext){
 
   topCharactersPrev.addEventListener('click',()=>topCharactersScroll.scrollBy({left:-topStep(),behavior:'smooth'}));
   topCharactersNext.addEventListener('click',()=>topCharactersScroll.scrollBy({left:topStep(),behavior:'smooth'}));
-
-  topCharactersScroll.addEventListener('wheel',(e)=>{
-    if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){
-      e.preventDefault();
-      topCharactersScroll.scrollBy({left:e.deltaY * 1.15,behavior:'auto'});
-    }
-  },{passive:false});
 
   topCharactersScroll.addEventListener('keydown',(e)=>{
     if(e.key==='ArrowRight'){e.preventDefault();topCharactersScroll.scrollBy({left:topStep()/2,behavior:'smooth'})}

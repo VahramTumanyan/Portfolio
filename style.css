@@ -5863,3 +5863,212 @@ h1{
     --badge-lift:0px !important;
   }
 }
+
+
+/* =========================================================
+   V42 — REQUESTED CAROUSEL + HEADING CHANGES ONLY
+   Base: V39
+   ========================================================= */
+
+/* ---------- Heading style like MY CONTACTS ---------- */
+#animations .vt-accent-heading,
+#work .vt-accent-heading{
+  display:inline-block !important;
+  position:relative !important;
+  z-index:1 !important;
+}
+
+#animations .vt-accent-heading span,
+#work .vt-accent-heading span{
+  color:#f2f3ef !important;
+  font-style:normal !important;
+}
+
+#animations .vt-accent-heading em,
+#work .vt-accent-heading em{
+  position:relative !important;
+  display:inline-block !important;
+  color:#b8ff00 !important;
+  font-style:italic !important;
+  font-weight:900 !important;
+  z-index:1 !important;
+}
+
+#animations .vt-accent-heading em::after,
+#work .vt-accent-heading em::after{
+  content:"" !important;
+  position:absolute !important;
+  left:-2% !important;
+  right:-4% !important;
+  bottom:-.06em !important;
+  height:.11em !important;
+  background:#b8ff00 !important;
+  border-radius:999px !important;
+  transform:skewX(-18deg) rotate(-1deg) !important;
+  opacity:.95 !important;
+  z-index:-1 !important;
+}
+
+/* Small labels/descriptions: a bit bigger and bolder */
+#animations .top-characters-head .kicker,
+#work .section-heading .kicker{
+  font-size:14px !important;
+  font-weight:900 !important;
+  letter-spacing:.17em !important;
+}
+
+#animations .top-characters-head > p:last-child{
+  font-size:16px !important;
+  font-weight:650 !important;
+  line-height:1.48 !important;
+  color:#aeb8c2 !important;
+}
+
+#work .section-heading > p:last-child{
+  font-size:15px !important;
+  font-weight:650 !important;
+  line-height:1.48 !important;
+  color:#aeb8c2 !important;
+}
+
+/* ---------- Private heading centered + red ---------- */
+#private-portfolio .private-head{
+  grid-template-columns:1fr !important;
+  text-align:center !important;
+  justify-items:center !important;
+}
+
+#private-portfolio .private-head > div{
+  width:100% !important;
+}
+
+#private-portfolio .private-head > p{
+  max-width:720px !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+
+#private-portfolio .vt-private-heading{
+  color:#ff3438 !important;
+  text-align:center !important;
+  width:100% !important;
+  text-shadow:0 0 18px rgba(255,52,56,.12) !important;
+}
+
+/* ---------- Mouse wheel no longer controls horizontal movement ----------
+   Touch/finger swipe, arrows and scrollbar remain native/active. */
+#animations .top-characters-scroll,
+#work .work-carousel{
+  scrollbar-width:auto !important;
+  scrollbar-color:#b8ff00 #151a20 !important;
+  overscroll-behavior-x:contain !important;
+  touch-action:pan-x pan-y !important;
+}
+
+/* Thicker green horizontal scrollbar */
+#animations .top-characters-scroll::-webkit-scrollbar,
+#work .work-carousel::-webkit-scrollbar{
+  height:18px !important;
+}
+
+#animations .top-characters-scroll::-webkit-scrollbar-track,
+#work .work-carousel::-webkit-scrollbar-track{
+  background:#151a20 !important;
+  border:1px solid rgba(184,255,0,.18) !important;
+  border-radius:999px !important;
+}
+
+#animations .top-characters-scroll::-webkit-scrollbar-thumb,
+#work .work-carousel::-webkit-scrollbar-thumb{
+  background:#b8ff00 !important;
+  border:4px solid #151a20 !important;
+  border-radius:999px !important;
+  min-width:60px !important;
+}
+
+#animations .top-characters-scroll::-webkit-scrollbar-thumb:hover,
+#work .work-carousel::-webkit-scrollbar-thumb:hover{
+  background:#d0ff42 !important;
+}
+
+/* ---------- Green textured arrow buttons, code-drawn ---------- */
+#animations .top-characters-arrow,
+#work .work-arrow{
+  position:relative !important;
+  overflow:hidden !important;
+  color:transparent !important;
+  font-size:0 !important;
+  background:
+    linear-gradient(145deg,rgba(184,255,0,.12),rgba(184,255,0,.025)),
+    repeating-linear-gradient(135deg,rgba(184,255,0,.08) 0 2px,transparent 2px 6px),
+    #12181d !important;
+  border:1px solid rgba(184,255,0,.42) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(184,255,0,.06),
+    0 8px 20px rgba(0,0,0,.28),
+    0 0 16px rgba(184,255,0,.05) !important;
+}
+
+#animations .top-characters-arrow::before,
+#work .work-arrow::before{
+  content:"" !important;
+  position:absolute !important;
+  top:50% !important;
+  left:50% !important;
+  width:0 !important;
+  height:0 !important;
+  transform:translate(-50%,-50%) !important;
+  filter:drop-shadow(0 0 5px rgba(184,255,0,.22)) !important;
+}
+
+#animations .top-characters-arrow-left::before,
+#work .work-arrow-left::before{
+  border-top:10px solid transparent !important;
+  border-bottom:10px solid transparent !important;
+  border-right:16px solid #b8ff00 !important;
+  margin-left:-2px !important;
+}
+
+#animations .top-characters-arrow-right::before,
+#work .work-arrow-right::before{
+  border-top:10px solid transparent !important;
+  border-bottom:10px solid transparent !important;
+  border-left:16px solid #b8ff00 !important;
+  margin-left:2px !important;
+}
+
+/* small rough highlight to make the triangle feel textured */
+#animations .top-characters-arrow::after,
+#work .work-arrow::after{
+  content:"" !important;
+  position:absolute !important;
+  inset:7px !important;
+  border-radius:10px !important;
+  pointer-events:none !important;
+  background:
+    radial-gradient(circle at 25% 25%,rgba(184,255,0,.18) 0 1px,transparent 2px),
+    radial-gradient(circle at 72% 68%,rgba(184,255,0,.12) 0 1px,transparent 2px) !important;
+  opacity:.8 !important;
+}
+
+#animations .top-characters-arrow:hover,
+#work .work-arrow:hover{
+  border-color:rgba(184,255,0,.78) !important;
+  background:
+    linear-gradient(145deg,rgba(184,255,0,.20),rgba(184,255,0,.05)),
+    repeating-linear-gradient(135deg,rgba(184,255,0,.11) 0 2px,transparent 2px 6px),
+    #141b20 !important;
+  transform:translateY(-1px) !important;
+}
+
+@media(max-width:900px){
+  #animations .top-characters-head .kicker,
+  #work .section-heading .kicker{
+    font-size:13px !important;
+  }
+
+  #animations .top-characters-head > p:last-child,
+  #work .section-heading > p:last-child{
+    font-size:14px !important;
+  }
+}
