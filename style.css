@@ -4623,7 +4623,7 @@ h1{
    V31 — ABOUT / ARTIST BADGE
    Only ABOUT section redesigned.
    Replace ONE file to change the badge image:
-   assets/about/about-badge.jpg
+   assets/about/about-badge.webp
    ========================================================= */
 
 .about-v31{
@@ -6071,4 +6071,727 @@ h1{
   #work .section-heading > p:last-child{
     font-size:14px !important;
   }
+}
+
+/* V43 HEADER / HERO */
+.topbar{
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  background:rgba(8,11,15,.98) !important;
+}
+.hero .portfolio-label{
+  color:#b8ff00 !important;
+  text-shadow:0 0 16px rgba(184,255,0,.10) !important;
+}
+#heroNameMorph .hero-name-first{color:#f3f3ef !important;}
+#heroNameMorph .hero-name-last{color:#aeb4b9 !important;}
+
+/* V43 SPEED PAINT */
+.speed-paint{
+  background:#0f1318 !important;
+  border-top:1px solid rgba(255,255,255,.07);
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.speed-paint-head{
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:36px;
+  align-items:end;
+  margin-bottom:28px;
+}
+.speed-paint-head .kicker{
+  color:#9aa5af !important;
+  font-size:14px !important;
+  font-weight:900 !important;
+  letter-spacing:.17em !important;
+}
+.speed-paint-head h2{
+  font-size:clamp(48px,6vw,84px);
+  margin-top:4px;
+}
+.speed-paint-head>p{
+  margin:0;
+  max-width:560px;
+  color:#aeb8c2;
+  font-size:15px;
+  font-weight:650;
+  line-height:1.48;
+}
+.speed-paint .vt-accent-heading{display:inline-block;position:relative;z-index:1;}
+.speed-paint .vt-accent-heading span{color:#f2f3ef;}
+.speed-paint .vt-accent-heading em{
+  position:relative;
+  display:inline-block;
+  color:#b8ff00;
+  font-style:italic;
+  font-weight:900;
+  z-index:1;
+}
+.speed-paint .vt-accent-heading em::after{
+  content:"";
+  position:absolute;
+  left:-2%;
+  right:-4%;
+  bottom:-.06em;
+  height:.11em;
+  background:#b8ff00;
+  border-radius:999px;
+  transform:skewX(-18deg) rotate(-1deg);
+  opacity:.95;
+  z-index:-1;
+}
+.speed-paint-scroll-shell{
+  display:grid;
+  grid-template-columns:54px minmax(0,1fr) 54px;
+  gap:12px;
+  align-items:center;
+}
+.speed-paint-scroll{
+  display:grid;
+  grid-auto-flow:column;
+  grid-template-rows:repeat(3,126px);
+  grid-auto-columns:210px;
+  gap:10px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scroll-behavior:smooth;
+  scrollbar-width:auto;
+  scrollbar-color:#b8ff00 #151a20;
+  touch-action:pan-x pan-y;
+  padding:2px 2px 10px;
+}
+.speed-paint-card{
+  display:grid;
+  grid-template-columns:122px 1fr;
+  height:126px;
+  text-decoration:none;
+  color:#eef2f5;
+  background:#12181d;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 12px 24px rgba(0,0,0,.24);
+  transition:.16s transform,.16s border-color,.16s box-shadow;
+}
+.speed-paint-card:hover{
+  transform:translateY(-2px);
+  border-color:rgba(184,255,0,.42);
+  box-shadow:0 16px 28px rgba(0,0,0,.32),0 0 15px rgba(184,255,0,.07);
+}
+.speed-paint-thumb{position:relative;overflow:hidden;background:#080b0e;}
+.speed-paint-thumb img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  filter:saturate(.88) brightness(.86) contrast(1.04);
+}
+.speed-paint-youtube{
+  position:absolute;
+  left:8px;
+  bottom:8px;
+  width:30px;
+  height:22px;
+  display:grid;
+  place-items:center;
+  border-radius:6px;
+  background:#ff1f28;
+  color:white;
+  font-size:11px;
+}
+.speed-paint-card-copy{
+  padding:12px 10px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.speed-paint-card-copy span{
+  color:#87929d;
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.11em;
+  margin-bottom:5px;
+}
+.speed-paint-card-copy strong{color:#f3f5f5;font-size:13px;line-height:1.05;}
+
+.speed-paint-scroll::-webkit-scrollbar{height:18px;}
+.speed-paint-scroll::-webkit-scrollbar-track{
+  background:#151a20;
+  border:1px solid rgba(184,255,0,.18);
+  border-radius:999px;
+}
+.speed-paint-scroll::-webkit-scrollbar-thumb{
+  background:#b8ff00;
+  border:4px solid #151a20;
+  border-radius:999px;
+  min-width:60px;
+}
+.speed-paint-scroll::-webkit-scrollbar-thumb:hover{background:#d0ff42;}
+
+.speed-paint-arrow{
+  position:relative;
+  width:54px;
+  height:70px;
+  overflow:hidden;
+  color:transparent;
+  font-size:0;
+  cursor:pointer;
+  border-radius:13px;
+  background:
+    linear-gradient(145deg,rgba(184,255,0,.12),rgba(184,255,0,.025)),
+    repeating-linear-gradient(135deg,rgba(184,255,0,.08) 0 2px,transparent 2px 6px),
+    #12181d;
+  border:1px solid rgba(184,255,0,.42);
+}
+.speed-paint-arrow::before{
+  content:"";
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:0;
+  height:0;
+  transform:translate(-50%,-50%);
+}
+.speed-paint-arrow-left::before{
+  border-top:10px solid transparent;
+  border-bottom:10px solid transparent;
+  border-right:16px solid #b8ff00;
+}
+.speed-paint-arrow-right::before{
+  border-top:10px solid transparent;
+  border-bottom:10px solid transparent;
+  border-left:16px solid #b8ff00;
+}
+.speed-paint-arrow:hover:not(:disabled){border-color:rgba(184,255,0,.78);}
+.speed-paint-arrow:disabled{opacity:.28;cursor:default;}
+.speed-paint-scroll-hint{
+  padding-top:7px;
+  color:#69737d;
+  font-size:9px;
+  font-weight:700;
+  text-align:center;
+  letter-spacing:.08em;
+}
+@media(max-width:900px){
+  .speed-paint-head{grid-template-columns:1fr;}
+  .speed-paint-scroll-shell{grid-template-columns:44px minmax(0,1fr) 44px;gap:8px;}
+  .speed-paint-arrow{width:44px;height:62px;}
+  .speed-paint-scroll{grid-auto-columns:190px;}
+}
+
+
+/* =========================================================
+   V44 — SPEED PAINT FINAL + HERO FONT CLEANUP
+   Base: V43
+   ========================================================= */
+
+/* SPEED PAINT: no side arrows, full-width 3-row scroller */
+.speed-paint-scroll-shell{
+  display:block !important;
+}
+
+.speed-paint-scroll{
+  width:100% !important;
+}
+
+/* Hide any leftover arrow CSS/markup defensively */
+.speed-paint-arrow{
+  display:none !important;
+}
+
+/* Hero typography: use the same strong sans-serif language as MY CONTACTS.
+   Keep current colors exactly as requested. */
+.hero .portfolio-label{
+  font-family:Arial, Helvetica, sans-serif !important;
+  font-weight:900 !important;
+  font-style:italic !important;
+  letter-spacing:-.035em !important;
+  transform:none !important;
+  text-transform:uppercase !important;
+}
+
+#heroNameMorph,
+#heroNameMorph .hero-name-first,
+#heroNameMorph .hero-name-last{
+  font-family:Arial, Helvetica, sans-serif !important;
+  font-weight:900 !important;
+  letter-spacing:-.055em !important;
+}
+
+#heroNameMorph .hero-name-first{
+  font-style:normal !important;
+}
+
+#heroNameMorph .hero-name-last{
+  font-style:italic !important;
+}
+
+/* Keep the existing requested colors */
+#heroNameMorph .hero-name-first{
+  color:#f3f3ef !important;
+}
+
+#heroNameMorph .hero-name-last{
+  color:#aeb4b9 !important;
+}
+
+.hero .portfolio-label{
+  color:#b8ff00 !important;
+}
+
+
+/* =========================================================
+   V45 — SPEED PAINT ACTIVE GREEN + SIMPLE PRIVATE VIEWER
+   Base: V44
+   ========================================================= */
+
+/* SPEED PAINT active navigation uses the site's exact green accent */
+.topbar nav .nav-link[href="#speed-paint"].active .nav-ink path{
+  stroke:#b8ff00 !important;
+  filter:drop-shadow(0 0 3px rgba(184,255,0,.22)) !important;
+}
+.topbar nav .nav-link[href="#speed-paint"].active{
+  text-shadow:0 0 10px rgba(184,255,0,.10) !important;
+}
+
+/* ---------------- PRIVATE VIEWER ---------------- */
+.private-viewer{
+  position:fixed !important;
+  inset:0 !important;
+  z-index:2147483000 !important;
+  display:none !important;
+}
+
+.private-viewer.open{
+  display:block !important;
+}
+
+.private-viewer-backdrop{
+  position:absolute !important;
+  inset:0 !important;
+  background:rgba(4,6,8,.97) !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+
+/* clean full-screen presentation */
+.private-viewer-dialog{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  max-width:none !important;
+  max-height:none !important;
+  transform:none !important;
+  padding:30px 34px 24px !important;
+  border:0 !important;
+  border-radius:0 !important;
+  overflow:hidden !important;
+  background:#07090c !important;
+  box-shadow:none !important;
+  display:grid !important;
+  grid-template-rows:minmax(0,1fr) auto auto !important;
+  gap:14px !important;
+}
+
+/* large central image + left/right nav */
+.private-viewer-stage{
+  min-height:0 !important;
+  display:grid !important;
+  grid-template-columns:64px minmax(0,1fr) 64px !important;
+  gap:18px !important;
+  align-items:center !important;
+  justify-items:stretch !important;
+  padding:14px 54px 0 !important;
+}
+
+.private-viewer-image-wrap{
+  width:min(980px,76vw) !important;
+  height:min(68vh,760px) !important;
+  min-height:320px !important;
+  margin:0 auto !important;
+  overflow:hidden !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  background:#050608 !important;
+  border:1px solid rgba(255,255,255,.13) !important;
+  border-radius:10px !important;
+  box-shadow:0 24px 64px rgba(0,0,0,.46) !important;
+  cursor:zoom-in !important;
+  touch-action:none !important;
+}
+
+.private-viewer-image-wrap.is-zoomed{
+  cursor:grab !important;
+}
+
+.private-viewer-image-wrap.is-dragging{
+  cursor:grabbing !important;
+}
+
+.private-viewer-image-wrap #privateViewerImage{
+  width:100% !important;
+  height:100% !important;
+  max-width:none !important;
+  max-height:none !important;
+  object-fit:contain !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:#050608 !important;
+  transform-origin:center center !important;
+  transition:transform .18s ease !important;
+  user-select:none !important;
+  -webkit-user-drag:none !important;
+}
+
+.private-viewer-image-wrap.is-dragging #privateViewerImage{
+  transition:none !important;
+}
+
+/* simple red-ring arrows */
+.private-viewer-nav{
+  width:54px !important;
+  height:54px !important;
+  border-radius:50% !important;
+  border:1px solid rgba(255,52,56,.72) !important;
+  background:rgba(10,12,15,.86) !important;
+  color:#f4f4f1 !important;
+  font-size:38px !important;
+  font-weight:300 !important;
+  line-height:1 !important;
+  display:grid !important;
+  place-items:center !important;
+  cursor:pointer !important;
+  box-shadow:0 0 18px rgba(255,52,56,.08) !important;
+  transition:transform .15s ease,border-color .15s ease,background .15s ease !important;
+}
+
+.private-viewer-nav:hover{
+  transform:scale(1.06) !important;
+  border-color:#ff3438 !important;
+  background:rgba(255,52,56,.08) !important;
+}
+
+/* only project title, nothing else */
+.private-viewer-titlebar{
+  width:min(980px,76vw) !important;
+  margin:0 auto !important;
+  padding:2px 0 0 !important;
+}
+
+.private-viewer-titlebar h3{
+  margin:0 !important;
+  padding-left:16px !important;
+  position:relative !important;
+  color:#f5f5f2 !important;
+  font-size:28px !important;
+  font-weight:800 !important;
+  letter-spacing:.01em !important;
+  text-transform:uppercase !important;
+}
+
+.private-viewer-titlebar h3::before{
+  content:"" !important;
+  position:absolute !important;
+  left:0 !important;
+  top:50% !important;
+  width:3px !important;
+  height:28px !important;
+  transform:translateY(-50%) !important;
+  background:#ff3438 !important;
+  border-radius:999px !important;
+}
+
+/* bottom thumbnails */
+.private-viewer-thumbs{
+  width:min(980px,76vw) !important;
+  margin:0 auto !important;
+  padding:0 0 2px !important;
+  display:flex !important;
+  gap:10px !important;
+  justify-content:flex-start !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  scrollbar-width:thin !important;
+  scrollbar-color:#ff3438 #11151a !important;
+}
+
+.private-viewer-thumbs::-webkit-scrollbar{
+  height:8px !important;
+}
+
+.private-viewer-thumbs::-webkit-scrollbar-track{
+  background:#11151a !important;
+  border-radius:999px !important;
+}
+
+.private-viewer-thumbs::-webkit-scrollbar-thumb{
+  background:#ff3438 !important;
+  border-radius:999px !important;
+}
+
+.private-viewer-thumbs button{
+  flex:0 0 112px !important;
+  width:112px !important;
+  height:68px !important;
+  padding:0 !important;
+  border:1px solid rgba(255,255,255,.14) !important;
+  border-radius:8px !important;
+  overflow:hidden !important;
+  background:#0c0f13 !important;
+  opacity:.72 !important;
+  cursor:pointer !important;
+  transition:opacity .15s ease,border-color .15s ease,transform .15s ease !important;
+}
+
+.private-viewer-thumbs button:hover{
+  opacity:1 !important;
+  transform:translateY(-1px) !important;
+}
+
+.private-viewer-thumbs button.active{
+  opacity:1 !important;
+  border-color:#ff3438 !important;
+  box-shadow:0 0 0 1px rgba(255,52,56,.30) !important;
+}
+
+.private-viewer-thumbs img{
+  width:100% !important;
+  height:100% !important;
+  display:block !important;
+  object-fit:cover !important;
+}
+
+/* X button top-right */
+.private-viewer-close{
+  position:absolute !important;
+  top:24px !important;
+  right:30px !important;
+  width:48px !important;
+  height:48px !important;
+  z-index:20 !important;
+  border-radius:50% !important;
+  border:1px solid rgba(255,255,255,.20) !important;
+  background:rgba(10,12,15,.90) !important;
+  color:#ffffff !important;
+  font-size:31px !important;
+  font-weight:300 !important;
+  line-height:1 !important;
+  cursor:pointer !important;
+  display:grid !important;
+  place-items:center !important;
+  transition:transform .15s ease,border-color .15s ease,background .15s ease !important;
+}
+
+.private-viewer-close:hover{
+  transform:rotate(6deg) scale(1.05) !important;
+  border-color:#ff3438 !important;
+  background:rgba(255,52,56,.08) !important;
+}
+
+/* remove old viewer elements defensively */
+.private-viewer-header,
+.private-viewer-count{
+  display:none !important;
+}
+
+@media(max-width:900px){
+  .private-viewer-dialog{
+    padding:22px 14px 16px !important;
+  }
+
+  .private-viewer-stage{
+    grid-template-columns:44px minmax(0,1fr) 44px !important;
+    gap:8px !important;
+    padding:54px 0 0 !important;
+  }
+
+  .private-viewer-image-wrap{
+    width:100% !important;
+    height:min(60vh,620px) !important;
+    min-height:280px !important;
+  }
+
+  .private-viewer-titlebar,
+  .private-viewer-thumbs{
+    width:100% !important;
+  }
+
+  .private-viewer-nav{
+    width:42px !important;
+    height:42px !important;
+    font-size:30px !important;
+  }
+
+  .private-viewer-close{
+    top:14px !important;
+    right:14px !important;
+    width:42px !important;
+    height:42px !important;
+  }
+}
+
+@media(max-width:600px){
+  .private-viewer-dialog{
+    grid-template-rows:minmax(0,1fr) auto auto !important;
+    gap:9px !important;
+  }
+
+  .private-viewer-stage{
+    grid-template-columns:34px minmax(0,1fr) 34px !important;
+    gap:5px !important;
+    padding-top:48px !important;
+  }
+
+  .private-viewer-nav{
+    width:34px !important;
+    height:34px !important;
+    font-size:25px !important;
+  }
+
+  .private-viewer-image-wrap{
+    height:56vh !important;
+    min-height:240px !important;
+  }
+
+  .private-viewer-titlebar h3{
+    font-size:20px !important;
+  }
+
+  .private-viewer-thumbs button{
+    flex-basis:88px !important;
+    width:88px !important;
+    height:54px !important;
+  }
+}
+
+
+/* =========================================================
+   V46 — FINAL NAV GREEN + TRANSPARENT BLACK VIEWER
+   Base: V45
+   ========================================================= */
+
+/* Every ACTIVE navigation hand-drawn ring is ALWAYS the same site green. */
+.topbar nav .nav-link.active .nav-ink path,
+.topbar nav .nav-link.active .nav-ink ellipse,
+.topbar nav .nav-link.active .nav-ink circle{
+  stroke:#b8ff00 !important;
+  fill:none !important;
+  filter:drop-shadow(0 0 3px rgba(184,255,0,.24)) !important;
+}
+
+/* Override older section-specific yellow/red active-ring rules. */
+.topbar nav .nav-link.active{
+  --nav-active:#b8ff00 !important;
+}
+
+.topbar nav .nav-private-archive.active .nav-ink path,
+.topbar nav .nav-private-archive.active .nav-ink ellipse,
+.topbar nav .nav-private-archive.active .nav-ink circle,
+.topbar nav .nav-link[href="#speed-paint"].active .nav-ink path,
+.topbar nav .nav-link[href="#speed-paint"].active .nav-ink ellipse,
+.topbar nav .nav-link[href="#speed-paint"].active .nav-ink circle{
+  stroke:#b8ff00 !important;
+  fill:none !important;
+}
+
+/* Viewer background: medium transparent black, NO blur. */
+.private-viewer-backdrop{
+  background:rgba(0,0,0,.68) !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+
+/* The viewer shell itself must stay transparent,
+   otherwise the semi-transparent backdrop cannot be seen. */
+.private-viewer-dialog{
+  background:transparent !important;
+}
+
+/* Keep the central artwork visually grounded without adding blur. */
+.private-viewer-image-wrap{
+  background:rgba(5,6,8,.94) !important;
+}
+
+
+/* =========================================================
+   V47 — VIEWER 20% DARKER + NEW BACK-TO-TOP ARROW
+   Base: V46
+   ========================================================= */
+
+/* About 20% darker than V46's rgba(0,0,0,.68) */
+.private-viewer-backdrop{
+  background:rgba(0,0,0,.82) !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+
+/* Back-to-top button now uses the same green textured visual language
+   as the site's carousel arrows, rotated upward. */
+.vt-scroll-top{
+  width:48px !important;
+  height:64px !important;
+  right:24px !important;
+  bottom:24px !important;
+  padding:0 !important;
+  border:1px solid rgba(184,255,0,.48) !important;
+  border-radius:16px !important;
+  background:
+    linear-gradient(145deg,rgba(184,255,0,.14),rgba(184,255,0,.03)),
+    repeating-linear-gradient(135deg,rgba(184,255,0,.10) 0 2px,transparent 2px 6px),
+    #11171c !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(184,255,0,.07),
+    0 10px 22px rgba(0,0,0,.30),
+    0 0 18px rgba(184,255,0,.07) !important;
+  overflow:hidden !important;
+  display:grid !important;
+  place-items:center !important;
+  transform:none !important;
+}
+
+/* Hide the old white chevron bars */
+.vt-scroll-top .vt-chevron-up,
+.vt-scroll-top .vt-chevron-left,
+.vt-scroll-top .vt-chevron-right{
+  display:none !important;
+}
+
+/* Green triangle, same idea as the reference, rotated upward */
+.vt-scroll-top::before{
+  content:"" !important;
+  width:0 !important;
+  height:0 !important;
+  border-left:10px solid transparent !important;
+  border-right:10px solid transparent !important;
+  border-bottom:16px solid #b8ff00 !important;
+  filter:drop-shadow(0 0 6px rgba(184,255,0,.24)) !important;
+  transform:translateY(-1px) !important;
+}
+
+/* Subtle texture spots */
+.vt-scroll-top::after{
+  content:"" !important;
+  position:absolute !important;
+  inset:8px !important;
+  border-radius:11px !important;
+  pointer-events:none !important;
+  background:
+    radial-gradient(circle at 26% 22%,rgba(184,255,0,.20) 0 1px,transparent 2px),
+    radial-gradient(circle at 74% 72%,rgba(184,255,0,.13) 0 1px,transparent 2px) !important;
+  opacity:.9 !important;
+}
+
+.vt-scroll-top:hover{
+  transform:translateY(-3px) scale(1.05) !important;
+  border-color:rgba(184,255,0,.88) !important;
+  background:
+    linear-gradient(145deg,rgba(184,255,0,.22),rgba(184,255,0,.05)),
+    repeating-linear-gradient(135deg,rgba(184,255,0,.13) 0 2px,transparent 2px 6px),
+    #131a20 !important;
+}
+
+.vt-scroll-top:active{
+  transform:translateY(0) scale(.97) !important;
 }

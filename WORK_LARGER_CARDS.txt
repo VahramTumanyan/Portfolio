@@ -1,7 +1,0 @@
-WORK V2
-
-Only the WORK card size was changed:
-- cards are slightly larger;
-- still two rows;
-- horizontal scrolling remains;
-- labels, links and other site sections are unchanged.

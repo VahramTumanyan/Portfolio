@@ -1,0 +1,42 @@
+V48 — OPTIMIZED FROM V47
+
+IMPORTANT
+V47 remains the untouched safe fallback version.
+
+SIZE
+Before: 57.9 MB (212 files)
+After:  30.5 MB (110 files)
+Saved:  27.4 MB (47.3%)
+
+REMOVED AS UNUSED / DUPLICATE
+- old TXT version notes and old README files
+- old standalone spine_demo.html
+- obsolete assets/spine/fly/ set used only by the old demo
+- duplicate legacy contact icons without user_*_v4 names
+- duplicate assets/private-covers/ folder
+  (PRIVATE ARCHIVE cards now reuse each project's 01.jpg)
+
+OPTIMIZED
+- hero-set PNG files converted to WebP
+- ABOUT badge converted to WebP
+- header avatar resized/optimized for actual display size
+- favicon resized/optimized
+- non-critical images use lazy loading and async decoding
+- hidden Croc/Frog iframes use lazy loading
+
+PRESERVED
+- full-resolution PRIVATE ARCHIVE images for zoom quality
+- active Fly/Frog/Croc Spine files
+- all V47 site design and interactions
+- Speed Paint links/cards
+- V47 Private Archive viewer
+- green active navigation ring
+- dark transparent viewer backdrop
+- V47 green back-to-top arrow
+- Windows local preview files
+- GitHub Pages structure
+
+VALIDATED
+- script.js syntax passed node --check
+- every direct local asset reference exists
+- active Spine atlas texture pages exist

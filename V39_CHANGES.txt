@@ -1,9 +1,0 @@
-V39 — Browser title + favicon
-
-Base: V37.
-
-Changed only:
-- Browser tab title: Vahram Tumanyan — Portfolio
-- Favicon: uses the existing Vahram avatar image
-
-Everything else remains identical to V37.

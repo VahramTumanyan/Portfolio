@@ -1,6 +1,0 @@
-Based on V13.
-
-Only one change:
-- The whole FLY / CROC / FROG button rail is moved vertically to the middle of the screen.
-- The original V13 button design, user icons, and animated fly hint remain unchanged.
-- Individual icon alignment was NOT changed.

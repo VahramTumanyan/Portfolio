@@ -245,7 +245,7 @@ function renderPrivateViewer(){
   privateViewerImage.src = src;
   privateViewerImage.alt = `${data.title} — image ${privateCurrentIndex + 1}`;
   resetPrivateZoom();
-  privateViewerCount.textContent = `${privateCurrentIndex + 1} / ${data.images.length}`;
+  if(privateViewerCount) privateViewerCount.textContent = `${privateCurrentIndex + 1} / ${data.images.length}`;
 
   privateViewerThumbs.innerHTML = '';
   data.images.forEach((img, i)=>{
@@ -345,6 +345,48 @@ window.addEventListener('mouseup', ()=>{
 // Double click: quick comfortable zoom / reset.
 privateViewerImageWrap?.addEventListener('dblclick', e=>{
   e.preventDefault();
+  if(privateZoom > 1.001) resetPrivateZoom();
+  else setPrivateZoom(1.65);
+});
+
+
+
+// Single click / tap: quick zoom toggle, matching the simple viewer interaction.
+privateViewerImageWrap?.addEventListener('click', e=>{
+  if(!privateViewer?.classList.contains('open')) return;
+
+  // Ignore click after a drag.
+  if(privateDragging) return;
+
+  // Mouse click toggles zoom.
+  if(e.pointerType === 'touch') return;
+  if(privateZoom > 1.001) resetPrivateZoom();
+  else setPrivateZoom(1.65);
+});
+
+// Single tap toggles zoom on touch devices.
+let privateTapStartX = 0;
+let privateTapStartY = 0;
+let privateTapMoved = false;
+
+privateViewerImageWrap?.addEventListener('touchstart', e=>{
+  if(e.touches.length === 1){
+    privateTapStartX = e.touches[0].clientX;
+    privateTapStartY = e.touches[0].clientY;
+    privateTapMoved = false;
+  }
+}, { passive:true });
+
+privateViewerImageWrap?.addEventListener('touchmove', e=>{
+  if(e.touches.length === 1){
+    const dx = e.touches[0].clientX - privateTapStartX;
+    const dy = e.touches[0].clientY - privateTapStartY;
+    if(Math.hypot(dx,dy) > 10) privateTapMoved = true;
+  }
+}, { passive:true });
+
+privateViewerImageWrap?.addEventListener('touchend', e=>{
+  if(privateTapMoved) return;
   if(privateZoom > 1.001) resetPrivateZoom();
   else setPrivateZoom(1.65);
 });
@@ -1016,54 +1058,54 @@ window.addEventListener('keydown',e=>{
       title:'CASINO GAME ART',
       note:'Casino Game Art',
       images:[
-        'assets/hero-sets/casino_01.png',
-        'assets/hero-sets/casino_02.png',
-        'assets/hero-sets/casino_03.png'
+        'assets/hero-sets/casino_01.webp',
+        'assets/hero-sets/casino_02.webp',
+        'assets/hero-sets/casino_03.webp'
       ]
     },
     {
       title:'CARTOON / ANIMATION',
       note:'Cartoon Covers',
       images:[
-        'assets/hero-sets/cartoon_01.png',
-        'assets/hero-sets/cartoon_02.png',
-        'assets/hero-sets/cartoon_03.png'
+        'assets/hero-sets/cartoon_01.webp',
+        'assets/hero-sets/cartoon_02.webp',
+        'assets/hero-sets/cartoon_03.webp'
       ]
     },
     {
       title:'SPINE 2D / ANIMATED GAME CHARACTERS',
       note:'Game Characters · Spine 2D',
       images:[
-        'assets/hero-sets/spine_frog.png',
-        'assets/hero-sets/spine_crocodile.png',
-        'assets/hero-sets/spine_fly.png'
+        'assets/hero-sets/spine_frog.webp',
+        'assets/hero-sets/spine_crocodile.webp',
+        'assets/hero-sets/spine_fly.webp'
       ]
     },
     {
       title:'CHARACTER CONCEPT ART',
       note:'Concept Art',
       images:[
-        'assets/hero-sets/concept_01.png',
-        'assets/hero-sets/concept_02.png',
-        'assets/hero-sets/concept_03.png'
+        'assets/hero-sets/concept_01.webp',
+        'assets/hero-sets/concept_02.webp',
+        'assets/hero-sets/concept_03.webp'
       ]
     },
     {
       title:'ENVIRONMENTS',
       note:'Game Environment Concept Art',
       images:[
-        'assets/hero-sets/environment_01.png',
-        'assets/hero-sets/environment_02.png',
-        'assets/hero-sets/environment_03.png'
+        'assets/hero-sets/environment_01.webp',
+        'assets/hero-sets/environment_02.webp',
+        'assets/hero-sets/environment_03.webp'
       ]
     },
     {
       title:'CHARACTER DESIGN',
       note:'Character Design',
       images:[
-        'assets/hero-sets/character_design_01.png',
-        'assets/hero-sets/character_design_02.png',
-        'assets/hero-sets/character_design_03.png'
+        'assets/hero-sets/character_design_01.webp',
+        'assets/hero-sets/character_design_02.webp',
+        'assets/hero-sets/character_design_03.webp'
       ]
     }
   ];
@@ -1758,3 +1800,5 @@ window.addEventListener('keydown',e=>{
     badge.style.setProperty('--badge-lift', '0px');
   });
 })();
+
+

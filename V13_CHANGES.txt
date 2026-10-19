@@ -1,7 +1,0 @@
-V13 — BIGGER FLY + BUBBLE OVER HEAD
-
-- Fly is much larger than V12.
-- Speech bubble moved above the fly's head instead of sitting in the middle of the character.
-- Movement bounds were updated for the larger fly size.
-- Slow/fast animation sync from V12 remains unchanged.
-- No other site sections changed.

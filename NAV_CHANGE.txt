@@ -1,5 +1,0 @@
-Only one visible navigation item was removed:
-- LIVE DEMO
-
-Everything else was left unchanged.
-ANIMATION is now the first menu item.
