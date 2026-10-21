@@ -1,0 +1,16 @@
+V75 — BASED ON V74
+
+PRIVATE PORTFOLIO — COMPACT 3-LANGUAGE CARDS
+
+Changed only the visual scale of the three language cards:
+- Armenian / English / Russian remain in the same order.
+- Same text and same meaning.
+- Same synchronized 48-hour timers.
+- Cards are now narrower and shorter.
+- Desktop width is capped close to the scale of the PRIVATE project cards below.
+- Reduced padding, heading size, body text size, access line size and timer height.
+- Layout stays responsive on tablet/mobile.
+
+Everything else remains unchanged from V74.
+
+JS validation passed.

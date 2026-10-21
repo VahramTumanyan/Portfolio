@@ -1,0 +1,19 @@
+V68 — BASED ON V66
+
+IMPORTANT:
+- V67 browse-mode lowering logic is NOT included.
+- This version restores the normal V66 behavior and changes only character layering.
+
+NORMAL SITE
+- Fly = top character layer
+- Croc = same top character layer
+- Frog = same top character layer
+- They remain above the normal site while scrolling.
+- VAHRAM TUMANYAN name behavior is untouched.
+
+PRIVATE VIEWER OPEN
+- The PRIVATE viewer becomes the absolute top layer.
+- Fly / Croc / Frog move below the viewer so they cannot cover artwork or controls.
+- Closing the viewer automatically returns all characters to the top layer.
+
+Everything else remains V66.

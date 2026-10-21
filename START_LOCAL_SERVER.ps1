@@ -28,7 +28,7 @@ try {
     $listener.Start()
 }
 
-Start-Process "$prefix`index.html?v=v58-all-private-banners"
+Start-Process "$prefix`index.html?v=v97-single-gallery-folder"
 
 Write-Host ""
 Write-Host "VAHRAM PORTFOLIO LOCAL PREVIEW"

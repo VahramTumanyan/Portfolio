@@ -1,0 +1,32 @@
+V81 — BASED DIRECTLY ON FIXED V75
+
+GALLERY DESIGN:
+- Only "Art gallery." heading.
+- Removed PUBLIC ART COLLECTION kicker.
+- Removed right-side helper text.
+- Removed left/right arrows.
+- Removed image counter / total work count.
+- Removed grey viewing panel.
+- No zoom, popup, fullscreen, or big-image click action.
+- Main artwork appears by itself on the dark site background.
+- Small thumbnails are centered directly under the artwork.
+- Active thumbnail uses the lime accent.
+
+TEST IMAGES:
+- Loaded the user's latest 5 images.
+- Optimized to WEBP for performance.
+- Full images max 1600 px long side, quality 82.
+- Separate small thumbnails max 260 px, quality 68.
+
+SIZE:
+- Original uploads total: 1.81 MB
+- Optimized gallery full images total: 0.14 MB
+- Optimized thumbnails total: 0.03 MB
+
+FUTURE:
+- Add new originals to assets/gallery/import/
+- Run UPDATE_GALLERY.bat
+- It generates optimized gallery WEBP files + thumbnails
+- Refresh the site
+
+JS validation passed.

@@ -31,14 +31,14 @@ echo.
 
 where py >nul 2>nul
 if %errorlevel%==0 (
-    start "" "http://localhost:8015/index.html?v=5"
+    start "" "http://localhost:8015/index.html?v=v86-corner-tapes-add"
     py -m http.server 8015
     goto :eof
 )
 
 where python >nul 2>nul
 if %errorlevel%==0 (
-    start "" "http://localhost:8015/index.html?v=5"
+    start "" "http://localhost:8015/index.html?v=v86-corner-tapes-add"
     python -m http.server 8015
     goto :eof
 )

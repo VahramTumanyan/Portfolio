@@ -920,6 +920,7 @@ window.addEventListener('keydown',e=>{
 
   let playing = false;
   let ready = false;
+  let pendingPlay = false;
   let runId = 0;
   const completed = [];
 
@@ -1049,8 +1050,18 @@ window.addEventListener('keydown',e=>{
   }
 
   function startOneShot() {
-    if (!ready || playing) return;
+    if (playing) return;
 
+    // Mobile reliability:
+    // if the Croc iframe is still starting, remember the tap and
+    // launch automatically as soon as the Spine widget sends "ready".
+    if (!ready) {
+      pendingPlay = true;
+      setButton(true);
+      return;
+    }
+
+    pendingPlay = false;
     playing = true;
     runId++;
     setButton(true);
@@ -1058,9 +1069,17 @@ window.addEventListener('keydown',e=>{
   }
 
   function stopNow() {
+    // Also allow cancelling a queued mobile tap before the iframe is ready.
+    if (pendingPlay && !playing) {
+      pendingPlay = false;
+      setButton(false);
+      return;
+    }
+
     if (!playing) return;
 
     playing = false;
+    pendingPlay = false;
     runId++;
     setButton(false);
     send('stop');
@@ -1068,7 +1087,7 @@ window.addEventListener('keydown',e=>{
   }
 
   button.addEventListener('click', () => {
-    if (playing) {
+    if (playing || pendingPlay) {
       stopNow();
     } else {
       startOneShot();
@@ -1082,6 +1101,12 @@ window.addEventListener('keydown',e=>{
     if (d.type === 'ready') {
       ready = true;
       hideStageImmediate();
+
+      // If the visitor tapped CROC before mobile finished loading it,
+      // start that requested animation now.
+      if (pendingPlay && !playing) {
+        startOneShot();
+      }
     }
 
     if (d.type === 'complete' && d.name) {
@@ -1089,6 +1114,8 @@ window.addEventListener('keydown',e=>{
     }
 
     if (d.type === 'error') {
+      pendingPlay = false;
+      setButton(false);
       console.error('CROC widget:', d.reason);
     }
   });
@@ -1383,26 +1410,6 @@ window.addEventListener('keydown',e=>{
 
   function render() {
     if (!home || !target) return;
-
-    /*
-      V53 MOBILE:
-      Keep the real name visually inside the HERO on phones.
-      It scrolls with the page instead of docking into the compact header.
-      Desktop/tablet keeps the original morph animation.
-    */
-    if (window.innerWidth <= 760) {
-      const mobileY = home.y - window.scrollY;
-      const mobileHidden = mobileY < -120;
-
-      name.style.left = `${home.x}px`;
-      name.style.top = `${mobileY}px`;
-      name.style.transformOrigin = 'top left';
-      name.style.transform = `scale(${homeScale})`;
-      name.style.opacity = mobileHidden ? '0' : '1';
-      name.style.visibility = mobileHidden ? 'hidden' : 'visible';
-      name.style.zIndex = '2147482500';
-      return;
-    }
 
     const heroRect = hero.getBoundingClientRect();
 
@@ -1892,3 +1899,360 @@ window.addEventListener('keydown',e=>{
 })();
 
 
+
+
+/* =========================================================
+   V63 — PRIVATE REVIEW COUNTDOWN
+   Visual-only 48h loop. Reloading starts from 48:00:00 again.
+   It never blocks access or modifies PRIVATE viewer behavior.
+   ========================================================= */
+(() => {
+  try {
+    const timerEls = Array.from(document.querySelectorAll('.private-access-timer-value'));
+    if (!timerEls.length) return;
+
+    const DURATION_SECONDS = 48 * 60 * 60;
+    let startedAt = Date.now();
+
+    const renderPrivateAccessTimer = () => {
+      const elapsed = Math.floor((Date.now() - startedAt) / 1000);
+
+      if (elapsed >= DURATION_SECONDS) {
+        startedAt = Date.now();
+      }
+
+      const cycleElapsed = Math.floor((Date.now() - startedAt) / 1000);
+      const remaining = Math.max(0, DURATION_SECONDS - cycleElapsed);
+
+      const hours = Math.floor(remaining / 3600);
+      const minutes = Math.floor((remaining % 3600) / 60);
+      const seconds = remaining % 60;
+
+      const value =
+        String(hours).padStart(2, '0') + ':' +
+        String(minutes).padStart(2, '0') + ':' +
+        String(seconds).padStart(2, '0');
+
+      timerEls.forEach((timerEl) => {
+        timerEl.textContent = value;
+      });
+    };
+
+    renderPrivateAccessTimer();
+    window.setInterval(renderPrivateAccessTimer, 1000);
+  } catch (err) {
+    console.warn('Private access timer disabled:', err);
+  }
+})();
+
+
+/* =========================================================
+   V70 — ART CAROUSEL ONE-TIME AUTO NUDGE
+   When ART first comes into view, move roughly half a card to
+   the right so visitors immediately understand there is more work.
+   User interaction cancels the hint. No looping/autoplay.
+   ========================================================= */
+(() => {
+  const section = document.getElementById('work');
+  const carousel = document.getElementById('workCarousel');
+  if (!section || !carousel) return;
+
+  let hinted = false;
+  let userInteracted = false;
+  let hintTimer = 0;
+
+  const cancelHint = () => {
+    userInteracted = true;
+    if (hintTimer) {
+      clearTimeout(hintTimer);
+      hintTimer = 0;
+    }
+  };
+
+  ['pointerdown', 'touchstart', 'wheel', 'keydown'].forEach(type => {
+    carousel.addEventListener(type, cancelHint, { passive: type !== 'keydown' });
+  });
+
+  function getHalfCardDistance() {
+    const card = carousel.querySelector('.carousel-card');
+    if (!card) return Math.max(180, carousel.clientWidth * 0.22);
+
+    const cardRect = card.getBoundingClientRect();
+    const styles = getComputedStyle(carousel);
+    const gap = parseFloat(styles.columnGap || styles.gap || '0') || 0;
+
+    return Math.max(150, (cardRect.width + gap) * 0.56);
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    const entry = entries[0];
+    if (!entry || hinted || userInteracted || !entry.isIntersecting) return;
+    if (entry.intersectionRatio < 0.42) return;
+
+    hinted = true;
+
+    hintTimer = window.setTimeout(() => {
+      if (userInteracted || carousel.scrollLeft > 8) return;
+
+      const maxScroll = Math.max(0, carousel.scrollWidth - carousel.clientWidth);
+      const distance = Math.min(getHalfCardDistance(), maxScroll);
+
+      if (distance > 20) {
+        carousel.scrollBy({
+          left: distance,
+          behavior: 'smooth'
+        });
+      }
+    }, 850);
+
+    observer.disconnect();
+  }, {
+    threshold: [0.42, 0.6]
+  });
+
+  observer.observe(section);
+})();
+
+
+/* =========================================================
+   V72 — CHARACTER CONTROL HINT
+   5 seconds visible / 5 seconds hidden / repeat
+   ========================================================= */
+(() => {
+  const hint = document.getElementById('flyDisableHint');
+  const hintText = document.getElementById('flyHintText');
+  const rail = document.getElementById('vtCharacterRail');
+
+  if (!hint || !hintText || !rail) return;
+
+  const SHOW_MS = 5000;
+  const HIDE_MS = 5000;
+  let visible = false;
+  let timer = 0;
+
+  hintText.textContent = 'CLICK TO TURN CHARACTERS ON / OFF';
+
+  function viewerOpen() {
+    return document.body.classList.contains('private-viewer-open');
+  }
+
+  function hideHint() {
+    visible = false;
+    hint.classList.remove('show');
+    hint.setAttribute('aria-hidden', 'true');
+  }
+
+  function showHint() {
+    if (viewerOpen()) {
+      hideHint();
+      return;
+    }
+
+    visible = true;
+    hint.classList.add('show');
+    hint.setAttribute('aria-hidden', 'false');
+  }
+
+  function cycleHint() {
+    clearTimeout(timer);
+
+    if (visible) {
+      hideHint();
+      timer = window.setTimeout(cycleHint, HIDE_MS);
+    } else {
+      showHint();
+      timer = window.setTimeout(cycleHint, SHOW_MS);
+    }
+  }
+
+  /* First reminder appears after 5 seconds. */
+  timer = window.setTimeout(cycleHint, 5000);
+
+  /* Any click/tap on the character controls dismisses it for this cycle. */
+  rail.addEventListener('pointerdown', () => {
+    hideHint();
+    clearTimeout(timer);
+    timer = window.setTimeout(cycleHint, HIDE_MS);
+  }, { passive: true });
+
+  /* The hint must never sit above an opened PRIVATE viewer. */
+  const bodyObserver = new MutationObserver(() => {
+    if (viewerOpen()) {
+      hideHint();
+      clearTimeout(timer);
+      timer = window.setTimeout(cycleHint, HIDE_MS);
+    }
+  });
+
+  bodyObserver.observe(document.body, {
+    attributes: true,
+    attributeFilter: ['class']
+  });
+})();
+
+
+/* =========================================================
+   V81 — CLEAN GALLERY
+   One main image + centered thumbnails.
+   No zoom, no arrows, no popup, no counters.
+   ========================================================= */
+(() => {
+  const mainImage = document.getElementById('vtCleanGalleryMainImage');
+  const thumbs = document.getElementById('vtCleanGalleryThumbs');
+  const empty = document.getElementById('vtCleanGalleryEmpty');
+
+  if (!mainImage || !thumbs || !empty) return;
+
+  let items = [];
+  let currentIndex = 0;
+
+  function show(index, shouldScroll = true) {
+    if (!items.length) return;
+
+    currentIndex = Math.max(0, Math.min(index, items.length - 1));
+    const item = items[currentIndex];
+
+    mainImage.src = `assets/gallery/${encodeURIComponent(item.file)}`;
+    mainImage.alt = item.title || `Artwork ${currentIndex + 1}`;
+
+    const buttons = thumbs.querySelectorAll('.vt-clean-gallery-thumb');
+    buttons.forEach((button, i) => {
+      button.classList.toggle('active', i === currentIndex);
+      button.setAttribute('aria-current', i === currentIndex ? 'true' : 'false');
+    });
+
+    if (shouldScroll && buttons[currentIndex]) {
+      buttons[currentIndex].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+    }
+  }
+
+  function render() {
+    thumbs.innerHTML = '';
+
+    if (!items.length) {
+      empty.hidden = false;
+      mainImage.removeAttribute('src');
+      mainImage.alt = '';
+      return;
+    }
+
+    empty.hidden = true;
+
+    items.forEach((item, index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'vt-clean-gallery-thumb';
+      button.setAttribute('aria-label', item.title || `Artwork ${index + 1}`);
+
+      const img = document.createElement('img');
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.src = `assets/gallery/${encodeURIComponent(item.file)}`;
+      img.alt = '';
+
+      button.appendChild(img);
+      button.addEventListener('click', () => show(index, false));
+      thumbs.appendChild(button);
+    });
+
+    show(0, false);
+  }
+
+  fetch(`assets/gallery/gallery.json?v=${Date.now()}`, { cache:'no-store' })
+    .then((response) => {
+      if (!response.ok) throw new Error('Gallery manifest not found');
+      return response.json();
+    })
+    .then((data) => {
+      items = Array.isArray(data)
+        ? data.filter((item) => item && typeof item.file === 'string' && item.file.trim())
+        : [];
+      render();
+    })
+    .catch(() => {
+      items = [];
+      render();
+    });
+})();
+
+
+/* =========================================================
+   V92 — EQUAL HEIGHT, NATURAL ASPECT, TAPED FRAME
+   Bottom thumbnails stay exactly as before.
+   Main artwork:
+   - same display height for every image
+   - width follows the image aspect ratio
+   - no crop
+   - no stretch
+   - decorative frame/tapes hug the current artwork
+   ========================================================= */
+(() => {
+  const image = document.getElementById('vtCleanGalleryMainImage');
+  const frame = document.getElementById('vtCleanGalleryFrame');
+  const stage = document.querySelector('.vt-clean-gallery-main');
+
+  if (!image || !frame || !stage) return;
+
+  function getTargetHeight() {
+    if (window.matchMedia('(max-width: 390px)').matches) return 270;
+    if (window.matchMedia('(max-width: 600px)').matches) return 300;
+    if (window.matchMedia('(max-width: 900px)').matches) return 420;
+    return 520;
+  }
+
+  function fitFrameToArtwork() {
+    if (!image.naturalWidth || !image.naturalHeight) return;
+
+    const targetH = getTargetHeight();
+    const aspect = image.naturalWidth / image.naturalHeight;
+    const stageWidth = Math.max(240, stage.clientWidth - 40);
+
+    let h = targetH;
+    let w = h * aspect;
+
+    /* If an extremely wide image would exceed the available stage width,
+       reduce both dimensions proportionally. This preserves the image. */
+    if (w > stageWidth) {
+      w = stageWidth;
+      h = w / aspect;
+    }
+
+    const framePadX = window.matchMedia('(max-width: 600px)').matches ? 16 : 24;
+    const framePadY = window.matchMedia('(max-width: 600px)').matches ? 16 : 24;
+    const frameW = Math.round(w + framePadX);
+    const frameH = Math.round(h + framePadY);
+
+    frame.style.setProperty('width', `${frameW}px`, 'important');
+    frame.style.setProperty('height', `${frameH}px`, 'important');
+    frame.style.setProperty('min-width', '0px', 'important');
+    frame.style.setProperty('min-height', '0px', 'important');
+    frame.style.setProperty('max-width', `${frameW}px`, 'important');
+    frame.style.setProperty('max-height', `${frameH}px`, 'important');
+
+    image.style.setProperty('width', `${Math.round(w)}px`, 'important');
+    image.style.setProperty('height', `${Math.round(h)}px`, 'important');
+  }
+
+  image.addEventListener('load', fitFrameToArtwork);
+
+  const srcObserver = new MutationObserver(() => {
+    if (image.complete && image.naturalWidth) {
+      requestAnimationFrame(fitFrameToArtwork);
+    }
+  });
+
+  srcObserver.observe(image, {
+    attributes: true,
+    attributeFilter: ['src']
+  });
+
+  window.addEventListener('resize', fitFrameToArtwork, { passive: true });
+
+  if (image.complete && image.naturalWidth) {
+    fitFrameToArtwork();
+  }
+})();

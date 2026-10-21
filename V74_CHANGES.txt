@@ -1,0 +1,17 @@
+V74 — BASED ON V73
+
+PRIVATE PORTFOLIO HEADER REDESIGN:
+- Replaced the single English block with THREE equal language cards.
+- Order is exactly:
+  1. Armenian
+  2. English
+  3. Russian
+- Each card contains the same meaning in its language.
+- Each card has its own visible countdown panel.
+- All three countdowns are synchronized to the same 48-hour visual timer.
+- Desktop: 3 equal columns.
+- Tablet/mobile: cards stack for readability.
+- Existing PRIVATE project cards/viewer remain below unchanged.
+- Existing V73 AI-Assisted Web Development (Vibe Coding) item remains.
+
+JS validation passed.

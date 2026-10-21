@@ -1,0 +1,24 @@
+V62 — BASED ON V61
+
+FIXED EXACTLY THE REQUESTED LAYERING / NAME BEHAVIOR
+
+FLY
+- Fly is now the absolute top layer: z-index 2147483647.
+- It stays above VAHRAM TUMANYAN and the rest of the site.
+- The older rule that pushed Fly below PRIVATE viewer is overridden.
+
+VAHRAM TUMANYAN
+- Removed the mobile-only rule that kept the name down inside HERO.
+- The original scroll morph is restored on mobile too.
+- When scrolling, VAHRAM TUMANYAN shrinks and moves up beside the avatar.
+- The name is directly below the Fly layer.
+
+HEADER
+- The sticky header stays below the moving name.
+
+Everything else remains V61, including:
+- Croc mobile fix
+- HERO background
+- mobile adaptation
+- PRIVATE zoom/pan
+- dedicated PRIVATE banners

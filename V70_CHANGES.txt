@@ -1,0 +1,20 @@
+V70 — BASED ON FIXED WORKING V69
+
+ONLY THE ART (#work) CAROUSEL WAS CHANGED.
+
+1) SCROLLBAR
+- Made much thicker and easier to notice.
+- Desktop height: 30px.
+- Mobile height: 18px.
+- Brighter green thumb with stronger visibility.
+
+2) ONE-TIME AUTO SCROLL HINT
+- When the ART section first becomes clearly visible,
+  it waits briefly and smoothly moves about half of one card to the right.
+- This visually shows visitors that more work exists off-screen.
+- It happens only once per page load.
+- It is NOT continuous autoplay.
+- If the visitor touches/clicks/wheels/uses keyboard first, the auto hint is cancelled.
+- Existing arrows, touch swipe, manual scrollbar and portfolio behavior remain unchanged.
+
+Everything else is untouched from V69.

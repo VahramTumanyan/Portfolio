@@ -1,0 +1,13 @@
+V72 — BASED ON V71
+
+CHARACTER CONTROL HINT
+- First appears after 5 seconds.
+- Visible for 5 seconds.
+- Hidden for 5 seconds.
+- Repeats continuously.
+- Text: CLICK TO TURN CHARACTERS ON / OFF
+- Clicking/tapping Fly / Croc / Frog hides the hint for the current cycle.
+- Hint is hidden while PRIVATE viewer is open.
+- All V71 site behavior is otherwise unchanged.
+
+JS validation passed.

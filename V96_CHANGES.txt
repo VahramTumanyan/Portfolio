@@ -1,0 +1,17 @@
+V96 — BASED ON V95
+
+VISUAL-ONLY CHANGE:
+- Restyled ONLY the main large gallery frame.
+- Added rough torn-paper/card texture around the selected artwork.
+- Added subtle inner hand-cut edge.
+- Preserved existing tape positions and made them slightly more fibrous/textured.
+
+UNCHANGED:
+- Main image dimensions and aspect behavior.
+- Gallery switching.
+- Main image layout/position.
+- Bottom thumbnail cards and their paper/tape styling.
+- All site functionality.
+- Rest of site.
+
+JS validation passed.

@@ -1,0 +1,20 @@
+V93 — BASED ON FIXED V92
+
+ONLY CHANGE:
+- The decorative frame and all tape pieces now follow the CURRENT selected image.
+- Frame width/height are forced to the exact visible artwork dimensions.
+- When switching images, the frame/tape automatically reshapes around the new artwork.
+
+UNCHANGED FROM V92:
+- Same image height logic.
+- Same natural aspect ratios.
+- Wide stays wide.
+- Portrait stays portrait.
+- Square stays square.
+- No crop.
+- No stretch.
+- Bottom thumbnail cards unchanged.
+- Gallery switching unchanged.
+- Rest of site unchanged.
+
+JS validation passed.

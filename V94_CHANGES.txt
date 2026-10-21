@@ -1,0 +1,21 @@
+V94 — BASED ON V93
+
+ONLY CHANGE:
+- The decorative frame now fits closely around the currently selected artwork.
+- Removed the large black empty gap between artwork and frame.
+- A small consistent border remains so the tape/frame treatment is visible.
+
+UNCHANGED:
+- Same V93 image sizing.
+- Same equal-height behavior.
+- Same image proportions.
+- No crop.
+- No stretch.
+- Wide stays wide.
+- Portrait stays portrait.
+- Square stays square.
+- Bottom thumbnail cards unchanged.
+- Gallery switching unchanged.
+- Rest of site unchanged.
+
+JS validation passed.

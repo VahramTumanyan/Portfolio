@@ -1,0 +1,20 @@
+V65 — BASED ON V64
+
+PRIVATE PORTFOLIO TEXT
+Added the authorship clarification directly into the main paragraph:
+Some of the projects shown here were created entirely by me, while others were collaborative projects in which I was responsible for specific parts of the artwork and production.
+
+TIMER DESIGN
+- redesigned to match the supplied reference
+- compact rectangular panel
+- not overly wide
+- large glowing red digital numbers
+- separate HOURS / MINUTES / SECONDS labels
+- PRIVATE REVIEW ACCESS title with red status dot
+- TIME REMAINING label below
+- same fake 48-hour loop behavior
+- reload starts again from 48:00:00
+- no access blocking
+- mobile version remains responsive
+
+Everything else remains V64.

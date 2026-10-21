@@ -1,0 +1,24 @@
+V92 — BASED ON V87
+
+ONLY THE MAIN GALLERY VIEWER WAS CHANGED.
+
+REQUESTED BEHAVIOR:
+- Bottom thumbnail cards are unchanged.
+- Every main artwork uses the same display height.
+- Width is automatic from the artwork's natural aspect ratio.
+- Wide images stay wide.
+- Portrait images stay portrait.
+- Square images stay square.
+- No crop.
+- No stretch.
+- No distortion.
+- The frame and tape treatment always wraps the currently selected artwork.
+- The outer gallery area stays fixed so the thumbnail row does not jump.
+- Small source pixel dimensions do not make an artwork tiny; sizing is based on aspect ratio and viewport.
+
+Desktop target artwork height: 520px
+Tablet target artwork height: 420px
+Mobile target artwork height: 300px
+Small mobile target artwork height: 270px
+
+JS validation passed.

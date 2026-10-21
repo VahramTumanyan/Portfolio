@@ -1,0 +1,8 @@
+V83 — Simple framed gallery stage
+
+Changed only the public gallery visual style on top of V82:
+- kept the fixed gallery stage behaviour;
+- kept the main selected image logic unchanged;
+- added a simple textured frame around the main artwork;
+- added light tape accents around the frame;
+- kept thumbnails and gallery functionality as before.

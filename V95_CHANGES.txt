@@ -1,0 +1,17 @@
+V95 — BASED ON FIXED V94
+
+VISUAL-ONLY CHANGE:
+- Bottom gallery thumbnail cards now have a rough paper/card edge.
+- Added a small tape strip on top of each thumbnail.
+- Active thumbnail gets a lime hand-painted accent/glow inspired by the supplied reference.
+
+UNCHANGED:
+- Main gallery viewer.
+- Main frame and tapes.
+- Image sizing.
+- Thumbnail dimensions and positions.
+- Click/switch behavior.
+- Gallery logic.
+- Rest of the site.
+
+JS validation passed.

@@ -7533,3 +7533,2794 @@ body.private-viewer-open #vtFlyStage{
     grid-template-columns:repeat(3,minmax(0,1fr)) !important;
   }
 }
+
+
+/* =========================================================
+   V59 — HERO IMAGE FRAMES LOCKED
+   Keep the 3-picture composition shape exactly stable when
+   source images are replaced. New images are cropped inside
+   the existing frames instead of changing their proportions.
+   ========================================================= */
+
+/* All three HERO cards use a fixed frame shape independent
+   from the intrinsic dimensions of the replacement image. */
+.hero-rot-card{
+  box-sizing:border-box !important;
+}
+
+/* LEFT / BACK frame */
+.hero-rot-card.card-back{
+  width:42% !important;
+  height:auto !important;
+  aspect-ratio:0.96 / 1 !important;
+}
+
+/* RIGHT / MIDDLE frame */
+.hero-rot-card.card-mid{
+  width:43% !important;
+  height:auto !important;
+  aspect-ratio:0.94 / 1 !important;
+}
+
+/* FRONT / BOTTOM landscape frame */
+.hero-rot-card.card-front{
+  width:56% !important;
+  height:auto !important;
+  aspect-ratio:1.73 / 1 !important;
+}
+
+/* Any replacement image is always center-cropped to the frame.
+   Its own aspect ratio can no longer change the composition. */
+.hero-rot-card > img{
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  min-width:100% !important;
+  min-height:100% !important;
+  max-width:none !important;
+  max-height:none !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+}
+
+/* Narrow desktop: preserve exactly the same three frame shapes,
+   only scale the whole composition with the available column. */
+@media (max-width:1450px) and (min-width:901px){
+  .hero-rot-card.card-back{
+    width:42% !important;
+    height:auto !important;
+    aspect-ratio:0.96 / 1 !important;
+  }
+
+  .hero-rot-card.card-mid{
+    width:43% !important;
+    height:auto !important;
+    aspect-ratio:0.94 / 1 !important;
+  }
+
+  .hero-rot-card.card-front{
+    width:56% !important;
+    height:auto !important;
+    aspect-ratio:1.73 / 1 !important;
+  }
+}
+
+/* Phone/tablet: keep the same visual proportions while the entire
+   artwork stack scales down. Replacement images are still cropped. */
+@media (max-width:900px){
+  .hero-rot-card.card-back{
+    width:49% !important;
+    height:auto !important;
+    aspect-ratio:0.96 / 1 !important;
+  }
+
+  .hero-rot-card.card-mid{
+    width:49% !important;
+    height:auto !important;
+    aspect-ratio:0.94 / 1 !important;
+  }
+
+  .hero-rot-card.card-front{
+    width:67% !important;
+    height:auto !important;
+    aspect-ratio:1.73 / 1 !important;
+  }
+}
+
+
+/* =========================================================
+   V60 — USER ART AS HERO BACKGROUND
+   Full HERO background, lowest visual layer, 10% opacity.
+   No blur.
+   ========================================================= */
+
+.hero{
+  position:relative !important;
+  isolation:isolate !important;
+}
+
+/* User artwork sits behind EVERYTHING inside the HERO. */
+.hero::before{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:0 !important;
+  pointer-events:none !important;
+
+  background-image:url("assets/hero-background/vahram-background.png") !important;
+  background-repeat:no-repeat !important;
+  background-position:center center !important;
+  background-size:cover !important;
+
+  opacity:.10 !important;
+
+  /* Explicitly no blur / filters. */
+  filter:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+
+/* Keep every existing HERO element above the background image. */
+.hero-copy,
+.hero-showcase{
+  position:relative !important;
+  z-index:1 !important;
+}
+
+/* Preserve the name above all HERO layers during its existing morph logic. */
+.hero-name-morph{
+  z-index:6 !important;
+}
+
+/* On phones the same background fills the complete stacked HERO. */
+@media (max-width:760px){
+  .hero::before{
+    background-position:center center !important;
+    background-size:cover !important;
+    opacity:.10 !important;
+  }
+}
+
+
+/* =========================================================
+   V62 — FLY TOPMOST / NAME DOCK FIX
+   ========================================================= */
+
+/* FLY must always be the highest visual layer on the site. */
+#vtFlyStage,
+.vt-fly-stage{
+  z-index:2147483647 !important;
+}
+
+/* Override the older behavior that lowered the fly while
+   PRIVATE ARCHIVE viewer was open. */
+body.private-viewer-open #vtFlyStage,
+body.private-viewer-open .vt-fly-stage{
+  z-index:2147483647 !important;
+  pointer-events:auto !important;
+}
+
+/* VAHRAM TUMANYAN is directly under the fly.
+   It still remains above the sticky navigation while moving/docking. */
+#heroNameMorph,
+.hero-name-morph{
+  z-index:2147483646 !important;
+}
+
+/* Header stays below the moving name. */
+.topbar{
+  z-index:2147483000 !important;
+}
+
+
+/* =========================================================
+   V63 — ABOUT CLEANUP + PRIVATE REVIEW TIMER
+   ========================================================= */
+
+/* PRIVATE header gets a two-column layout again:
+   message on the left, small timer on the right. */
+#private-portfolio .private-head{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) auto !important;
+  gap:28px !important;
+  align-items:end !important;
+  justify-items:stretch !important;
+  text-align:left !important;
+}
+
+#private-portfolio .private-head-copy{
+  min-width:0 !important;
+}
+
+#private-portfolio .private-head-copy .kicker{
+  text-align:left !important;
+  margin-bottom:8px !important;
+}
+
+#private-portfolio .vt-private-heading{
+  max-width:920px !important;
+  margin:0 !important;
+  color:#ff3438 !important;
+  text-align:left !important;
+  font-size:clamp(34px,4.8vw,68px) !important;
+  line-height:.98 !important;
+  text-shadow:0 0 18px rgba(255,52,56,.12) !important;
+}
+
+#private-portfolio .private-head-description{
+  max-width:760px !important;
+  margin:16px 0 0 !important;
+  color:#99a1aa !important;
+  line-height:1.65 !important;
+  text-align:left !important;
+}
+
+/* Small red digital timer — visual only. */
+.private-access-timer{
+  width:196px !important;
+  min-width:196px !important;
+  padding:12px 13px 11px !important;
+  border:1px solid rgba(255,52,56,.42) !important;
+  border-radius:10px !important;
+  background:
+    linear-gradient(180deg,rgba(255,52,56,.055),rgba(0,0,0,.12)),
+    #0b0e12 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.025),
+    0 12px 28px rgba(0,0,0,.26),
+    0 0 20px rgba(255,52,56,.055) !important;
+  justify-self:end !important;
+  align-self:end !important;
+  overflow:hidden !important;
+}
+
+.private-access-timer-top{
+  display:flex !important;
+  align-items:center !important;
+  gap:7px !important;
+  margin-bottom:7px !important;
+  color:#9ba2aa !important;
+  font-size:8px !important;
+  font-weight:900 !important;
+  letter-spacing:.14em !important;
+  white-space:nowrap !important;
+}
+
+.private-access-dot{
+  width:6px !important;
+  height:6px !important;
+  flex:0 0 6px !important;
+  border-radius:50% !important;
+  background:#ff3438 !important;
+  box-shadow:0 0 8px rgba(255,52,56,.72) !important;
+  animation:privateAccessPulse 1s steps(1,end) infinite !important;
+}
+
+.private-access-timer strong{
+  display:block !important;
+  font-family:"Courier New",Consolas,monospace !important;
+  font-size:31px !important;
+  line-height:1 !important;
+  font-weight:900 !important;
+  letter-spacing:.055em !important;
+  color:#ff3438 !important;
+  font-variant-numeric:tabular-nums !important;
+  text-shadow:
+    0 0 4px rgba(255,52,56,.76),
+    0 0 14px rgba(255,52,56,.22) !important;
+  white-space:nowrap !important;
+}
+
+.private-access-timer small{
+  display:block !important;
+  margin-top:7px !important;
+  color:#737b84 !important;
+  font-size:8px !important;
+  font-weight:900 !important;
+  letter-spacing:.18em !important;
+}
+
+@keyframes privateAccessPulse{
+  0%,49%{opacity:1}
+  50%,100%{opacity:.24}
+}
+
+/* Keep reduced-motion visitors stable. */
+@media (prefers-reduced-motion:reduce){
+  .private-access-dot{
+    animation:none !important;
+  }
+}
+
+/* Mobile: timer becomes compact and centered under the text. */
+@media (max-width:760px){
+  #private-portfolio .private-head{
+    grid-template-columns:1fr !important;
+    gap:18px !important;
+    text-align:center !important;
+    justify-items:center !important;
+  }
+
+  #private-portfolio .private-head-copy .kicker,
+  #private-portfolio .vt-private-heading,
+  #private-portfolio .private-head-description{
+    text-align:center !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+  }
+
+  #private-portfolio .vt-private-heading{
+    font-size:clamp(30px,9vw,42px) !important;
+  }
+
+  .private-access-timer{
+    width:188px !important;
+    min-width:188px !important;
+    justify-self:center !important;
+  }
+
+  .private-access-timer strong{
+    font-size:29px !important;
+  }
+}
+
+
+/* =========================================================
+   V64 — PRIVATE PORTFOLIO ACCESS BLOCK REDESIGN
+   ========================================================= */
+
+#private-portfolio .private-head{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:18px !important;
+  text-align:center !important;
+  margin-bottom:24px !important;
+}
+
+#private-portfolio .private-head-copy{
+  width:min(1080px,100%) !important;
+  text-align:center !important;
+}
+
+#private-portfolio .private-head-copy .kicker{
+  text-align:center !important;
+  margin:0 0 8px !important;
+}
+
+#private-portfolio .vt-private-heading{
+  max-width:980px !important;
+  margin:0 auto !important;
+  text-align:center !important;
+  color:#ff3438 !important;
+  font-size:clamp(28px,3.7vw,52px) !important;
+  line-height:1.02 !important;
+  font-weight:900 !important;
+  letter-spacing:-.035em !important;
+  text-shadow:0 0 14px rgba(255,52,56,.10) !important;
+}
+
+#private-portfolio .private-head-description{
+  max-width:960px !important;
+  margin:18px auto 0 !important;
+  text-align:center !important;
+  color:#f0f2f4 !important;
+  font-size:clamp(18px,1.7vw,26px) !important;
+  line-height:1.45 !important;
+  font-weight:700 !important;
+  letter-spacing:-.01em !important;
+}
+
+#private-portfolio .private-access-message{
+  max-width:1020px !important;
+  margin:22px auto 0 !important;
+  text-align:center !important;
+  color:#ffffff !important;
+  font-size:clamp(22px,2.25vw,34px) !important;
+  line-height:1.15 !important;
+  font-weight:950 !important;
+  letter-spacing:.015em !important;
+}
+
+#private-portfolio .private-open-message{
+  max-width:900px !important;
+  margin:12px auto 0 !important;
+  text-align:center !important;
+  color:#d3d8dd !important;
+  font-size:clamp(16px,1.45vw,22px) !important;
+  line-height:1.3 !important;
+  font-weight:850 !important;
+  letter-spacing:.025em !important;
+}
+
+/* Timer is now much larger and centered. */
+.private-access-timer{
+  width:310px !important;
+  min-width:310px !important;
+  padding:18px 20px 16px !important;
+  margin:2px auto 0 !important;
+  border:1px solid rgba(255,52,56,.60) !important;
+  border-radius:12px !important;
+  justify-self:center !important;
+  align-self:center !important;
+  background:
+    linear-gradient(180deg,rgba(255,52,56,.075),rgba(0,0,0,.16)),
+    #090c10 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.025),
+    0 16px 34px rgba(0,0,0,.28),
+    0 0 28px rgba(255,52,56,.08) !important;
+}
+
+.private-access-timer-top{
+  justify-content:center !important;
+  margin-bottom:10px !important;
+  font-size:10px !important;
+  letter-spacing:.17em !important;
+}
+
+.private-access-dot{
+  width:8px !important;
+  height:8px !important;
+  flex-basis:8px !important;
+  box-shadow:0 0 11px rgba(255,52,56,.86) !important;
+}
+
+.private-access-timer strong{
+  display:block !important;
+  text-align:center !important;
+  font-size:50px !important;
+  line-height:.95 !important;
+  letter-spacing:.055em !important;
+  color:#ff3438 !important;
+  text-shadow:
+    0 0 5px rgba(255,52,56,.88),
+    0 0 18px rgba(255,52,56,.28) !important;
+}
+
+.private-access-timer small{
+  text-align:center !important;
+  margin-top:10px !important;
+  font-size:9px !important;
+  letter-spacing:.22em !important;
+}
+
+#private-portfolio .private-projects{
+  margin-top:10px !important;
+}
+
+@media (max-width:760px){
+  #private-portfolio .private-head{
+    gap:15px !important;
+    margin-bottom:20px !important;
+  }
+
+  #private-portfolio .vt-private-heading{
+    font-size:clamp(26px,8vw,36px) !important;
+  }
+
+  #private-portfolio .private-head-description{
+    font-size:clamp(16px,4.5vw,20px) !important;
+    line-height:1.4 !important;
+  }
+
+  #private-portfolio .private-access-message{
+    font-size:clamp(20px,5.6vw,27px) !important;
+  }
+
+  #private-portfolio .private-open-message{
+    font-size:clamp(14px,4vw,18px) !important;
+  }
+
+  .private-access-timer{
+    width:min(300px,88vw) !important;
+    min-width:0 !important;
+    padding:16px 14px 14px !important;
+  }
+
+  .private-access-timer strong{
+    font-size:clamp(40px,13vw,50px) !important;
+  }
+
+  #private-portfolio .private-projects{
+    margin-top:6px !important;
+  }
+}
+
+
+/* =========================================================
+   V65 — PRIVATE TIMER REFERENCE STYLE
+   Compact red digital panel, not overly wide.
+   ========================================================= */
+
+.private-access-timer{
+  width:360px !important;
+  min-width:360px !important;
+  padding:20px 22px 17px !important;
+  margin:4px auto 0 !important;
+  border:1px solid rgba(255,54,54,.60) !important;
+  border-radius:11px !important;
+  background:
+    linear-gradient(180deg,rgba(255,45,45,.035),rgba(0,0,0,.12)),
+    #0a0d11 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.018),
+    0 14px 30px rgba(0,0,0,.28),
+    0 0 20px rgba(255,45,45,.045) !important;
+}
+
+.private-access-timer-top{
+  justify-content:center !important;
+  gap:10px !important;
+  margin-bottom:14px !important;
+  font-size:10px !important;
+  letter-spacing:.16em !important;
+  color:#9ba1a7 !important;
+}
+
+.private-access-dot{
+  width:8px !important;
+  height:8px !important;
+  flex:0 0 8px !important;
+  background:#ff3036 !important;
+  box-shadow:0 0 10px rgba(255,48,54,.82) !important;
+}
+
+.private-access-digits{
+  display:grid !important;
+  grid-template-columns:1fr auto 1fr auto 1fr !important;
+  align-items:center !important;
+  justify-content:center !important;
+  column-gap:7px !important;
+  width:100% !important;
+  font-family:"Courier New",Consolas,monospace !important;
+  font-variant-numeric:tabular-nums !important;
+  color:#ff3036 !important;
+  text-align:center !important;
+  line-height:1 !important;
+  text-shadow:
+    0 0 5px rgba(255,48,54,.92),
+    0 0 15px rgba(255,48,54,.24) !important;
+}
+
+.private-access-digits span{
+  display:block !important;
+  min-width:0 !important;
+  font-size:58px !important;
+  font-weight:900 !important;
+  letter-spacing:.025em !important;
+}
+
+.private-access-digits i{
+  display:block !important;
+  margin-top:-5px !important;
+  color:#ff3036 !important;
+  font-style:normal !important;
+  font-size:47px !important;
+  font-weight:700 !important;
+  opacity:.92 !important;
+}
+
+.private-access-units{
+  display:grid !important;
+  grid-template-columns:repeat(3,1fr) !important;
+  gap:24px !important;
+  margin-top:9px !important;
+  padding:0 9px !important;
+}
+
+.private-access-units span{
+  color:#575d64 !important;
+  text-align:center !important;
+  font-size:8px !important;
+  font-weight:900 !important;
+  letter-spacing:.16em !important;
+}
+
+.private-access-timer small{
+  display:block !important;
+  margin-top:14px !important;
+  text-align:center !important;
+  color:#555c63 !important;
+  font-size:9px !important;
+  font-weight:900 !important;
+  letter-spacing:.24em !important;
+}
+
+@media (max-width:760px){
+  .private-access-timer{
+    width:min(340px,90vw) !important;
+    min-width:0 !important;
+    padding:17px 16px 15px !important;
+  }
+
+  .private-access-digits span{
+    font-size:clamp(43px,13vw,56px) !important;
+  }
+
+  .private-access-digits i{
+    font-size:clamp(34px,10vw,45px) !important;
+  }
+
+  .private-access-units{
+    gap:14px !important;
+    padding:0 4px !important;
+  }
+}
+
+
+/* =========================================================
+   V66 — ONE WIDE TIMER + HERO HASHTAG MARQUEE
+   ========================================================= */
+
+/* --- PRIVATE TIMER: one wide horizontal panel, reference style --- */
+.private-access-timer{
+  width:min(970px,92vw) !important;
+  min-width:0 !important;
+  min-height:154px !important;
+  padding:27px 34px 24px !important;
+  margin:6px auto 0 !important;
+  border:1px solid rgba(255,48,54,.64) !important;
+  border-radius:14px !important;
+  background:
+    linear-gradient(180deg,rgba(255,48,54,.035),rgba(0,0,0,.10)),
+    #090c10 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.018),
+    0 15px 34px rgba(0,0,0,.28),
+    0 0 24px rgba(255,48,54,.045) !important;
+}
+
+.private-access-timer-top{
+  justify-content:center !important;
+  gap:11px !important;
+  margin:0 0 15px !important;
+  font-size:11px !important;
+  letter-spacing:.17em !important;
+  color:#9ca3aa !important;
+}
+
+.private-access-dot{
+  width:9px !important;
+  height:9px !important;
+  flex:0 0 9px !important;
+  background:#ff3036 !important;
+  box-shadow:0 0 11px rgba(255,48,54,.88) !important;
+}
+
+.private-access-timer strong{
+  display:block !important;
+  width:100% !important;
+  text-align:center !important;
+  font-family:"Courier New",Consolas,monospace !important;
+  font-variant-numeric:tabular-nums !important;
+  color:#ff3036 !important;
+  font-size:clamp(54px,5vw,76px) !important;
+  line-height:.96 !important;
+  font-weight:900 !important;
+  letter-spacing:.085em !important;
+  text-shadow:
+    0 0 6px rgba(255,48,54,.92),
+    0 0 18px rgba(255,48,54,.26) !important;
+  white-space:nowrap !important;
+}
+
+.private-access-timer small{
+  display:block !important;
+  margin-top:18px !important;
+  text-align:center !important;
+  color:#5f666d !important;
+  font-size:10px !important;
+  font-weight:900 !important;
+  letter-spacing:.25em !important;
+}
+
+/* Old V65 segmented timer pieces are no longer used. */
+.private-access-digits,
+.private-access-units{
+  display:none !important;
+}
+
+/* --- HERO BOTTOM HASHTAG RUNNING LINE --- */
+.hero{
+  padding-bottom:48px !important;
+}
+
+.hero-hashtag-marquee{
+  position:absolute !important;
+  left:0 !important;
+  right:0 !important;
+  bottom:7px !important;
+  z-index:3 !important;
+  width:100% !important;
+  overflow:hidden !important;
+  pointer-events:none !important;
+  white-space:nowrap !important;
+  opacity:.86 !important;
+  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 4%,#000 96%,transparent 100%) !important;
+  mask-image:linear-gradient(to right,transparent 0,#000 4%,#000 96%,transparent 100%) !important;
+}
+
+.hero-hashtag-track{
+  display:flex !important;
+  width:max-content !important;
+  min-width:max-content !important;
+  align-items:center !important;
+  will-change:transform !important;
+  animation:heroHashtagTicker 38s linear infinite !important;
+}
+
+.hero-hashtag-track span{
+  display:block !important;
+  flex:0 0 auto !important;
+  padding-right:56px !important;
+  color:#aeb5bc !important;
+  font-size:12px !important;
+  line-height:1.2 !important;
+  font-weight:800 !important;
+  letter-spacing:.055em !important;
+  text-transform:none !important;
+}
+
+.hero-hashtag-track span::first-letter{
+  color:inherit !important;
+}
+
+@keyframes heroHashtagTicker{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(-50%,0,0)}
+}
+
+@media (max-width:760px){
+  .hero{
+    padding-bottom:43px !important;
+  }
+
+  .hero-hashtag-marquee{
+    bottom:8px !important;
+  }
+
+  .hero-hashtag-track{
+    animation-duration:32s !important;
+  }
+
+  .hero-hashtag-track span{
+    padding-right:40px !important;
+    font-size:10px !important;
+    letter-spacing:.045em !important;
+  }
+
+  .private-access-timer{
+    width:min(94vw,620px) !important;
+    min-height:132px !important;
+    padding:22px 18px 20px !important;
+  }
+
+  .private-access-timer strong{
+    font-size:clamp(44px,12vw,62px) !important;
+    letter-spacing:.055em !important;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .hero-hashtag-track{
+    animation:none !important;
+  }
+}
+
+
+/* =========================================================
+   V68 — FLY / CROC / FROG SAME TOP-LAYER BEHAVIOR
+   Base: V66 (V67 browse-mode logic intentionally NOT used)
+   ========================================================= */
+
+/* Normal site:
+   all three characters stay above the site, like the fly. */
+#vtFlyStage,
+.vt-fly-stage,
+#vtCrocStage,
+.vt-croc-stage,
+#vtFrogStage,
+.vt-frog-stage{
+  z-index:2147483600 !important;
+}
+
+/* Character controls remain above the normal site too. */
+#vtCharacterRail,
+.vt-character-rail{
+  z-index:2147483500 !important;
+}
+
+/* Keep the name exactly where V66 already had it.
+   No position/scroll/morph changes are made here. */
+
+/* PRIVATE viewer:
+   the viewer becomes the absolute top layer,
+   while Fly / Croc / Frog stay underneath it. */
+body.private-viewer-open .private-viewer,
+body.private-viewer-open #privateViewer{
+  z-index:2147483647 !important;
+}
+
+body.private-viewer-open #vtFlyStage,
+body.private-viewer-open .vt-fly-stage,
+body.private-viewer-open #vtCrocStage,
+body.private-viewer-open .vt-croc-stage,
+body.private-viewer-open #vtFrogStage,
+body.private-viewer-open .vt-frog-stage,
+body.private-viewer-open #vtCharacterRail,
+body.private-viewer-open .vt-character-rail{
+  z-index:2147483400 !important;
+  pointer-events:none !important;
+}
+
+
+/* =========================================================
+   V69 — TRUE BODY-LEVEL CHARACTER STACKING
+   Root cause fix:
+   Frog was nested inside HERO and therefore trapped by HERO stacking context.
+   It is now a BODY-level fixed element, same as Fly/Croc.
+   ========================================================= */
+
+/* Normal site: ALL three characters are above everything. */
+#vtFlyStage,
+.vt-fly-stage,
+#vtCrocStage,
+.vt-croc-stage,
+#vtFrogStage,
+.vt-frog-stage{
+  position:fixed !important;
+  z-index:2147483645 !important;
+}
+
+/* Controls stay just below characters but above the regular site. */
+#vtCharacterRail,
+.vt-character-rail{
+  z-index:2147483644 !important;
+}
+
+/* Do NOT alter VAHRAM TUMANYAN position/morph.
+   The name keeps all previous behavior exactly as before. */
+
+/* PRIVATE VIEWER is the ONLY visual layer above the characters. */
+body.private-viewer-open .private-viewer,
+body.private-viewer-open #privateViewer{
+  z-index:2147483647 !important;
+}
+
+/* While viewer is open, keep all characters below it. */
+body.private-viewer-open #vtFlyStage,
+body.private-viewer-open .vt-fly-stage,
+body.private-viewer-open #vtCrocStage,
+body.private-viewer-open .vt-croc-stage,
+body.private-viewer-open #vtFrogStage,
+body.private-viewer-open .vt-frog-stage,
+body.private-viewer-open #vtCharacterRail,
+body.private-viewer-open .vt-character-rail{
+  z-index:2147483643 !important;
+  pointer-events:none !important;
+}
+
+
+/* =========================================================
+   V70 — ART CAROUSEL DISCOVERY HINT
+   ONLY #work is changed.
+   ========================================================= */
+
+/* Much thicker, easier-to-notice scrollbar on desktop. */
+#work .work-carousel{
+  padding-bottom:22px !important;
+  scrollbar-width:auto !important;
+  scrollbar-color:#b8ff00 #11171c !important;
+}
+
+#work .work-carousel::-webkit-scrollbar{
+  height:30px !important;
+}
+
+#work .work-carousel::-webkit-scrollbar-track{
+  background:#11171c !important;
+  border:2px solid rgba(184,255,0,.28) !important;
+  border-radius:999px !important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.025) !important;
+}
+
+#work .work-carousel::-webkit-scrollbar-thumb{
+  background:#b8ff00 !important;
+  border:4px solid #11171c !important;
+  border-radius:999px !important;
+  min-width:92px !important;
+  box-shadow:0 0 12px rgba(184,255,0,.22) !important;
+}
+
+#work .work-carousel::-webkit-scrollbar-thumb:hover{
+  background:#d2ff48 !important;
+}
+
+/* Mobile: still clearly visible, but not oversized. */
+@media (max-width:760px){
+  #work .work-carousel{
+    padding-bottom:19px !important;
+  }
+
+  #work .work-carousel::-webkit-scrollbar{
+    height:18px !important;
+  }
+
+  #work .work-carousel::-webkit-scrollbar-thumb{
+    border-width:3px !important;
+    min-width:64px !important;
+  }
+}
+
+
+/* =========================================================
+   V71 — SPEED PAINT CARD CLARITY
+   ========================================================= */
+
+.speed-paint-card{
+  position:relative !important;
+  cursor:pointer !important;
+  transition:
+    transform .20s ease,
+    border-color .20s ease,
+    box-shadow .20s ease,
+    background .20s ease !important;
+}
+
+.speed-paint-thumb{
+  position:relative !important;
+  overflow:hidden !important;
+  background:#10161b !important;
+}
+
+/* YouTube HQ thumbnails often have black letterbox bars baked into
+   the JPG itself. Zoom inside the clipped frame to remove them visually. */
+.speed-paint-thumb img{
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+  transform:scale(1.24) !important;
+  transform-origin:center center !important;
+  filter:saturate(.96) brightness(.94) contrast(1.06) !important;
+  transition:
+    transform .28s cubic-bezier(.2,.7,.2,1),
+    filter .22s ease !important;
+}
+
+.speed-paint-thumb::after{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  pointer-events:none !important;
+  background:linear-gradient(180deg,rgba(0,0,0,.01) 40%,rgba(0,0,0,.20) 100%) !important;
+  z-index:1 !important;
+}
+
+.speed-paint-youtube{
+  left:9px !important;
+  bottom:9px !important;
+  width:38px !important;
+  height:28px !important;
+  border-radius:8px !important;
+  font-size:14px !important;
+  font-weight:900 !important;
+  z-index:3 !important;
+  box-shadow:0 5px 14px rgba(0,0,0,.42),0 0 0 1px rgba(255,255,255,.10) inset !important;
+  transition:transform .20s ease,box-shadow .20s ease !important;
+}
+
+.speed-paint-card-copy{
+  position:relative !important;
+  padding:12px 11px !important;
+}
+
+.speed-paint-card-copy .speed-paint-type{
+  color:#8c99a5 !important;
+  font-size:7px !important;
+  font-weight:900 !important;
+  letter-spacing:.11em !important;
+  margin-bottom:5px !important;
+}
+
+.speed-paint-card-copy strong{
+  color:#f5f7f7 !important;
+  font-size:12px !important;
+  line-height:1.08 !important;
+}
+
+.speed-paint-open-link{
+  display:inline-flex !important;
+  align-items:center !important;
+  width:max-content !important;
+  margin-top:7px !important;
+  color:#9aa5ae !important;
+  font-size:7px !important;
+  line-height:1 !important;
+  font-weight:950 !important;
+  letter-spacing:.12em !important;
+  transition:color .18s ease,transform .18s ease !important;
+}
+
+.speed-paint-card:hover,
+.speed-paint-card:focus-visible{
+  transform:translateY(-4px) scale(1.025) !important;
+  background:#182128 !important;
+  border-color:#b8ff00 !important;
+  box-shadow:
+    0 18px 34px rgba(0,0,0,.42),
+    0 0 0 2px rgba(184,255,0,.16),
+    0 0 28px rgba(184,255,0,.22) !important;
+  outline:none !important;
+}
+
+.speed-paint-card:hover .speed-paint-thumb img,
+.speed-paint-card:focus-visible .speed-paint-thumb img{
+  transform:scale(1.31) !important;
+  filter:saturate(1.16) brightness(1.18) contrast(1.06) !important;
+}
+
+.speed-paint-card:hover .speed-paint-youtube,
+.speed-paint-card:focus-visible .speed-paint-youtube{
+  transform:scale(1.14) !important;
+  box-shadow:
+    0 6px 18px rgba(0,0,0,.48),
+    0 0 18px rgba(255,31,40,.42) !important;
+}
+
+.speed-paint-card:hover .speed-paint-open-link,
+.speed-paint-card:focus-visible .speed-paint-open-link{
+  color:#b8ff00 !important;
+  transform:translateX(2px) !important;
+}
+
+.speed-paint-card::after{
+  content:"↗" !important;
+  position:absolute !important;
+  top:8px !important;
+  right:8px !important;
+  width:22px !important;
+  height:22px !important;
+  display:grid !important;
+  place-items:center !important;
+  border-radius:7px !important;
+  color:#c5cbd0 !important;
+  background:rgba(5,8,11,.76) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  font-size:13px !important;
+  font-weight:900 !important;
+  z-index:5 !important;
+  transition:
+    color .18s ease,
+    border-color .18s ease,
+    background .18s ease,
+    transform .18s ease !important;
+  pointer-events:none !important;
+}
+
+.speed-paint-card:hover::after,
+.speed-paint-card:focus-visible::after{
+  color:#081006 !important;
+  background:#b8ff00 !important;
+  border-color:#b8ff00 !important;
+  transform:translate(1px,-1px) !important;
+}
+
+@media (max-width:760px){
+  .speed-paint-card-copy strong{
+    font-size:10px !important;
+  }
+
+  .speed-paint-open-link{
+    margin-top:5px !important;
+    font-size:6px !important;
+  }
+
+  .speed-paint-youtube{
+    width:34px !important;
+    height:25px !important;
+    font-size:12px !important;
+  }
+
+  .speed-paint-card::after{
+    width:20px !important;
+    height:20px !important;
+    top:6px !important;
+    right:6px !important;
+  }
+}
+
+
+/* =========================================================
+   V72 — CHARACTER HINT TEXT FIT
+   ========================================================= */
+.fly-disable-hint-bubble{
+  min-width:250px !important;
+  max-width:310px !important;
+}
+
+.fly-disable-hint-copy{
+  white-space:nowrap !important;
+}
+
+@media (max-width:760px){
+  .fly-disable-hint-bubble{
+    min-width:205px !important;
+    max-width:245px !important;
+  }
+
+  .fly-disable-hint-copy{
+    font-size:9px !important;
+  }
+}
+
+
+/* =========================================================
+   V74 — TRILINGUAL PRIVATE PORTFOLIO
+   Order: Armenian / English / Russian
+   Equal cards, each with the same synchronized countdown.
+   ========================================================= */
+
+#private-portfolio .private-language-grid{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:18px !important;
+  align-items:stretch !important;
+  width:100% !important;
+  margin:0 auto 30px !important;
+}
+
+#private-portfolio .private-language-card{
+  min-width:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:space-between !important;
+  gap:22px !important;
+  padding:28px 26px 24px !important;
+  border:1px solid rgba(255,48,54,.60) !important;
+  border-radius:16px !important;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(255,48,54,.035),transparent 34%),
+    linear-gradient(180deg,rgba(255,255,255,.018),rgba(0,0,0,.08)),
+    #0a0e12 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.015),
+    0 18px 34px rgba(0,0,0,.24) !important;
+}
+
+#private-portfolio .private-language-copy{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  text-align:center !important;
+  min-width:0 !important;
+}
+
+#private-portfolio .private-language-kicker{
+  margin:0 0 18px !important;
+  color:#9cacb9 !important;
+  font-size:11px !important;
+  line-height:1.2 !important;
+  font-weight:900 !important;
+  letter-spacing:.20em !important;
+  text-transform:uppercase !important;
+}
+
+#private-portfolio .private-language-title{
+  margin:0 0 22px !important;
+  color:#ff353b !important;
+  font-family:Arial,Helvetica,sans-serif !important;
+  font-size:clamp(28px,2.25vw,43px) !important;
+  line-height:1.04 !important;
+  font-weight:950 !important;
+  letter-spacing:-.035em !important;
+  text-transform:uppercase !important;
+  text-shadow:0 0 18px rgba(255,53,59,.08) !important;
+}
+
+#private-portfolio .private-language-description{
+  margin:0 !important;
+  color:#f1f3f4 !important;
+  font-size:clamp(14px,1.05vw,18px) !important;
+  line-height:1.48 !important;
+  font-weight:650 !important;
+  max-width:100% !important;
+}
+
+#private-portfolio .private-language-access{
+  position:relative !important;
+  margin:26px 0 0 !important;
+  padding-top:22px !important;
+  color:#f5f6f6 !important;
+  font-size:clamp(16px,1.28vw,22px) !important;
+  line-height:1.16 !important;
+  font-weight:950 !important;
+  text-transform:uppercase !important;
+}
+
+#private-portfolio .private-language-access::before{
+  content:"" !important;
+  position:absolute !important;
+  top:0 !important;
+  left:50% !important;
+  width:64px !important;
+  height:2px !important;
+  transform:translateX(-50%) !important;
+  background:#ff353b !important;
+  box-shadow:0 0 10px rgba(255,53,59,.22) !important;
+}
+
+#private-portfolio .private-language-open{
+  margin:15px 0 0 !important;
+  color:#aebbc6 !important;
+  font-size:clamp(11px,.86vw,14px) !important;
+  line-height:1.35 !important;
+  font-weight:850 !important;
+  letter-spacing:.045em !important;
+  text-transform:uppercase !important;
+}
+
+#private-portfolio .private-card-timer{
+  width:100% !important;
+  min-width:0 !important;
+  min-height:145px !important;
+  margin:0 !important;
+  padding:22px 15px 18px !important;
+  border-radius:13px !important;
+  flex:0 0 auto !important;
+}
+
+#private-portfolio .private-card-timer .private-access-timer-top{
+  margin:0 0 13px !important;
+  font-size:9px !important;
+  line-height:1.2 !important;
+  letter-spacing:.16em !important;
+  white-space:normal !important;
+  text-align:center !important;
+}
+
+#private-portfolio .private-card-timer strong{
+  font-size:clamp(40px,3.05vw,58px) !important;
+  line-height:1 !important;
+  letter-spacing:.055em !important;
+}
+
+#private-portfolio .private-card-timer small{
+  margin-top:14px !important;
+  font-size:8px !important;
+  line-height:1.2 !important;
+  letter-spacing:.18em !important;
+}
+
+/* Keep Armenian typography readable rather than over-compressed. */
+#private-portfolio .private-lang-hy .private-language-title{
+  font-size:clamp(26px,2vw,39px) !important;
+  letter-spacing:-.02em !important;
+}
+
+#private-portfolio .private-lang-hy .private-language-description{
+  line-height:1.52 !important;
+}
+
+/* Russian title is slightly smaller so the three cards stay balanced. */
+#private-portfolio .private-lang-ru .private-language-title{
+  font-size:clamp(27px,2.05vw,40px) !important;
+}
+
+/* Tablet: cards stack in one column for legibility. */
+@media (max-width:1180px){
+  #private-portfolio .private-language-grid{
+    grid-template-columns:1fr !important;
+    max-width:820px !important;
+    gap:18px !important;
+  }
+
+  #private-portfolio .private-language-card{
+    padding:28px 28px 24px !important;
+  }
+
+  #private-portfolio .private-language-title,
+  #private-portfolio .private-lang-hy .private-language-title,
+  #private-portfolio .private-lang-ru .private-language-title{
+    font-size:clamp(30px,5vw,44px) !important;
+  }
+
+  #private-portfolio .private-language-description{
+    font-size:16px !important;
+    max-width:720px !important;
+  }
+
+  #private-portfolio .private-card-timer{
+    max-width:680px !important;
+    align-self:center !important;
+  }
+}
+
+@media (max-width:600px){
+  #private-portfolio .private-language-card{
+    padding:22px 16px 18px !important;
+    border-radius:13px !important;
+  }
+
+  #private-portfolio .private-language-kicker{
+    font-size:9px !important;
+    margin-bottom:14px !important;
+  }
+
+  #private-portfolio .private-language-title,
+  #private-portfolio .private-lang-hy .private-language-title,
+  #private-portfolio .private-lang-ru .private-language-title{
+    font-size:clamp(25px,8.5vw,34px) !important;
+    margin-bottom:17px !important;
+  }
+
+  #private-portfolio .private-language-description{
+    font-size:14px !important;
+    line-height:1.46 !important;
+  }
+
+  #private-portfolio .private-language-access{
+    font-size:16px !important;
+    margin-top:22px !important;
+  }
+
+  #private-portfolio .private-language-open{
+    font-size:10px !important;
+  }
+
+  #private-portfolio .private-card-timer{
+    min-height:128px !important;
+    padding:18px 10px 15px !important;
+  }
+
+  #private-portfolio .private-card-timer strong{
+    font-size:clamp(38px,12vw,52px) !important;
+  }
+}
+
+
+/* =========================================================
+   V75 — COMPACT TRILINGUAL PRIVATE CARDS
+   Same content / same three languages / same synchronized timers.
+   Only the visual scale is reduced to sit closer to the size
+   of the PRIVATE project cards below.
+   ========================================================= */
+
+#private-portfolio .private-language-grid{
+  grid-template-columns:repeat(3,minmax(0,460px)) !important;
+  justify-content:center !important;
+  gap:16px !important;
+  max-width:1420px !important;
+  margin:0 auto 24px !important;
+}
+
+#private-portfolio .private-language-card{
+  gap:18px !important;
+  padding:22px 20px 18px !important;
+  border-radius:14px !important;
+}
+
+#private-portfolio .private-language-kicker{
+  margin-bottom:13px !important;
+  font-size:9px !important;
+  letter-spacing:.18em !important;
+}
+
+#private-portfolio .private-language-title{
+  margin-bottom:16px !important;
+  font-size:clamp(24px,1.85vw,34px) !important;
+  line-height:1.02 !important;
+}
+
+#private-portfolio .private-lang-hy .private-language-title{
+  font-size:clamp(23px,1.75vw,32px) !important;
+}
+
+#private-portfolio .private-lang-ru .private-language-title{
+  font-size:clamp(23px,1.78vw,33px) !important;
+}
+
+#private-portfolio .private-language-description{
+  font-size:clamp(12px,.88vw,15px) !important;
+  line-height:1.42 !important;
+  font-weight:650 !important;
+}
+
+#private-portfolio .private-language-access{
+  margin-top:20px !important;
+  padding-top:16px !important;
+  font-size:clamp(14px,1vw,18px) !important;
+  line-height:1.13 !important;
+}
+
+#private-portfolio .private-language-access::before{
+  width:54px !important;
+}
+
+#private-portfolio .private-language-open{
+  margin-top:11px !important;
+  font-size:clamp(9px,.67vw,12px) !important;
+  line-height:1.25 !important;
+}
+
+#private-portfolio .private-card-timer{
+  min-height:118px !important;
+  padding:17px 12px 14px !important;
+  border-radius:12px !important;
+}
+
+#private-portfolio .private-card-timer .private-access-timer-top{
+  margin-bottom:10px !important;
+  font-size:7px !important;
+  letter-spacing:.15em !important;
+}
+
+#private-portfolio .private-card-timer strong{
+  font-size:clamp(34px,2.5vw,46px) !important;
+  letter-spacing:.05em !important;
+}
+
+#private-portfolio .private-card-timer small{
+  margin-top:10px !important;
+  font-size:7px !important;
+  letter-spacing:.16em !important;
+}
+
+/* Keep the 3-card row longer on medium desktop widths. */
+@media (max-width:1450px) and (min-width:1051px){
+  #private-portfolio .private-language-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    max-width:1320px !important;
+    padding-inline:8px !important;
+  }
+
+  #private-portfolio .private-language-card{
+    padding:20px 17px 17px !important;
+  }
+
+  #private-portfolio .private-language-title,
+  #private-portfolio .private-lang-hy .private-language-title,
+  #private-portfolio .private-lang-ru .private-language-title{
+    font-size:clamp(22px,2.15vw,30px) !important;
+  }
+
+  #private-portfolio .private-language-description{
+    font-size:13px !important;
+  }
+
+  #private-portfolio .private-language-access{
+    font-size:15px !important;
+  }
+}
+
+/* Tablet/mobile remain stacked and readable, but still more compact than V74. */
+@media (max-width:1050px){
+  #private-portfolio .private-language-grid{
+    grid-template-columns:1fr !important;
+    max-width:720px !important;
+    gap:14px !important;
+  }
+
+  #private-portfolio .private-language-card{
+    padding:20px 18px 17px !important;
+  }
+
+  #private-portfolio .private-language-title,
+  #private-portfolio .private-lang-hy .private-language-title,
+  #private-portfolio .private-lang-ru .private-language-title{
+    font-size:clamp(26px,5vw,36px) !important;
+  }
+
+  #private-portfolio .private-language-description{
+    font-size:14px !important;
+    max-width:650px !important;
+  }
+
+  #private-portfolio .private-card-timer{
+    max-width:600px !important;
+    min-height:112px !important;
+  }
+}
+
+@media (max-width:600px){
+  #private-portfolio .private-language-card{
+    padding:18px 14px 15px !important;
+  }
+
+  #private-portfolio .private-language-title,
+  #private-portfolio .private-lang-hy .private-language-title,
+  #private-portfolio .private-lang-ru .private-language-title{
+    font-size:clamp(23px,7.7vw,31px) !important;
+    margin-bottom:14px !important;
+  }
+
+  #private-portfolio .private-language-description{
+    font-size:13px !important;
+  }
+
+  #private-portfolio .private-language-access{
+    font-size:15px !important;
+    margin-top:18px !important;
+  }
+
+  #private-portfolio .private-card-timer{
+    min-height:104px !important;
+    padding:15px 10px 12px !important;
+  }
+
+  #private-portfolio .private-card-timer strong{
+    font-size:clamp(34px,11vw,45px) !important;
+  }
+}
+
+
+/* =========================================================
+   V81 — CLEAN ART GALLERY
+   No helper text, arrows, grey panel, counters, or zoom.
+   ========================================================= */
+.vt-clean-gallery{
+  position:relative;
+  background:#080b0e !important;
+  padding-top:42px !important;
+  padding-bottom:54px !important;
+}
+
+.vt-clean-gallery-head{
+  margin:0 0 18px !important;
+}
+
+.vt-clean-gallery-title{
+  margin:0 !important;
+  color:#f4f4f1 !important;
+  font-family:Arial,Helvetica,sans-serif !important;
+  font-size:clamp(34px,3.2vw,56px) !important;
+  line-height:.95 !important;
+  font-weight:900 !important;
+  letter-spacing:-.045em !important;
+}
+
+.vt-clean-gallery-title em{
+  color:#b8ff00 !important;
+  font-style:italic !important;
+  text-decoration:underline !important;
+  text-decoration-thickness:4px !important;
+  text-underline-offset:7px !important;
+}
+
+/* Only the actual image is visible. No grey viewing container. */
+.vt-clean-gallery-main{
+  display:flex !important;
+  justify-content:center !important;
+  align-items:flex-end !important;
+  width:100% !important;
+  min-height:0 !important;
+  margin:0 auto !important;
+  padding:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  overflow:visible !important;
+}
+
+.vt-clean-gallery-main img{
+  display:block !important;
+  width:auto !important;
+  height:auto !important;
+  max-width:min(100%,1100px) !important;
+  max-height:620px !important;
+  object-fit:contain !important;
+  object-position:center bottom !important;
+  pointer-events:none !important;
+  user-select:none !important;
+  -webkit-user-drag:none !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  transform:none !important;
+}
+
+/* Thumbnails are small, centered, and close to the selected image. */
+.vt-clean-gallery-thumbs{
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+  gap:10px !important;
+  width:min(100%,900px) !important;
+  margin:12px auto 0 !important;
+  padding:8px 6px 4px !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  scroll-behavior:smooth !important;
+  scrollbar-width:none !important;
+}
+
+.vt-clean-gallery-thumbs::-webkit-scrollbar{
+  display:none !important;
+}
+
+.vt-clean-gallery-thumb{
+  flex:0 0 92px !important;
+  height:62px !important;
+  padding:0 !important;
+  overflow:hidden !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  border-radius:7px !important;
+  background:#10151a !important;
+  opacity:.58 !important;
+  cursor:pointer !important;
+  transition:
+    opacity .18s ease,
+    transform .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease !important;
+}
+
+.vt-clean-gallery-thumb img{
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+}
+
+.vt-clean-gallery-thumb:hover{
+  opacity:.92 !important;
+  transform:translateY(-2px) !important;
+}
+
+.vt-clean-gallery-thumb.active{
+  opacity:1 !important;
+  border-color:#b8ff00 !important;
+  box-shadow:
+    0 0 0 1px rgba(184,255,0,.13),
+    0 0 14px rgba(184,255,0,.15) !important;
+}
+
+.vt-clean-gallery-empty{
+  margin:18px auto 0 !important;
+  max-width:720px !important;
+  text-align:center !important;
+  color:#87919a !important;
+  font-size:11px !important;
+}
+
+.vt-clean-gallery-empty[hidden]{
+  display:none !important;
+}
+
+.vt-clean-gallery-empty code{
+  color:#cdd5db !important;
+  background:#11171c !important;
+  padding:2px 5px !important;
+  border-radius:4px !important;
+}
+
+@media (max-width:900px){
+  .vt-clean-gallery{
+    padding-top:34px !important;
+    padding-bottom:44px !important;
+  }
+
+  .vt-clean-gallery-main img{
+    max-width:100% !important;
+    max-height:520px !important;
+  }
+
+  .vt-clean-gallery-thumbs{
+    justify-content:flex-start !important;
+    width:100% !important;
+    margin-top:10px !important;
+  }
+
+  .vt-clean-gallery-thumb{
+    flex-basis:82px !important;
+    height:56px !important;
+  }
+}
+
+@media (max-width:600px){
+  .vt-clean-gallery-main img{
+    max-height:390px !important;
+  }
+
+  .vt-clean-gallery-thumb{
+    flex-basis:72px !important;
+    height:50px !important;
+  }
+}
+
+
+/* =========================================================
+   V82 — FIXED GALLERY STAGE
+   Different source image sizes no longer move thumbnails up/down.
+   The viewing stage keeps a fixed size on desktop and mobile.
+   ========================================================= */
+
+/* Desktop: fixed visual stage */
+.vt-clean-gallery-main{
+  width:min(100%,1180px) !important;
+  height:620px !important;
+  min-height:620px !important;
+  max-height:620px !important;
+  margin:0 auto !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  overflow:hidden !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+
+/* Every artwork fits the exact same fixed stage.
+   Aspect ratio is preserved and there is no crop / stretch. */
+.vt-clean-gallery-main img{
+  display:block !important;
+  width:auto !important;
+  height:auto !important;
+  max-width:100% !important;
+  max-height:100% !important;
+  object-fit:contain !important;
+  object-position:center center !important;
+  margin:auto !important;
+  transform:none !important;
+  pointer-events:none !important;
+}
+
+/* Thumbnails are anchored to the fixed stage, so they never jump vertically. */
+.vt-clean-gallery-thumbs{
+  width:min(100%,900px) !important;
+  min-height:78px !important;
+  margin:10px auto 0 !important;
+  padding:8px 6px 4px !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+/* Tablet */
+@media (max-width:900px){
+  .vt-clean-gallery-main{
+    width:100% !important;
+    height:500px !important;
+    min-height:500px !important;
+    max-height:500px !important;
+  }
+
+  .vt-clean-gallery-thumbs{
+    min-height:72px !important;
+    margin-top:9px !important;
+  }
+}
+
+/* Phones: fixed phone-sized viewing area.
+   Portrait, square and landscape images all use this same box. */
+@media (max-width:600px){
+  .vt-clean-gallery-main{
+    width:100% !important;
+    height:360px !important;
+    min-height:360px !important;
+    max-height:360px !important;
+  }
+
+  .vt-clean-gallery-thumbs{
+    min-height:64px !important;
+    margin-top:8px !important;
+    justify-content:flex-start !important;
+  }
+}
+
+/* Very small phones */
+@media (max-width:390px){
+  .vt-clean-gallery-main{
+    height:320px !important;
+    min-height:320px !important;
+    max-height:320px !important;
+  }
+}
+
+
+/* =========================================================
+   V83 — SIMPLE FRAMED GALLERY STAGE
+   Keep the main artwork unchanged and add a light artistic frame
+   with simple textured edges and tape accents around it.
+   ========================================================= */
+
+.vt-clean-gallery-main{
+  position:relative !important;
+}
+
+.vt-clean-gallery-stageframe{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  max-width:100%;
+  max-height:100%;
+  padding:14px;
+  background:
+    linear-gradient(180deg, rgba(19,24,29,.92), rgba(10,13,17,.96)),
+    repeating-linear-gradient(135deg, rgba(255,255,255,.018) 0 8px, rgba(255,255,255,0) 8px 16px);
+  border:1px solid rgba(237,239,241,.16);
+  box-shadow:
+    0 20px 48px rgba(0,0,0,.42),
+    0 0 0 1px rgba(184,255,0,.05),
+    inset 0 1px 0 rgba(255,255,255,.04);
+  overflow:visible;
+  isolation:isolate;
+}
+
+.vt-clean-gallery-stageframe::before,
+.vt-clean-gallery-stageframe::after{
+  content:"";
+  position:absolute;
+  pointer-events:none;
+}
+
+.vt-clean-gallery-stageframe::before{
+  inset:7px;
+  border:1px solid rgba(255,255,255,.14);
+  opacity:.9;
+  transform:rotate(-.35deg);
+}
+
+.vt-clean-gallery-stageframe::after{
+  inset:-6px;
+  border:1px solid rgba(255,255,255,.08);
+  opacity:.65;
+  transform:rotate(.5deg);
+}
+
+.vt-clean-gallery-stageframe img{
+  position:relative;
+  z-index:2;
+  border:1px solid rgba(255,255,255,.08) !important;
+  box-shadow:0 8px 30px rgba(0,0,0,.28) !important;
+  background:#0a0d10;
+}
+
+.vt-gallery-tape{
+  position:absolute;
+  z-index:4;
+  display:block;
+  width:76px;
+  height:18px;
+  background:linear-gradient(180deg, rgba(214,207,182,.88), rgba(170,160,130,.72));
+  border:1px solid rgba(66,55,33,.18);
+  box-shadow:0 2px 8px rgba(0,0,0,.18);
+  opacity:.92;
+  mix-blend-mode:screen;
+}
+
+.vt-gallery-tape::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:repeating-linear-gradient(90deg, rgba(255,255,255,.10) 0 5px, rgba(255,255,255,0) 5px 10px);
+  opacity:.4;
+}
+
+.vt-gallery-tape-a{
+  top:-9px;
+  left:8%;
+  transform:rotate(-11deg);
+}
+
+.vt-gallery-tape-b{
+  top:-11px;
+  right:10%;
+  transform:rotate(8deg);
+}
+
+.vt-gallery-tape-c{
+  bottom:-10px;
+  right:18%;
+  width:66px;
+  transform:rotate(-7deg);
+}
+
+@media (max-width:900px){
+  .vt-clean-gallery-stageframe{
+    padding:11px;
+  }
+
+  .vt-gallery-tape{
+    width:62px;
+    height:16px;
+  }
+}
+
+@media (max-width:600px){
+  .vt-clean-gallery-stageframe{
+    padding:9px;
+  }
+
+  .vt-clean-gallery-stageframe::before{
+    inset:5px;
+  }
+
+  .vt-gallery-tape{
+    width:48px;
+    height:14px;
+  }
+
+  .vt-gallery-tape-c{
+    width:42px;
+  }
+}
+
+
+/* =========================================================
+   V86 — keep V83 exactly as is and ADD 4 corner tapes only
+   Requested by user after V85 rollback.
+   Existing 3 tapes remain untouched.
+   ========================================================= */
+
+.vt-gallery-corner-tape{
+  position:absolute;
+  z-index:5;
+  display:block;
+  width:84px;
+  height:24px;
+  border-radius:2px;
+  opacity:.97;
+  box-shadow:0 3px 10px rgba(0,0,0,.22);
+  pointer-events:none;
+  background:
+    linear-gradient(180deg, rgba(214,207,182,.95), rgba(174,164,138,.82));
+  clip-path:polygon(3% 10%, 97% 0%, 100% 88%, 6% 100%, 0% 22%);
+}
+
+.vt-gallery-corner-tape::before,
+.vt-gallery-corner-tape::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+/* soft paper fibers */
+.vt-gallery-corner-tape::before{
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(255,255,255,.08) 0 4px,
+      rgba(255,255,255,0) 4px 10px),
+    repeating-linear-gradient(0deg,
+      rgba(80,60,35,.05) 0 2px,
+      rgba(80,60,35,0) 2px 6px);
+  mix-blend-mode:soft-light;
+  opacity:.75;
+}
+
+/* a hand-drawn crooked edge line */
+.vt-gallery-corner-tape::after{
+  inset:1px;
+  border:1px solid rgba(76,66,45,.22);
+  clip-path:polygon(6% 8%, 96% 2%, 99% 89%, 8% 98%, 2% 24%);
+  opacity:.55;
+}
+
+.vt-gallery-corner-tape-tl{
+  top:-18px;
+  left:-18px;
+  transform:rotate(-49deg);
+}
+
+.vt-gallery-corner-tape-tr{
+  top:-18px;
+  right:-18px;
+  transform:rotate(44deg);
+}
+
+.vt-gallery-corner-tape-bl{
+  bottom:-18px;
+  left:-18px;
+  transform:rotate(44deg);
+}
+
+.vt-gallery-corner-tape-br{
+  bottom:-18px;
+  right:-18px;
+  width:90px;
+  height:26px;
+  background:linear-gradient(180deg, rgba(191,255,19,.98), rgba(153,220,0,.92));
+  box-shadow:0 3px 10px rgba(0,0,0,.22), 0 0 12px rgba(174,255,0,.12);
+  transform:rotate(-36deg);
+}
+
+@media (max-width: 900px){
+  .vt-gallery-corner-tape{
+    width:70px;
+    height:20px;
+  }
+  .vt-gallery-corner-tape-tl{top:-15px;left:-15px;}
+  .vt-gallery-corner-tape-tr{top:-15px;right:-15px;}
+  .vt-gallery-corner-tape-bl{bottom:-15px;left:-15px;}
+  .vt-gallery-corner-tape-br{bottom:-15px;right:-15px;width:75px;height:22px;}
+}
+
+@media (max-width: 600px){
+  .vt-gallery-corner-tape{
+    width:56px;
+    height:16px;
+  }
+  .vt-gallery-corner-tape-tl{top:-11px;left:-11px;}
+  .vt-gallery-corner-tape-tr{top:-11px;right:-11px;}
+  .vt-gallery-corner-tape-bl{bottom:-11px;left:-11px;}
+  .vt-gallery-corner-tape-br{bottom:-11px;right:-11px;width:60px;height:18px;}
+}
+
+
+/* =========================================================
+   V87 — FIXED TAPE ART GALLERY
+   Inspired by the approved mockup:
+   - fixed frame size
+   - tape positions never move when image changes
+   - 6 tape pieces: TL / top-center / TR / BL / bottom-center / BR lime
+   - light code-drawn chalk / lime background decoration
+   ========================================================= */
+
+/* old V83/V86 tape layers are no longer used */
+.vt-gallery-tape,
+.vt-gallery-corner-tape{
+  display:none !important;
+}
+
+/* Keep all decoration behind the artwork */
+.vt-clean-gallery{
+  overflow:hidden !important;
+  isolation:isolate !important;
+  background:
+    repeating-linear-gradient(
+      168deg,
+      rgba(255,255,255,.013) 0 1px,
+      transparent 1px 34px
+    ),
+    radial-gradient(circle at 13% 40%, rgba(184,255,0,.025), transparent 24%),
+    radial-gradient(circle at 88% 47%, rgba(184,255,0,.020), transparent 24%),
+    #080b0e !important;
+}
+
+.vt-clean-gallery-head,
+.vt-clean-gallery-main,
+.vt-clean-gallery-thumbs,
+.vt-clean-gallery-empty{
+  position:relative !important;
+  z-index:3 !important;
+}
+
+/* Fixed frame: image changes INSIDE it, frame/tapes do not move */
+.vt-clean-gallery-stageframe{
+  position:relative !important;
+  width:min(100%,1100px) !important;
+  height:590px !important;
+  max-width:1100px !important;
+  max-height:590px !important;
+  min-height:590px !important;
+  flex:0 0 auto !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  padding:14px !important;
+  background:
+    linear-gradient(180deg,rgba(19,24,29,.93),rgba(9,12,16,.97)),
+    repeating-linear-gradient(
+      135deg,
+      rgba(255,255,255,.018) 0 7px,
+      transparent 7px 15px
+    ) !important;
+
+  border:1px solid rgba(235,238,240,.17) !important;
+  box-shadow:
+    0 20px 48px rgba(0,0,0,.43),
+    0 0 0 1px rgba(184,255,0,.04),
+    inset 0 1px 0 rgba(255,255,255,.045) !important;
+  overflow:visible !important;
+}
+
+/* slightly imperfect paper/sketch border */
+.vt-clean-gallery-stageframe::before{
+  inset:7px !important;
+  border:1px solid rgba(255,255,255,.16) !important;
+  transform:rotate(-.28deg) !important;
+}
+
+.vt-clean-gallery-stageframe::after{
+  inset:-6px !important;
+  border:1px solid rgba(255,255,255,.075) !important;
+  transform:rotate(.42deg) !important;
+}
+
+/* Artwork stays untouched, only fits inside fixed frame */
+.vt-clean-gallery-stageframe img{
+  position:relative !important;
+  z-index:2 !important;
+  width:auto !important;
+  height:auto !important;
+  max-width:100% !important;
+  max-height:100% !important;
+  object-fit:contain !important;
+  object-position:center center !important;
+  margin:auto !important;
+  transform:none !important;
+  border:0 !important;
+  box-shadow:none !important;
+  background:transparent !important;
+}
+
+/* ---------------------------------------------------------
+   FIXED TAPE PIECES
+   --------------------------------------------------------- */
+.vt-fixed-tape{
+  position:absolute;
+  z-index:7;
+  width:82px;
+  height:22px;
+  pointer-events:none;
+  opacity:.96;
+  border-radius:2px;
+  background:
+    linear-gradient(180deg,rgba(219,215,197,.96),rgba(170,163,137,.83));
+  box-shadow:0 3px 9px rgba(0,0,0,.24);
+  clip-path:polygon(3% 8%,97% 0,100% 90%,5% 100%,0 18%);
+}
+
+.vt-fixed-tape::before,
+.vt-fixed-tape::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+.vt-fixed-tape::before{
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.10) 0 4px,
+      transparent 4px 10px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(73,62,42,.05) 0 2px,
+      transparent 2px 6px
+    );
+  opacity:.85;
+}
+
+.vt-fixed-tape::after{
+  inset:1px;
+  border:1px solid rgba(75,65,45,.18);
+  clip-path:polygon(5% 7%,96% 2%,99% 89%,7% 98%,2% 21%);
+  opacity:.55;
+}
+
+/* positions match the approved mockup approximately */
+.vt-fixed-tape-tl{
+  top:-13px;
+  left:-14px;
+  transform:rotate(-38deg);
+}
+
+.vt-fixed-tape-tc{
+  top:-12px;
+  left:50%;
+  width:68px;
+  height:18px;
+  transform:translateX(-50%) rotate(-4deg);
+}
+
+.vt-fixed-tape-tr{
+  top:-13px;
+  right:-14px;
+  transform:rotate(37deg);
+}
+
+.vt-fixed-tape-bl{
+  bottom:-13px;
+  left:-14px;
+  transform:rotate(36deg);
+}
+
+.vt-fixed-tape-bc{
+  bottom:-12px;
+  left:50%;
+  width:68px;
+  height:18px;
+  transform:translateX(-50%) rotate(-4deg);
+}
+
+.vt-fixed-tape-br{
+  bottom:-16px;
+  right:-18px;
+  width:94px;
+  height:26px;
+  transform:rotate(-28deg);
+  background:
+    linear-gradient(180deg,rgba(197,255,20,.99),rgba(157,223,0,.94));
+  box-shadow:
+    0 3px 10px rgba(0,0,0,.23),
+    0 0 14px rgba(184,255,0,.13);
+}
+
+/* ---------------------------------------------------------
+   CODE-DRAWN BACKGROUND MARKS
+   --------------------------------------------------------- */
+.vt-gallery-code-art{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+.vt-art-mark{
+  position:absolute;
+  display:block;
+  opacity:.62;
+}
+
+/* lime brush strokes */
+.vt-art-mark-1,
+.vt-art-mark-3,
+.vt-art-mark-6{
+  height:7px;
+  background:#b8ff00;
+  clip-path:polygon(0 35%,18% 18%,37% 42%,55% 13%,73% 35%,100% 4%,94% 72%,68% 62%,45% 86%,22% 58%,4% 76%);
+  box-shadow:0 0 10px rgba(184,255,0,.08);
+}
+
+.vt-art-mark-1{
+  width:132px;
+  left:2.5%;
+  top:30%;
+  transform:rotate(-18deg);
+}
+
+.vt-art-mark-3{
+  width:116px;
+  right:3%;
+  top:27%;
+  transform:rotate(11deg);
+}
+
+.vt-art-mark-6{
+  width:148px;
+  left:3%;
+  bottom:12%;
+  transform:rotate(-13deg);
+}
+
+/* chalk / pencil scribbles */
+.vt-art-mark-2,
+.vt-art-mark-4,
+.vt-art-mark-7{
+  width:96px;
+  height:52px;
+  border-top:2px solid rgba(220,224,226,.23);
+  border-radius:50%;
+}
+
+.vt-art-mark-2{
+  left:1%;
+  top:57%;
+  transform:rotate(-18deg) skewX(-12deg);
+}
+
+.vt-art-mark-4{
+  right:1.2%;
+  top:55%;
+  transform:rotate(17deg) skewX(13deg);
+}
+
+.vt-art-mark-7{
+  right:2.5%;
+  bottom:9%;
+  width:118px;
+  transform:rotate(13deg);
+}
+
+/* small lime slash pairs */
+.vt-art-mark-5,
+.vt-art-mark-8{
+  width:50px;
+  height:30px;
+}
+
+.vt-art-mark-5{
+  left:4%;
+  top:18%;
+  background:
+    linear-gradient(54deg,transparent 0 38%,#b8ff00 40% 47%,transparent 49%),
+    linear-gradient(54deg,transparent 0 59%,#b8ff00 61% 67%,transparent 69%);
+}
+
+.vt-art-mark-8{
+  right:4%;
+  bottom:26%;
+  background:
+    linear-gradient(-53deg,transparent 0 38%,#b8ff00 40% 47%,transparent 49%),
+    linear-gradient(-53deg,transparent 0 59%,#b8ff00 61% 67%,transparent 69%);
+}
+
+/* Keep existing thumbnail behavior */
+.vt-clean-gallery-thumbs{
+  margin-top:12px !important;
+}
+
+/* Tablet */
+@media (max-width:900px){
+  .vt-clean-gallery-stageframe{
+    width:100% !important;
+    height:470px !important;
+    min-height:470px !important;
+    max-height:470px !important;
+    padding:11px !important;
+  }
+
+  .vt-fixed-tape{
+    width:66px;
+    height:18px;
+  }
+
+  .vt-fixed-tape-tc,
+  .vt-fixed-tape-bc{
+    width:56px;
+    height:16px;
+  }
+
+  .vt-fixed-tape-br{
+    width:74px;
+    height:20px;
+  }
+
+  .vt-art-mark{
+    opacity:.45;
+  }
+}
+
+/* Mobile */
+@media (max-width:600px){
+  .vt-clean-gallery-stageframe{
+    width:100% !important;
+    height:330px !important;
+    min-height:330px !important;
+    max-height:330px !important;
+    padding:9px !important;
+  }
+
+  .vt-fixed-tape{
+    width:50px;
+    height:14px;
+  }
+
+  .vt-fixed-tape-tl{top:-9px;left:-10px;}
+  .vt-fixed-tape-tr{top:-9px;right:-10px;}
+  .vt-fixed-tape-bl{bottom:-9px;left:-10px;}
+
+  .vt-fixed-tape-tc,
+  .vt-fixed-tape-bc{
+    width:44px;
+    height:12px;
+  }
+
+  .vt-fixed-tape-br{
+    bottom:-10px;
+    right:-11px;
+    width:56px;
+    height:16px;
+  }
+
+  .vt-gallery-code-art{
+    opacity:.7;
+  }
+}
+
+@media (max-width:390px){
+  .vt-clean-gallery-stageframe{
+    height:295px !important;
+    min-height:295px !important;
+    max-height:295px !important;
+  }
+}
+
+
+/* =========================================================
+   V92 — MAIN GALLERY ONLY
+   Bottom cards/thumbnails remain unchanged.
+   ========================================================= */
+
+/* Fixed outer viewing area so the thumbnail row never jumps. */
+.vt-clean-gallery-main{
+  width:min(100%,1180px) !important;
+  height:590px !important;
+  min-height:590px !important;
+  max-height:590px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  overflow:visible !important;
+  margin-inline:auto !important;
+}
+
+/* This decorative frame now follows the current image proportions. */
+.vt-clean-gallery-stageframe{
+  min-width:0 !important;
+  min-height:0 !important;
+  max-width:calc(100% - 40px) !important;
+  max-height:520px !important;
+  flex:0 0 auto !important;
+  box-sizing:border-box !important;
+  overflow:visible !important;
+  transition:
+    width .28s ease,
+    height .28s ease !important;
+}
+
+/* Critical rule:
+   preserve each artwork's natural proportions.
+   The JS gives the frame the SAME aspect ratio as the image,
+   so filling the frame does not distort the artwork. */
+.vt-clean-gallery-stageframe img{
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  max-width:none !important;
+  max-height:none !important;
+  object-fit:contain !important;
+  object-position:center center !important;
+  margin:0 !important;
+  padding:0 !important;
+  transform:none !important;
+  border:0 !important;
+  background:transparent !important;
+}
+
+/* Tapes remain attached to the decorative frame itself,
+   so every current image is viewed with the same taped treatment. */
+.vt-fixed-tape{
+  pointer-events:none !important;
+}
+
+@media (max-width:900px){
+  .vt-clean-gallery-main{
+    height:490px !important;
+    min-height:490px !important;
+    max-height:490px !important;
+  }
+
+  .vt-clean-gallery-stageframe{
+    max-width:calc(100% - 30px) !important;
+    max-height:420px !important;
+  }
+}
+
+@media (max-width:600px){
+  .vt-clean-gallery-main{
+    height:360px !important;
+    min-height:360px !important;
+    max-height:360px !important;
+  }
+
+  .vt-clean-gallery-stageframe{
+    max-width:calc(100% - 20px) !important;
+    max-height:300px !important;
+  }
+}
+
+@media (max-width:390px){
+  .vt-clean-gallery-main{
+    height:330px !important;
+    min-height:330px !important;
+    max-height:330px !important;
+  }
+
+  .vt-clean-gallery-stageframe{
+    max-height:270px !important;
+  }
+}
+
+
+/* =========================================================
+   V93 — DECORATION FOLLOWS CURRENT IMAGE
+   Based on fixed V92.
+   ONLY change: frame/tapes now hug the current artwork itself.
+   Artwork sizing, aspect ratio, gallery controls and thumbnails are unchanged.
+   ========================================================= */
+
+/* Neutralize the older fixed frame box from earlier gallery versions.
+   V92 JavaScript now writes the exact current artwork size with !important. */
+.vt-clean-gallery-stageframe{
+  width:auto !important;
+  height:auto !important;
+  min-width:0 !important;
+  min-height:0 !important;
+  overflow:visible !important;
+}
+
+/* Keep the image exactly inside the frame dimensions computed by V92.
+   No crop, no stretch, same V92 display proportions. */
+.vt-clean-gallery-stageframe img{
+  width:100% !important;
+  height:100% !important;
+  object-fit:contain !important;
+  object-position:center center !important;
+  display:block !important;
+}
+
+/* Decorative layers remain attached to the current frame edge. */
+.vt-clean-gallery-stageframe::before,
+.vt-clean-gallery-stageframe::after,
+.vt-fixed-tape{
+  pointer-events:none !important;
+}
+
+/* Bottom thumbnail cards intentionally untouched. */
+
+
+/* =========================================================
+   V94 — SNUG FRAME AROUND CURRENT ARTWORK
+   Base: V93
+   Only removes the excessive black empty area between artwork and frame.
+   ========================================================= */
+
+.vt-clean-gallery-stageframe{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:12px !important;
+  box-sizing:border-box !important;
+  overflow:visible !important;
+}
+
+/* Image keeps V93 dimensions/aspect.
+   JS sets exact width/height; no crop, no stretch. */
+.vt-clean-gallery-stageframe img{
+  flex:0 0 auto !important;
+  max-width:none !important;
+  max-height:none !important;
+  object-fit:contain !important;
+  object-position:center center !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+
+/* Frame lines and tapes stay attached to this snug frame. */
+.vt-clean-gallery-stageframe::before,
+.vt-clean-gallery-stageframe::after,
+.vt-fixed-tape{
+  pointer-events:none !important;
+}
+
+@media (max-width:600px){
+  .vt-clean-gallery-stageframe{
+    padding:8px !important;
+  }
+}
+
+/* Bottom thumbnail cards intentionally unchanged. */
+
+
+/* =========================================================
+   V95 — BOTTOM GALLERY THUMBNAILS ONLY
+   Visual-only treatment based on the supplied reference:
+   paper edge + tape + lime painted active state.
+   No layout, sizing, switching, or gallery logic changes.
+   ========================================================= */
+
+.vt-clean-gallery-thumbs{
+  overflow:visible !important;
+}
+
+/* Keep original size/layout; only decorate the existing button */
+.vt-clean-gallery-thumb{
+  position:relative !important;
+  isolation:isolate !important;
+  overflow:visible !important;
+  background:#11161b !important;
+  border:1px solid rgba(238,234,215,.34) !important;
+  box-shadow:
+    0 7px 16px rgba(0,0,0,.30),
+    0 0 0 1px rgba(255,255,255,.025) !important;
+}
+
+/* rough paper-like outer edge */
+.vt-clean-gallery-thumb::before{
+  content:"";
+  position:absolute;
+  z-index:-2;
+  inset:-5px;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg, rgba(232,226,203,.72), rgba(177,169,143,.55)),
+    repeating-linear-gradient(
+      92deg,
+      rgba(255,255,255,.08) 0 3px,
+      rgba(80,70,52,.05) 3px 7px
+    );
+  clip-path:polygon(
+    2% 5%, 16% 2%, 34% 4%, 52% 1%, 72% 3%, 98% 1%,
+    100% 20%, 98% 43%, 100% 64%, 97% 97%,
+    78% 99%, 61% 97%, 40% 100%, 20% 98%, 2% 100%,
+    0 76%, 2% 53%, 0 29%
+  );
+  opacity:.78;
+  box-shadow:0 3px 9px rgba(0,0,0,.25);
+}
+
+/* top tape strip */
+.vt-clean-gallery-thumb::after{
+  content:"";
+  position:absolute;
+  z-index:4;
+  top:-7px;
+  left:50%;
+  width:26px;
+  height:9px;
+  transform:translateX(-50%) rotate(-3deg);
+  pointer-events:none;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.10) 0 3px,
+      transparent 3px 7px
+    ),
+    linear-gradient(180deg, rgba(218,212,190,.96), rgba(165,156,130,.90));
+  clip-path:polygon(4% 8%,96% 0,100% 89%,6% 100%,0 18%);
+  box-shadow:0 2px 4px rgba(0,0,0,.18);
+}
+
+/* artwork itself remains exactly as before */
+.vt-clean-gallery-thumb img{
+  position:relative !important;
+  z-index:1 !important;
+  display:block !important;
+}
+
+/* ACTIVE: hand-painted lime accent, without changing dimensions */
+.vt-clean-gallery-thumb.active{
+  border-color:rgba(184,255,0,.88) !important;
+  box-shadow:
+    0 0 0 2px rgba(184,255,0,.42),
+    0 0 18px rgba(184,255,0,.17),
+    0 7px 16px rgba(0,0,0,.30) !important;
+}
+
+.vt-clean-gallery-thumb.active::before{
+  inset:-7px;
+  opacity:1;
+  background:
+    linear-gradient(
+      175deg,
+      rgba(184,255,0,.92) 0 7%,
+      rgba(230,225,202,.76) 8% 89%,
+      rgba(184,255,0,.80) 90% 100%
+    ),
+    repeating-linear-gradient(
+      92deg,
+      rgba(255,255,255,.08) 0 3px,
+      rgba(80,70,52,.05) 3px 7px
+    );
+  filter:drop-shadow(0 0 6px rgba(184,255,0,.12));
+}
+
+/* small lime brush swipe behind the active card */
+.vt-clean-gallery-thumb.active > img{
+  outline:1px solid rgba(184,255,0,.18);
+  outline-offset:-1px;
+}
+
+@media (max-width:600px){
+  .vt-clean-gallery-thumb::before{
+    inset:-4px;
+  }
+
+  .vt-clean-gallery-thumb::after{
+    top:-6px;
+    width:22px;
+    height:8px;
+  }
+
+  .vt-clean-gallery-thumb.active::before{
+    inset:-6px;
+  }
+}
+
+
+/* =========================================================
+   V96 — MAIN ARTWORK PAPER FRAME ONLY
+   Base: V95
+   Bottom thumbnails remain completely unchanged.
+   ========================================================= */
+
+/* Preserve V95 geometry/functionality. Only restyle the frame surface. */
+.vt-clean-gallery-stageframe{
+  position:relative !important;
+  isolation:isolate !important;
+  background:
+    linear-gradient(180deg, rgba(228,223,205,.92), rgba(176,168,143,.78)),
+    repeating-linear-gradient(
+      91deg,
+      rgba(255,255,255,.06) 0 3px,
+      rgba(76,68,50,.05) 3px 8px
+    ) !important;
+  border:0 !important;
+  box-shadow:
+    0 18px 40px rgba(0,0,0,.34),
+    0 0 0 1px rgba(255,255,255,.03) !important;
+}
+
+/* Outer torn-paper silhouette */
+.vt-clean-gallery-stageframe::before{
+  content:"" !important;
+  position:absolute !important;
+  z-index:-2 !important;
+  inset:-9px !important;
+  pointer-events:none !important;
+  background:
+    linear-gradient(180deg, rgba(231,226,208,.95), rgba(172,163,137,.85)),
+    repeating-linear-gradient(
+      88deg,
+      rgba(255,255,255,.08) 0 4px,
+      rgba(72,63,45,.05) 4px 9px
+    ) !important;
+  border:0 !important;
+  clip-path:polygon(
+    1% 4%, 8% 2%, 16% 4%, 24% 1%, 34% 3%, 43% 1%, 53% 4%, 63% 2%, 72% 4%, 82% 1%, 92% 3%, 99% 1%,
+    100% 10%, 98% 20%, 100% 31%, 99% 42%, 100% 54%, 98% 64%, 100% 75%, 99% 87%, 100% 98%,
+    90% 99%, 79% 97%, 69% 100%, 58% 98%, 47% 100%, 36% 97%, 25% 100%, 15% 98%, 2% 100%,
+    0 91%, 2% 80%, 0 68%, 1% 57%, 0 46%, 2% 34%, 0 23%, 1% 13%
+  ) !important;
+  transform:rotate(-.18deg) !important;
+  opacity:.98 !important;
+  filter:drop-shadow(0 5px 10px rgba(0,0,0,.28));
+}
+
+/* Inner rough paper edge / hand-cut line */
+.vt-clean-gallery-stageframe::after{
+  content:"" !important;
+  position:absolute !important;
+  z-index:1 !important;
+  inset:6px !important;
+  pointer-events:none !important;
+  border:1px solid rgba(74,67,52,.42) !important;
+  clip-path:polygon(
+    0 1%, 13% 0, 28% 1%, 42% 0, 58% 1%, 74% 0, 100% 1%,
+    99% 21%, 100% 41%, 99% 62%, 100% 82%, 99% 100%,
+    81% 99%, 61% 100%, 40% 99%, 20% 100%, 1% 99%,
+    0 81%, 1% 61%, 0 42%, 1% 22%
+  ) !important;
+  transform:none !important;
+  opacity:.78 !important;
+}
+
+/* Main artwork stays exactly as V95. */
+.vt-clean-gallery-stageframe img{
+  position:relative !important;
+  z-index:2 !important;
+}
+
+/* Existing tape pieces stay visually above the paper frame. */
+.vt-fixed-tape{
+  z-index:8 !important;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.22));
+}
+
+/* Add subtle fibrous paper texture to the existing tape without moving it. */
+.vt-fixed-tape::before{
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.12) 0 3px,
+      transparent 3px 7px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(74,63,43,.05) 0 2px,
+      transparent 2px 5px
+    ) !important;
+}
+
+/* Do not touch bottom thumbnail cards. */
