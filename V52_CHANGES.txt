@@ -1,7 +1,0 @@
-V52 — BASED ON V51
-
-Changed only:
-- Top navigation label: WORK -> ART
-
-The section anchor remains #work, so all navigation behavior is preserved.
-Everything else remains unchanged from V51.
