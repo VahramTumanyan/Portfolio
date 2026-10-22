@@ -1431,8 +1431,17 @@ window.addEventListener('keydown',e=>{
       ? 4 * p * p * p
       : 1 - Math.pow(-2 * p + 2, 3) / 2;
 
-    const desiredFinalWidth = clamp(window.innerWidth * 0.125, 155, 205);
-    const finalScale = clamp(desiredFinalWidth / naturalWidth, 0.15, 0.30);
+    // V104: use the same compact dock width that the header reserves.
+    // Desktop keeps a readable wordmark; phones use a smaller fixed visual width
+    // so the name, avatar and navigation fit as one group without overlap.
+    const desiredFinalWidth = window.innerWidth <= 390
+      ? clamp(window.innerWidth * 0.175, 58, 68)
+      : window.innerWidth <= 760
+        ? clamp(window.innerWidth * 0.18, 62, 76)
+        : window.innerWidth <= 1200
+          ? clamp(window.innerWidth * 0.14, 155, 180)
+          : clamp(window.innerWidth * 0.13, 170, 205);
+    const finalScale = clamp(desiredFinalWidth / naturalWidth, 0.10, 0.30);
     const scale = homeScale + (finalScale - homeScale) * eased;
 
     // At the very top, return to the exact original hero position.

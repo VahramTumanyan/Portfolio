@@ -10380,3 +10380,185 @@ body.private-viewer-open .vt-character-rail{
     -webkit-transform:translateZ(0);
   }
 }
+
+/* =========================================================
+   V104 — LOGO + MOVING NAME + NAV AS ONE HEADER GROUP
+   Desktop and mobile use the same composition logic.
+   The moving VAHRAM TUMANYAN element still starts in HERO,
+   then docks beside the round avatar. Navigation begins
+   immediately after the reserved name area.
+   ========================================================= */
+.topbar{
+  --vt-name-dock-width:clamp(170px,13vw,205px);
+  display:flex !important;
+  grid-template-columns:none !important;
+  justify-content:flex-start !important;
+  align-items:center !important;
+  column-gap:0 !important;
+  gap:0 !important;
+}
+
+.topbar .brand.brand-avatar-only{
+  flex:0 0 auto !important;
+  margin:0 !important;
+}
+
+.topbar nav{
+  flex:0 1 auto !important;
+  justify-self:auto !important;
+  justify-content:flex-start !important;
+  margin-left:calc(var(--vt-name-dock-width) + 14px) !important;
+  min-width:0 !important;
+}
+
+/* Keep the landing area visually compact on normal desktop widths. */
+@media (max-width:1200px) and (min-width:761px){
+  .topbar{
+    --vt-name-dock-width:clamp(155px,14vw,180px);
+  }
+
+  .topbar nav{
+    gap:18px !important;
+  }
+
+  .topbar nav .nav-link{
+    font-size:12px !important;
+    padding-left:3px !important;
+    padding-right:3px !important;
+  }
+}
+
+/* Phone/tablet: same structure, just a smaller docked name.
+   Nav remains horizontally scrollable exactly as before. */
+@media (max-width:760px){
+  html{
+    -webkit-text-size-adjust:100% !important;
+    text-size-adjust:100% !important;
+  }
+
+  .topbar{
+    --vt-name-dock-width:clamp(84px,23vw,104px);
+    justify-content:flex-start !important;
+  }
+
+  .topbar nav{
+    flex:1 1 auto !important;
+    width:auto !important;
+    max-width:none !important;
+    margin-left:calc(var(--vt-name-dock-width) + 8px) !important;
+    padding-left:2px !important;
+    padding-right:7px !important;
+  }
+}
+
+@media (max-width:390px){
+  .topbar{
+    --vt-name-dock-width:82px;
+  }
+
+  .topbar nav{
+    margin-left:98px !important;
+  }
+}
+
+
+/* =========================================================
+   V106 — CENTERED HEADER GROUP, ANIMATED NAME PRESERVED
+   Order on desktop and phone:
+   avatar -> animated VAHRAM TUMANYAN -> navigation links.
+   The same hero name element still morphs/docks on scroll.
+   ========================================================= */
+.topbar{
+  justify-content:center !important;
+}
+
+/* Desktop/tablet: center avatar + reserved animated-name area + nav as one unit. */
+@media (min-width:761px){
+  .topbar{
+    padding-left:clamp(14px,2vw,28px) !important;
+    padding-right:clamp(14px,2vw,28px) !important;
+  }
+
+  .topbar nav{
+    flex:0 1 auto !important;
+    width:auto !important;
+    max-width:calc(100vw - 330px) !important;
+  }
+}
+
+/* Phone: keep the exact same order in one centered row.
+   Everything is reduced together instead of turning into a different layout. */
+@media (max-width:760px){
+  .topbar{
+    --vt-name-dock-width:clamp(62px,18vw,76px) !important;
+    min-height:50px !important;
+    height:50px !important;
+    padding:4px 4px !important;
+    gap:0 !important;
+    justify-content:center !important;
+    overflow:hidden !important;
+  }
+
+  .brand.brand-avatar-only{
+    min-width:34px !important;
+    width:34px !important;
+    flex:0 0 34px !important;
+    margin:0 !important;
+  }
+
+  .brand-avatar-wrap{
+    width:32px !important;
+    height:32px !important;
+    flex:0 0 32px !important;
+  }
+
+  .topbar nav{
+    flex:0 0 auto !important;
+    width:auto !important;
+    min-width:0 !important;
+    max-width:none !important;
+    margin-left:calc(var(--vt-name-dock-width) + 4px) !important;
+    padding:0 !important;
+    gap:clamp(3px,1vw,6px) !important;
+    overflow:visible !important;
+    scroll-snap-type:none !important;
+    overscroll-behavior:auto !important;
+    -webkit-overflow-scrolling:auto !important;
+  }
+
+  .topbar nav .nav-link{
+    min-width:0 !important;
+    flex:0 0 auto !important;
+    font-size:clamp(5.2px,1.55vw,7px) !important;
+    line-height:1 !important;
+    letter-spacing:0 !important;
+    padding:3px 0 !important;
+    white-space:nowrap !important;
+  }
+
+  .topbar nav .nav-private-archive{
+    gap:2px !important;
+  }
+
+  .topbar nav .private-lock,
+  .private-lock{
+    transform:scale(.58) !important;
+    transform-origin:center !important;
+    margin-right:-2px !important;
+  }
+}
+
+@media (max-width:390px){
+  .topbar{
+    --vt-name-dock-width:clamp(58px,17.5vw,68px) !important;
+  }
+
+  .topbar nav{
+    margin-left:calc(var(--vt-name-dock-width) + 3px) !important;
+    gap:clamp(2px,.8vw,4px) !important;
+  }
+
+  .topbar nav .nav-link{
+    font-size:clamp(4.8px,1.48vw,5.8px) !important;
+  }
+}
