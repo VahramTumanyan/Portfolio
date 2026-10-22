@@ -1,2 +1,0 @@
-Put new source images in this folder, then run UPDATE_GALLERY.bat.
-Supported: JPG, JPEG, PNG, WEBP, AVIF.

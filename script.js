@@ -907,9 +907,9 @@ window.addEventListener('keydown',e=>{
 
 
 /* =========================================================
-   CROC V19 — ONE-SHOT
+   CROC V103 — EDGE-TO-EDGE ONE-SHOT
    Exact sequence:
-   start -> running -> Happy_1 -> running -> fade out -> OFF
+   start -> running -> Happy_1 -> Happy_2 -> Happy_1 -> running -> fade out -> OFF
    ========================================================= */
 (() => {
   const stage = document.getElementById('vtCrocStage');
@@ -1038,7 +1038,17 @@ window.addEventListener('keydown',e=>{
     await waitForComplete('Happy_1', 5200);
     if (!playing || id !== runId) return;
 
-    /* 4. running — this is now the LAST animation */
+    /* 4. Happy_2 */
+    play('Happy_2', false);
+    await waitForComplete('Happy_2', 5200);
+    if (!playing || id !== runId) return;
+
+    /* 5. Happy_1 again */
+    play('Happy_1', false);
+    await waitForComplete('Happy_1', 5200);
+    if (!playing || id !== runId) return;
+
+    /* 6. running — this is now the LAST animation */
     play('running', true);
     stage.style.transition = 'left 2.8s linear';
     stage.style.left = right + 'px';

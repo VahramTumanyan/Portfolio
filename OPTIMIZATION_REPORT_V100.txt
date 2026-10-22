@@ -1,0 +1,40 @@
+VAHRAM PORTFOLIO — SAFE OPTIMIZATION V100
+
+Base: VAHRAM_PORTFOLIO_FLY_SMALL_HITBOX_V99(2).zip
+Goal: safest possible cleanup without changing design, links, animations, gallery behavior, Private Portfolio, or fly mechanics.
+
+CHANGES
+1. Removed non-runtime history/instruction TXT files only:
+   - V*_CHANGES.txt
+   - OPTIMIZATION_V48.txt
+   - README / BANNER_README / HOW_TO_REPLACE helper TXT files
+   These files were not referenced by the website runtime.
+
+2. Losslessly optimized PNG files.
+   - Filenames and paths unchanged.
+   - Image dimensions and pixel data verified identical after optimization.
+   - Spine atlas page filenames unchanged.
+   - No JPG or WEBP recompression was performed.
+
+3. Core site code was NOT changed in this safe pass:
+   - index.html unchanged
+   - style.css unchanged
+   - script.js unchanged
+   - fly_widget.html unchanged
+   - croc_widget.html unchanged
+   - frog_widget.html unchanged
+
+4. Kept utility files:
+   - OPEN_SITE_LOCAL.bat
+   - OPEN_SITE_WINDOWS.cmd
+   - START_LOCAL_SERVER.ps1
+   - UPDATE_GALLERY.bat
+   - UPDATE_GALLERY.py
+
+TEST STATUS
+- Local referenced files checked after optimization.
+- Spine atlas pages checked.
+- Core code hashes match the original V99.
+- PNG decoded pixel hashes match original images.
+
+This is intentionally a conservative test build. Deeper CSS/JS cleanup should be done only after this version is tested visually and functionally.
