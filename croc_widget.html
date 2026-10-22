@@ -24,6 +24,24 @@ html,body{
   background:transparent!important;
 }
 </style>
+
+<style>
+/* V98 — never clip/mask the Spine character inside its widget */
+html, body,
+#flyPlayer, #crocPlayer, #frogPlayer,
+.spine-player, .spine-player-canvas, canvas {
+  overflow: visible !important;
+  clip-path: none !important;
+  mask: none !important;
+  -webkit-mask: none !important;
+  contain: none !important;
+}
+canvas {
+  max-width: none !important;
+  max-height: none !important;
+}
+</style>
+
 </head>
 <body>
 <div id="crocPlayer"></div>
@@ -56,10 +74,10 @@ new spine.SpinePlayer('crocPlayer', {
   backgroundColor:'#00000000',
   defaultMix:0.08,
   viewport:{
-    x:-1012.6289,
-    y:-1440.6956,
-    width:2083.2205,
-    height:2592.464,
+    x:-1262.6154,
+        y:-1751.7913,
+        width:2583.1934,
+        height:3214.6554,
     padLeft:0,
     padRight:0,
     padTop:0,

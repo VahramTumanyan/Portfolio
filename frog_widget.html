@@ -11,6 +11,24 @@ html,body{margin:0;width:100%;height:100%;overflow:visible;background:transparen
 #frogPlayer{position:absolute;inset:0;background:transparent!important;overflow:visible!important}
 #frogPlayer canvas{background:transparent!important}
 </style>
+
+<style>
+/* V98 — never clip/mask the Spine character inside its widget */
+html, body,
+#flyPlayer, #crocPlayer, #frogPlayer,
+.spine-player, .spine-player-canvas, canvas {
+  overflow: visible !important;
+  clip-path: none !important;
+  mask: none !important;
+  -webkit-mask: none !important;
+  contain: none !important;
+}
+canvas {
+  max-width: none !important;
+  max-height: none !important;
+}
+</style>
+
 </head>
 <body>
 <div id="frogPlayer"></div>
@@ -45,10 +63,10 @@ new spine.SpinePlayer('frogPlayer',{
   backgroundColor:'#00000000',
   defaultMix:0.08,
   viewport:{
-    x:-1139.2693,
-    y:-425.2873,
-    width:1855.246,
-    height:1341.873,
+    x:-1361.8988,
+        y:-586.3121,
+        width:2300.5050,
+        height:1663.9225,
     padLeft:0,padRight:0,padTop:0,padBottom:0
   },
   success(player){

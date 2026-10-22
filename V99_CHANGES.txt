@@ -1,0 +1,16 @@
+V99 — BASED ON V98
+
+FLY ONLY:
+- Kept the large fly iframe/render area so the character is not cropped.
+- Reduced the clickable hit mask to the central visible fly area.
+- Empty space at the sides/top/bottom of the iframe no longer triggers FIRE.
+- The hit mask is elliptical instead of the full rectangular iframe.
+- Only the primary left click/tap triggers FIRE.
+
+UNCHANGED:
+- Fly visual size and movement.
+- Fly no-crop viewport from V98.
+- Croc/Frog.
+- Gallery and site design/functionality.
+
+JS validation passed.

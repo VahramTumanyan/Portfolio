@@ -10324,3 +10324,34 @@ body.private-viewer-open .vt-character-rail{
 }
 
 /* Do not touch bottom thumbnail cards. */
+
+
+/* =========================================================
+   V98 — CHARACTERS: NO MASK / NO CROP
+   Fly / Croc / Frog only.
+   ========================================================= */
+#vtFlyStage,
+.vt-fly-stage,
+#vtCrocStage,
+.vt-croc-stage,
+#vtFrogStage,
+.vt-frog-stage,
+#vtFlyFrame,
+#vtCrocFrame,
+#vtFrogFrame,
+.vt-fly-stage iframe,
+.vt-croc-stage iframe,
+.vt-frog-stage iframe{
+  overflow:visible !important;
+  clip-path:none !important;
+  mask:none !important;
+  -webkit-mask:none !important;
+  contain:none !important;
+}
+
+/* Do not introduce a rounded/hidden clipping surface on the character layers. */
+#vtFlyStage,
+#vtCrocStage,
+#vtFrogStage{
+  border-radius:0 !important;
+}

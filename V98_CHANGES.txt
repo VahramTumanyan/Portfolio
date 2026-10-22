@@ -1,0 +1,11 @@
+V98 — BASED ON V97
+
+CHARACTERS ONLY:
+- Removed CSS mask / clip-path / hidden overflow from Fly, Croc and Frog layers.
+- Removed containment that could clip rendering.
+- Expanded each Spine viewport by 12% on every side.
+- This gives hands, feet, weapon/effects and animation extremes extra safe space.
+- Character stage z-index/layering and controls are unchanged.
+- Gallery/site design is unchanged.
+
+JS validation passed.

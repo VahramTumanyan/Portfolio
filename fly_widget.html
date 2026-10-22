@@ -14,10 +14,19 @@
     }
     #flyHit{
       position:absolute;
-      inset:0;
+      /* V99: smaller click mask.
+         The iframe stays large so the fly is never cropped,
+         but only this central area reacts to clicks. */
+      left:18%;
+      right:18%;
+      top:14%;
+      bottom:14%;
       cursor:pointer;
       background:transparent;
       z-index:2;
+      border-radius:38%;
+      clip-path:ellipse(50% 48% at 50% 50%);
+      touch-action:manipulation;
     }
     #flyPlayer{
       position:absolute;
@@ -53,7 +62,25 @@
       }
     </style>
 
-  </head>
+  
+<style>
+/* V98 — never clip/mask the Spine character inside its widget */
+html, body,
+#flyPlayer, #crocPlayer, #frogPlayer,
+.spine-player, .spine-player-canvas, canvas {
+  overflow: visible !important;
+  clip-path: none !important;
+  mask: none !important;
+  -webkit-mask: none !important;
+  contain: none !important;
+}
+canvas {
+  max-width: none !important;
+  max-height: none !important;
+}
+</style>
+
+</head>
 <body>
   <div id="flyPlayer"></div>
   <div id="flyHit" aria-label="Interactive fly"></div>
@@ -118,10 +145,10 @@
       backgroundColor:'#00000000',
       defaultMix:0.10,
       viewport:{
-        x:-1887.077,
-        y:-377.485,
-        width:2587.1494,
-        height:1235.0067,
+        x:-2197.5349,
+        y:-525.6858,
+        width:3208.0653,
+        height:1531.4083,
         padLeft:0,
         padRight:0,
         padTop:0,
@@ -158,7 +185,10 @@
     // Hover no longer changes the movement animation.
     // The animation is controlled ONLY by slow/fast movement state.
     hit.addEventListener('pointerdown', (e)=>{
+      if(e.isPrimary === false) return;
+      if(typeof e.button === 'number' && e.button !== 0) return;
       e.preventDefault();
+      e.stopPropagation();
       fire();
     });
   </script>
