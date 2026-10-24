@@ -4623,7 +4623,7 @@ h1{
    V31 — ABOUT / ARTIST BADGE
    Only ABOUT section redesigned.
    Replace ONE file to change the badge image:
-   assets/about/about-badge.webp
+   assets/about/sanek-photo.png
    ========================================================= */
 
 .about-v31{
@@ -5394,6 +5394,11 @@ h1{
 }
 
 #about .about-v34-text p{margin:0 0 9px}
+
+#about .about-v34-text strong{
+  font-weight:800;
+  color:#eef1f3;
+}
 
 #about .about-v34-badge-wrap{
   position:relative;
@@ -10560,5 +10565,169 @@ body.private-viewer-open .vt-character-rail{
 
   .topbar nav .nav-link{
     font-size:clamp(4.8px,1.48vw,5.8px) !important;
+  }
+}
+
+/* =========================================================
+   V118 — FINAL CHARACTER / PRIVATE VIEWER LAYER ORDER
+   Positions and animations are untouched.
+   Normal site: Fly / Croc / Frog are the top visual layer.
+   Private Portfolio viewer: viewer is above EVERYTHING.
+   ========================================================= */
+
+/* Normal browsing — characters above the complete site UI. */
+#vtFlyStage,
+.vt-fly-stage,
+#vtCrocStage,
+.vt-croc-stage,
+#vtFrogStage,
+.vt-frog-stage{
+  z-index:2147483647 !important;
+}
+
+#vtCharacterRail,
+.vt-character-rail{
+  z-index:2147483646 !important;
+}
+
+/* Private Portfolio viewer is the absolute top layer while open. */
+body.private-viewer-open .private-viewer,
+body.private-viewer-open #privateViewer{
+  z-index:2147483647 !important;
+}
+
+/* Characters and their controls stay underneath the viewer. */
+body.private-viewer-open #vtFlyStage,
+body.private-viewer-open .vt-fly-stage,
+body.private-viewer-open #vtCrocStage,
+body.private-viewer-open .vt-croc-stage,
+body.private-viewer-open #vtFrogStage,
+body.private-viewer-open .vt-frog-stage{
+  z-index:2147483600 !important;
+  pointer-events:none !important;
+}
+
+body.private-viewer-open #vtCharacterRail,
+body.private-viewer-open .vt-character-rail{
+  z-index:2147483599 !important;
+  pointer-events:none !important;
+}
+
+/* Other fixed overlays must never cover the private viewer. */
+body.private-viewer-open .vt-scroll-top,
+body.private-viewer-open #vtScrollTop{
+  z-index:2147483598 !important;
+  pointer-events:none !important;
+}
+
+body.private-viewer-open .hero-name-morph,
+body.private-viewer-open #heroNameMorph{
+  z-index:2147483597 !important;
+}
+
+body.private-viewer-open .topbar{
+  z-index:2147483596 !important;
+}
+
+/* =========================================================
+   V119 — PRIVATE LANGUAGE CARDS 30% SMALLER / FIXED DESKTOP SCALE
+   Desktop only: keep all three cards in a stable 3-column composition
+   and reduce the complete visual block to roughly 70% of V118.
+   Mobile/tablet rules below 1050px remain unchanged for readability.
+   ========================================================= */
+@media (min-width:1051px){
+  #private-portfolio .private-language-grid{
+    grid-template-columns:repeat(3,322px) !important;
+    justify-content:center !important;
+    gap:11px !important;
+    width:auto !important;
+    max-width:988px !important;
+    margin:0 auto 18px !important;
+    padding-inline:0 !important;
+  }
+
+  #private-portfolio .private-language-card{
+    width:322px !important;
+    min-width:322px !important;
+    max-width:322px !important;
+    min-height:424px !important;
+    gap:13px !important;
+    padding:15px 14px 13px !important;
+    border-radius:10px !important;
+  }
+
+  #private-portfolio .private-language-kicker{
+    margin-bottom:9px !important;
+    font-size:7px !important;
+    line-height:1.2 !important;
+    letter-spacing:.18em !important;
+  }
+
+  #private-portfolio .private-language-title,
+  #private-portfolio .private-lang-hy .private-language-title,
+  #private-portfolio .private-lang-ru .private-language-title{
+    margin-bottom:11px !important;
+    font-size:23px !important;
+    line-height:1.02 !important;
+  }
+
+  #private-portfolio .private-lang-hy .private-language-title{
+    font-size:22px !important;
+  }
+
+  #private-portfolio .private-lang-ru .private-language-title{
+    font-size:22px !important;
+  }
+
+  #private-portfolio .private-language-description{
+    font-size:11px !important;
+    line-height:1.42 !important;
+    max-width:100% !important;
+  }
+
+  #private-portfolio .private-language-access{
+    margin-top:14px !important;
+    padding-top:11px !important;
+    font-size:12px !important;
+    line-height:1.13 !important;
+  }
+
+  #private-portfolio .private-language-access::before{
+    width:38px !important;
+    height:1px !important;
+  }
+
+  #private-portfolio .private-language-open{
+    margin-top:8px !important;
+    font-size:8px !important;
+    line-height:1.25 !important;
+  }
+
+  #private-portfolio .private-card-timer{
+    width:100% !important;
+    max-width:none !important;
+    min-height:83px !important;
+    padding:12px 8px 10px !important;
+    border-radius:8px !important;
+  }
+
+  #private-portfolio .private-card-timer .private-access-timer-top{
+    margin-bottom:7px !important;
+    font-size:6px !important;
+    line-height:1.2 !important;
+    letter-spacing:.15em !important;
+  }
+
+  #private-portfolio .private-card-timer strong{
+    font-size:32px !important;
+    line-height:1 !important;
+    letter-spacing:.05em !important;
+  }
+
+  #private-portfolio .private-card-timer small{
+    margin-top:7px !important;
+    font-size:6px !important;
+    line-height:1.2 !important;
+    letter-spacing:.16em !important;
   }
 }
