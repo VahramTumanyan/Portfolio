@@ -10731,3 +10731,110 @@ body.private-viewer-open .topbar{
     letter-spacing:.16em !important;
   }
 }
+
+/* =========================================================
+   VERSION 2 — PRIVATE VIEWER INSTANT OPEN / ORDERED LOADING
+   Viewer opens immediately. The selected image loads first;
+   remaining project images are preloaded sequentially.
+   Existing viewer layout/appearance stays unchanged.
+   ========================================================= */
+.private-viewer-image-wrap{
+  position:relative !important;
+}
+
+.private-viewer-image-wrap::before{
+  content:"LOADING…";
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  z-index:2;
+  color:rgba(245,245,242,.72);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.22em;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .12s ease;
+}
+
+.private-viewer-image-wrap::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:calc(50% + 28px);
+  width:34px;
+  height:2px;
+  transform:translateX(-50%) scaleX(.2);
+  transform-origin:left center;
+  background:#ff3438;
+  box-shadow:0 0 12px rgba(255,52,56,.35);
+  pointer-events:none;
+  opacity:0;
+}
+
+.private-viewer-image-wrap.is-loading::before,
+.private-viewer-image-wrap.is-loading::after{
+  opacity:1;
+}
+
+.private-viewer-image-wrap.is-loading::after{
+  animation:privateViewerLoadingLine .8s ease-in-out infinite alternate;
+}
+
+.private-viewer-image-wrap.is-load-error::before{
+  content:"IMAGE UNAVAILABLE";
+  opacity:1;
+  color:#ff676a;
+}
+
+.private-viewer-image-wrap #privateViewerImage{
+  transition:transform .18s ease, opacity .12s ease !important;
+}
+
+.private-viewer-thumbs button{
+  position:relative !important;
+}
+
+.private-viewer-thumbs .private-thumb-placeholder{
+  width:100%;
+  height:100%;
+  display:grid;
+  place-items:center;
+  color:rgba(245,245,242,.36);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.16em;
+  background:
+    linear-gradient(110deg, transparent 30%, rgba(255,255,255,.045) 50%, transparent 70%),
+    #0c0f13;
+  background-size:220% 100%, auto;
+  animation:privateThumbLoading 1.2s linear infinite;
+}
+
+.private-viewer-thumbs button.is-loaded .private-thumb-placeholder,
+.private-viewer-thumbs button.is-failed .private-thumb-placeholder{
+  animation:none;
+}
+
+.private-viewer-thumbs button.is-failed{
+  opacity:.28 !important;
+  cursor:default !important;
+}
+
+@keyframes privateViewerLoadingLine{
+  from{transform:translateX(-50%) scaleX(.18)}
+  to{transform:translateX(-50%) scaleX(1)}
+}
+
+@keyframes privateThumbLoading{
+  from{background-position:180% 0,0 0}
+  to{background-position:-80% 0,0 0}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .private-viewer-image-wrap.is-loading::after,
+  .private-viewer-thumbs .private-thumb-placeholder{
+    animation:none !important;
+  }
+}

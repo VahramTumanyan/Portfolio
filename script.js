@@ -68,18 +68,6 @@ if(topCharactersScroll && topCharactersPrev && topCharactersNext){
 
 
 
-async function resolveAvailablePrivateImages(projectKey){
-  const data = privateProjects[projectKey];
-  const checks = data.images.map(src => new Promise(resolve=>{
-    const img = new Image();
-    img.onload = ()=>resolve(src);
-    img.onerror = ()=>resolve(null);
-    img.src = src;
-  }));
-  const found = (await Promise.all(checks)).filter(Boolean);
-  return found;
-}
-
 // ===== PRIVATE PORTFOLIO VIEWER (demo data; replace later with user's real files) =====
 const privateProjects = {
   'crazy-frog': {
@@ -249,54 +237,235 @@ function setPrivateZoom(nextZoom){
 }
 
 
+// Private viewer V2 loading model:
+// - open the viewer immediately;
+// - give the selected image high priority;
+// - preload the remaining project images one-by-one;
+// - keep completed images cached for instant revisits.
+const privateImageCache = new Map();
+let privateViewerSession = 0;
+let privateRenderToken = 0;
+let privateThumbProject = null;
+
+function preloadPrivateImage(src, priority = 'auto'){
+  let record = privateImageCache.get(src);
+
+  if(record){
+    // If the user navigates to an image that was only being prefetched,
+    // promote that same request instead of starting another download.
+    if(priority === 'high' && record.status === 'loading'){
+      try{ record.image.fetchPriority = 'high'; }catch(_e){}
+    }
+    return record.promise;
+  }
+
+  const image = new Image();
+  image.decoding = 'async';
+  try{ image.fetchPriority = priority; }catch(_e){}
+
+  record = { image, status:'loading', promise:null };
+  record.promise = new Promise((resolve, reject)=>{
+    image.onload = ()=>{
+      record.status = 'loaded';
+      resolve(src);
+    };
+    image.onerror = ()=>{
+      record.status = 'error';
+      reject(new Error(`Unable to load private image: ${src}`));
+    };
+  });
+
+  // Keep rejected preloads handled so a missing optional image never produces
+  // an unhandled Promise rejection while the user is viewing another image.
+  record.promise.catch(()=>{});
+  privateImageCache.set(src, record);
+  image.src = src;
+  return record.promise;
+}
+
+function updatePrivateThumbState(index, state, src){
+  const btn = privateViewerThumbs?.querySelector(`[data-private-index="${index}"]`);
+  if(!btn) return;
+
+  btn.classList.remove('is-loading','is-loaded','is-failed');
+  btn.classList.add(state);
+
+  if(state === 'is-loaded' && src && !btn.querySelector('img')){
+    const thumb = document.createElement('img');
+    thumb.src = src;
+    thumb.alt = '';
+    thumb.decoding = 'async';
+    thumb.draggable = false;
+    btn.replaceChildren(thumb);
+  }
+
+  if(state === 'is-failed'){
+    btn.disabled = true;
+    btn.setAttribute('aria-label', `Image ${index + 1} unavailable`);
+  }
+}
+
+function buildPrivateThumbs(){
+  if(!privateCurrentProject || !privateViewerThumbs) return;
+  const data = privateProjects[privateCurrentProject];
+
+  privateViewerThumbs.innerHTML = '';
+  data.images.forEach((src, i)=>{
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.dataset.privateIndex = String(i);
+    btn.className = 'is-loading';
+    btn.setAttribute('aria-label', `Open image ${i + 1}`);
+
+    const cached = privateImageCache.get(src);
+    if(cached?.status === 'loaded'){
+      const thumb = document.createElement('img');
+      thumb.src = src;
+      thumb.alt = '';
+      thumb.decoding = 'async';
+      thumb.draggable = false;
+      btn.className = 'is-loaded';
+      btn.appendChild(thumb);
+    }else{
+      const placeholder = document.createElement('span');
+      placeholder.className = 'private-thumb-placeholder';
+      placeholder.textContent = String(i + 1).padStart(2,'0');
+      btn.appendChild(placeholder);
+      if(cached?.status === 'error'){
+        btn.className = 'is-failed';
+        btn.disabled = true;
+      }
+    }
+
+    btn.addEventListener('click',()=>{
+      if(btn.disabled) return;
+      privateCurrentIndex = i;
+      renderPrivateViewer();
+    });
+    privateViewerThumbs.appendChild(btn);
+  });
+
+  privateThumbProject = privateCurrentProject;
+}
+
+function updatePrivateActiveThumb(){
+  privateViewerThumbs?.querySelectorAll('button').forEach((btn, i)=>{
+    btn.classList.toggle('active', i === privateCurrentIndex);
+  });
+
+  const active = privateViewerThumbs?.querySelector(`[data-private-index="${privateCurrentIndex}"]`);
+  active?.scrollIntoView({block:'nearest', inline:'nearest', behavior:'smooth'});
+}
+
+async function showPrivateImage(src, altText){
+  if(!privateViewerImage || !privateViewerImageWrap) return;
+  const renderToken = ++privateRenderToken;
+  const projectAtRequest = privateCurrentProject;
+  const indexAtRequest = privateCurrentIndex;
+
+  privateViewerImageWrap.classList.add('is-loading');
+  privateViewerImageWrap.classList.remove('is-load-error');
+  privateViewerImage.style.opacity = '0';
+  privateViewerImage.alt = altText;
+  resetPrivateZoom();
+
+  try{
+    await preloadPrivateImage(src, 'high');
+
+    if(renderToken !== privateRenderToken ||
+       projectAtRequest !== privateCurrentProject ||
+       indexAtRequest !== privateCurrentIndex){
+      return;
+    }
+
+    privateViewerImage.src = src;
+    privateViewerImage.alt = altText;
+    privateViewerImage.style.opacity = '1';
+    privateViewerImageWrap.classList.remove('is-loading');
+    updatePrivateThumbState(indexAtRequest, 'is-loaded', src);
+  }catch(_error){
+    if(renderToken !== privateRenderToken ||
+       projectAtRequest !== privateCurrentProject ||
+       indexAtRequest !== privateCurrentIndex){
+      return;
+    }
+
+    privateViewerImage.removeAttribute('src');
+    privateViewerImage.style.opacity = '0';
+    privateViewerImageWrap.classList.remove('is-loading');
+    privateViewerImageWrap.classList.add('is-load-error');
+    updatePrivateThumbState(indexAtRequest, 'is-failed', src);
+  }
+}
+
 function renderPrivateViewer(){
   if(!privateCurrentProject) return;
   const data = privateProjects[privateCurrentProject];
   const src = data.images[privateCurrentIndex];
 
   privateViewerTitle.textContent = data.title;
-  privateViewerImage.src = src;
-  privateViewerImage.alt = `${data.title} — image ${privateCurrentIndex + 1}`;
-  resetPrivateZoom();
   if(privateViewerCount) privateViewerCount.textContent = `${privateCurrentIndex + 1} / ${data.images.length}`;
 
-  privateViewerThumbs.innerHTML = '';
-  data.images.forEach((img, i)=>{
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = i === privateCurrentIndex ? 'active' : '';
-    btn.innerHTML = `<img src="${img}" alt="">`;
-    btn.addEventListener('click',()=>{
-      privateCurrentIndex = i;
-      renderPrivateViewer();
-    });
-    privateViewerThumbs.appendChild(btn);
-  });
+  if(privateThumbProject !== privateCurrentProject ||
+     privateViewerThumbs?.children.length !== data.images.length){
+    buildPrivateThumbs();
+  }
+  updatePrivateActiveThumb();
+  showPrivateImage(src, `${data.title} — image ${privateCurrentIndex + 1}`);
 }
 
-async function openPrivateViewer(projectKey){
+async function preloadPrivateProjectInOrder(projectKey, session){
   const data = privateProjects[projectKey];
-  const available = await resolveAvailablePrivateImages(projectKey);
+  if(!data) return;
 
-  if(!available.length){
-    alert('Images for this project have not been uploaded yet.');
+  // Image 1 is already requested by renderPrivateViewer() with high priority.
+  // Wait for it first, then continue strictly in file order.
+  for(let i = 0; i < data.images.length; i++){
+    if(session !== privateViewerSession || projectKey !== privateCurrentProject) return;
+
+    const src = data.images[i];
+    try{
+      await preloadPrivateImage(src, i === 0 ? 'high' : 'low');
+      if(session !== privateViewerSession || projectKey !== privateCurrentProject) return;
+      updatePrivateThumbState(i, 'is-loaded', src);
+    }catch(_error){
+      if(session !== privateViewerSession || projectKey !== privateCurrentProject) return;
+      updatePrivateThumbState(i, 'is-failed', src);
+    }
+  }
+}
+
+function openPrivateViewer(projectKey){
+  const data = privateProjects[projectKey];
+  if(!data || !data.images.length) return;
+
+  // Repeated clicks on the already-open project do nothing. This prevents
+  // duplicate open/load cycles when a visitor clicks several times quickly.
+  if(privateViewer?.classList.contains('open') && privateCurrentProject === projectKey){
     return;
   }
 
-  data._originalImages = data._originalImages || data.images;
-  data.images = available;
-
+  const session = ++privateViewerSession;
   privateCurrentProject = projectKey;
   privateCurrentIndex = 0;
-  renderPrivateViewer();
+  privateThumbProject = null;
+
+  // IMPORTANT: reveal the viewer before any network wait.
   privateViewer.classList.add('open');
   privateViewer.setAttribute('aria-hidden','false');
   document.body.classList.add('private-viewer-open');
   document.body.style.overflow = 'hidden';
+
+  renderPrivateViewer();
+  preloadPrivateProjectInOrder(projectKey, session);
 }
 
 function closePrivateViewer(){
+  // Invalidate any in-progress UI update / sequential preloading session.
+  privateViewerSession++;
+  privateRenderToken++;
   resetPrivateZoom();
+  privateViewerImageWrap?.classList.remove('is-loading','is-load-error');
   privateViewer.classList.remove('open');
   privateViewer.setAttribute('aria-hidden','true');
   document.body.classList.remove('private-viewer-open');
